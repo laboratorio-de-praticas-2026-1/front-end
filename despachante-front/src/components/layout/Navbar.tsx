@@ -16,8 +16,8 @@ export function Navbar() {
 
   return (
     <>
-      {/* HEADER PRINCIPAL (DESKTOP E BARRA DO MOBILE) */}
-      <header className="fixed top-0 left-0 right-0 z-50 w-full bg-white shadow-sm ">
+      {/* HEADER PRINCIPAL (DESKTOP E BARRA DO MOBILE) backdrop-blur-sm*/}
+      <header className="fixed top-0 left-0 right-0 z-50 w-full bg-white/80 shadow-sm border-b border-border transition-all duration-300">
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 md:px-12">
           
           {/* 1. Logo com animação de scale (aumento de 5%) */}
@@ -43,10 +43,10 @@ export function Navbar() {
           </nav>
 
           {/* 3. Botão Entrar Desktop */}
-          <div className="hidden md:block bg-amber-500 rounded-full transition-all duration-300 hover:scale-105 hover:opacity-90">
+          <div className="bg-primary hidden md:block  rounded-full transition-all duration-300 hover:scale-105 hover:opacity-90">
             <a 
               href="/login"
-              className="inline-flex items-center justify-center gap-2.5 rounded-full bg-primary px-6 py-3 text-base font-semibold text-white shadow-sm "
+              className="inline-flex items-center justify-center gap-2.5 rounded-full px-6 py-3 text-base font-semibold text-white shadow-sm "
             >
               <FiUser className="h-5 w-5 stroke-[2.5]" />
               Entrar
@@ -102,7 +102,7 @@ export function Navbar() {
           <div className="mt-auto p-6 pb-8">
             <a 
               href="/login"
-              className="bg-amber-500 flex w-full items-center justify-center gap-2.5 rounded-full bg-primary h-14 text-lg font-semibold text-white shadow-sm transition-all duration-300 hover:scale-[1.02] hover:opacity-90"
+              className="bg-primary flex w-full items-center justify-center gap-2.5 rounded-full h-14 text-lg font-semibold text-white shadow-sm transition-all duration-300 hover:scale-[1.02] hover:opacity-90"
             >
               <FiUser className="h-6 w-6 stroke-[2.5]" />
               Entrar
