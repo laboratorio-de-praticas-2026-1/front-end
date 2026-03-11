@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/layout/Navbar"
 import { FaReact } from "react-icons/fa"
-import { HeaderSection } from "./components/sections/header-section"
+import { HeaderSection } from "./components/sections/HeaderSection"
+import ServiceCarousel from "./components/sections/ServiceCarousel"
 
 function App() {
   return (
@@ -8,8 +9,9 @@ function App() {
       <Navbar />
       
       {/* Removemos o padding e as margens daqui. Agora a section vai bater no teto da tela! */}
-      <main>
+      <main className="flex flex-col gap-20 md:gap-32">
         <HeaderSection />
+        <ServiceCarousel/>
         
         {/* Futuras seções entrarão aqui embaixo */}
       </main>
