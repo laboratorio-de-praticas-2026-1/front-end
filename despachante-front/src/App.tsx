@@ -12,7 +12,6 @@ function App() {
       <main className="flex flex-col gap-20 md:gap-32">
         <HeaderSection />
         <ServiceCarousel/>
-        
         {/* Futuras seções entrarão aqui embaixo */}
       </main>
     </div>
