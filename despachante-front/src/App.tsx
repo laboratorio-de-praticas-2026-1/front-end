@@ -2,6 +2,7 @@ import { Navbar } from "@/components/layout/Navbar"
 import { FaReact } from "react-icons/fa"
 import { HeaderSection } from "./components/sections/HeaderSection"
 import ServiceCarousel from "./components/sections/ServiceCarousel"
+import BlogTable from "./components/tables/BlogTable"
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <main className="flex flex-col gap-20 md:gap-32">
         <HeaderSection />
         <ServiceCarousel/>
+        <BlogTable />
         
         {/* Futuras seções entrarão aqui embaixo */}
       </main>

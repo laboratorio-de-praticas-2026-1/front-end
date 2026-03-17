@@ -1,0 +1,283 @@
+[
+  {
+    "id": "#001",
+    "imagem": "https://picsum.photos/seed/carro1/600/400",
+    "titulo": "Licenciamento de veículos no estado de São Paulo em 2026 já está disponível para pagamento e regularização",
+    "conteudo": "O licenciamento anual é uma obrigação para todos os proprietários de veículos registrados no estado de São Paulo. Em 2026 o processo continua sendo realizado principalmente de forma digital por meio de aplicativos oficiais e internet banking dos bancos autorizados. Manter o licenciamento em dia garante que o veículo esteja regularizado para circular, evitando multas, pontos na carteira e até a apreensão do veículo durante fiscalizações de trânsito realizadas nas rodovias e centros urbanos.",
+    "data_publicacao": "08/03/2026"
+  },
+  {
+    "id": "#002",
+    "imagem": "https://picsum.photos/seed/carro2/600/400",
+    "titulo": "Mercado automotivo brasileiro em 2026 apresenta novos modelos com foco em tecnologia, eficiência energética e conectividade",
+    "conteudo": "O setor automotivo no Brasil segue em evolução com o lançamento de novos veículos equipados com sistemas avançados de segurança, conectividade com smartphones e maior eficiência no consumo de combustível. Montadoras estão investindo em carros híbridos e elétricos para acompanhar as mudanças globais e atender consumidores que buscam tecnologia, conforto e menor impacto ambiental no uso diário do automóvel.",
+    "data_publicacao": "08/03/2026"
+  },
+  {
+    "id": "#003",
+    "imagem": "https://picsum.photos/seed/carro3/600/400",
+    "titulo": "Manutenção preventiva do veículo pode evitar problemas mecânicos graves e reduzir custos inesperados",
+    "conteudo": "Realizar revisões periódicas no carro é uma das melhores maneiras de evitar falhas mecânicas inesperadas. Componentes como óleo do motor, filtros, sistema de freios, suspensão e correias precisam ser verificados regularmente. Além de aumentar a vida útil do veículo, a manutenção preventiva contribui para a segurança do motorista e passageiros, evitando situações de risco durante a condução em estradas ou áreas urbanas.",
+    "data_publicacao": "07/03/2026"
+  },
+  {
+    "id": "#004",
+    "imagem": "https://picsum.photos/seed/carro4/600/400",
+    "titulo": "Alta no preço dos combustíveis leva motoristas a adotarem estratégias para reduzir gastos no dia a dia",
+    "conteudo": "Com os preços da gasolina e do etanol variando constantemente, muitos motoristas buscam alternativas para diminuir o consumo de combustível. Dirigir de maneira mais suave, evitar acelerações bruscas, manter pneus calibrados e realizar revisões periódicas são algumas práticas que ajudam a melhorar o rendimento do veículo. Pequenas mudanças de hábito podem gerar economia significativa ao longo do tempo.",
+    "data_publicacao": "06/03/2026"
+  },
+  {
+    "id": "#005",
+    "imagem": "https://picsum.photos/seed/carro5/600/400",
+    "titulo": "Tecnologias automotivas modernas estão transformando a experiência de dirigir e aumentando a segurança nas ruas",
+    "conteudo": "Sistemas como frenagem automática de emergência, sensores de estacionamento, assistente de permanência em faixa e integração com aplicativos móveis já fazem parte de muitos carros atuais. Essas tecnologias ajudam a reduzir riscos de acidentes e tornam a condução mais confortável. A tendência é que nos próximos anos esses recursos se tornem ainda mais comuns mesmo em veículos de entrada.",
+    "data_publicacao": "05/03/2026"
+  },
+  {
+    "id": "#006",
+    "imagem": "https://picsum.photos/seed/carro6/600/400",
+    "titulo": "Verificações básicas antes de viajar de carro podem evitar imprevistos e aumentar a segurança na estrada",
+    "conteudo": "Antes de iniciar uma viagem longa é importante conferir itens essenciais do veículo, como nível de óleo, calibragem dos pneus, funcionamento dos freios e iluminação. Também é recomendado verificar o sistema de arrefecimento e levar ferramentas básicas no porta-malas. Esse tipo de cuidado reduz a chance de problemas mecânicos durante o trajeto e contribui para uma viagem mais tranquila.",
+    "data_publicacao": "04/03/2026"
+  },
+  {
+    "id": "#007",
+    "imagem": "https://picsum.photos/seed/carro7/600/400",
+    "titulo": "Crescimento dos carros elétricos no Brasil desperta interesse de consumidores e fabricantes",
+    "conteudo": "Os veículos elétricos estão se tornando cada vez mais presentes no mercado brasileiro, impulsionados por avanços tecnológicos e maior preocupação com sustentabilidade. Apesar do custo inicial ainda elevado em comparação com carros tradicionais, o menor gasto com combustível e manutenção tem atraído consumidores interessados em soluções mais eficientes e ambientalmente responsáveis.",
+    "data_publicacao": "03/03/2026"
+  },
+  {
+    "id": "#008",
+    "imagem": "https://picsum.photos/seed/carro8/600/400",
+    "titulo": "Escolher o seguro automotivo adequado pode evitar prejuízos financeiros em situações inesperadas",
+    "conteudo": "Contratar um seguro para o carro é uma decisão importante para garantir proteção contra roubos, colisões e danos a terceiros. Antes de escolher uma seguradora, é essencial comparar coberturas, franquias e benefícios oferecidos. Avaliar o perfil do motorista, a região onde o veículo circula e o valor de mercado do automóvel ajuda a encontrar um plano que realmente atenda às necessidades do proprietário.",
+    "data_publicacao": "02/03/2026"
+  },
+  {
+    "id": "#009",
+    "imagem": "https://picsum.photos/seed/carro9/600/400",
+    "titulo": "Troca de óleo do motor deve seguir recomendações do fabricante para garantir bom funcionamento",
+    "conteudo": "O óleo do motor desempenha papel fundamental na lubrificação das peças internas e na redução do desgaste causado pelo atrito. Seguir o intervalo de troca indicado pelo fabricante ajuda a preservar o desempenho do motor e evita danos que podem resultar em reparos caros. Além disso, utilizar o tipo correto de óleo é essencial para manter a eficiência do sistema.",
+    "data_publicacao": "01/03/2026"
+  },
+  {
+    "id": "#010",
+    "imagem": "https://picsum.photos/seed/carro10/600/400",
+    "titulo": "Compra de carro usado exige atenção a histórico do veículo e condições mecânicas",
+    "conteudo": "Adquirir um carro usado pode ser uma ótima alternativa para economizar, mas exige alguns cuidados importantes. Verificar histórico de manutenção, quilometragem real, estado da lataria e funcionamento do motor são etapas fundamentais. Também é recomendável consultar a situação do veículo em órgãos oficiais para garantir que não existem débitos ou restrições.",
+    "data_publicacao": "28/02/2026"
+  },
+  {
+    "id": "#011",
+    "imagem": "https://picsum.photos/seed/carro11/600/400",
+    "titulo": "Cuidados simples no dia a dia ajudam a aumentar a vida útil do motor do veículo",
+    "conteudo": "Evitar acelerações bruscas com o motor frio, manter o nível correto de óleo e realizar revisões periódicas são hábitos que ajudam a preservar o motor. Além disso, utilizar combustível de qualidade e respeitar os limites de carga do veículo contribuem para reduzir o desgaste das peças internas e manter o desempenho adequado ao longo do tempo.",
+    "data_publicacao": "27/02/2026"
+  },
+  {
+    "id": "#012",
+    "imagem": "https://picsum.photos/seed/carro12/600/400",
+    "titulo": "Rodar com pneus desgastados aumenta risco de acidentes e pode resultar em multa",
+    "conteudo": "Pneus em más condições comprometem a aderência do veículo ao solo e aumentam a distância necessária para frenagem. Além do risco à segurança, conduzir um carro com pneus carecas pode gerar penalidades previstas no código de trânsito. Verificar regularmente o estado dos pneus e realizar a substituição quando necessário é essencial para garantir uma condução segura.",
+    "data_publicacao": "26/02/2026"
+  },
+  {
+    "id": "#013",
+    "imagem": "https://picsum.photos/seed/carro13/600/400",
+    "titulo": "Veículos híbridos combinam motor elétrico e motor a combustão para melhorar eficiência energética",
+    "conteudo": "Os carros híbridos utilizam dois sistemas de propulsão que trabalham em conjunto para reduzir o consumo de combustível e as emissões de poluentes. Durante trajetos urbanos, o motor elétrico pode assumir grande parte do funcionamento do veículo, enquanto o motor a combustão auxilia em velocidades maiores ou em situações de maior demanda de potência.",
+    "data_publicacao": "25/02/2026"
+  },
+  {
+    "id": "#014",
+    "imagem": "https://picsum.photos/seed/carro14/600/400",
+    "titulo": "Dirigir sob chuva exige atenção redobrada e alguns cuidados importantes para evitar acidentes",
+    "conteudo": "Pistas molhadas reduzem a aderência dos pneus e aumentam o risco de aquaplanagem. Em situações de chuva intensa, é importante reduzir a velocidade, manter distância segura do veículo à frente e utilizar corretamente os faróis. Essas medidas simples ajudam a manter o controle do carro e reduzem a probabilidade de colisões.",
+    "data_publicacao": "24/02/2026"
+  },
+  {
+    "id": "#015",
+    "imagem": "https://picsum.photos/seed/carro15/600/400",
+    "titulo": "Manutenção do sistema de ar-condicionado automotivo melhora conforto e qualidade do ar",
+    "conteudo": "O ar-condicionado do carro também precisa de manutenção periódica para funcionar corretamente. Limpeza dos filtros e verificação do gás refrigerante ajudam a manter o sistema eficiente e evitam odores desagradáveis no interior do veículo. Além do conforto térmico, esse cuidado também contribui para a saúde dos ocupantes.",
+    "data_publicacao": "23/02/2026"
+  },
+  {
+    "id": "#016",
+    "imagem": "https://picsum.photos/seed/carro16/600/400",
+    "titulo": "Bateria automotiva apresenta sinais claros quando está próxima do fim da vida útil",
+    "conteudo": "Dificuldade ao dar partida no motor, falhas em componentes elétricos e luzes do painel piscando podem indicar que a bateria está fraca. Normalmente a vida útil da bateria varia entre dois e três anos, dependendo do uso do veículo. Verificações periódicas ajudam a evitar ficar parado por falta de energia no sistema.",
+    "data_publicacao": "22/02/2026"
+  },
+  {
+    "id": "#017",
+    "imagem": "https://picsum.photos/seed/carro17/600/400",
+    "titulo": "Aplicativos para motoristas ajudam a encontrar rotas melhores e acompanhar manutenção do veículo",
+    "conteudo": "Diversos aplicativos disponíveis para smartphones auxiliam motoristas no dia a dia. Eles permitem monitorar consumo de combustível, registrar manutenções realizadas e encontrar rotas com menos trânsito. Com o avanço da tecnologia, essas ferramentas se tornaram aliadas importantes para quem utiliza o carro com frequência.",
+    "data_publicacao": "21/02/2026"
+  },
+  {
+    "id": "#018",
+    "imagem": "https://picsum.photos/seed/carro18/600/400",
+    "titulo": "Custos de manter um carro incluem combustível, manutenção, impostos e seguro",
+    "conteudo": "Ter um veículo próprio envolve diferentes tipos de despesas que vão além do valor de compra. Combustível, revisões periódicas, impostos obrigatórios e seguro automotivo fazem parte do custo total de propriedade. Planejar essas despesas é essencial para evitar surpresas no orçamento e garantir que o veículo continue funcionando adequadamente.",
+    "data_publicacao": "20/02/2026"
+  },
+  {
+    "id": "#019",
+    "imagem": "https://picsum.photos/seed/carro19/600/400",
+    "titulo": "Direção defensiva é uma prática fundamental para aumentar a segurança no trânsito",
+    "conteudo": "A direção defensiva envolve antecipar possíveis riscos e adotar comportamentos que reduzam a chance de acidentes. Manter distância segura, respeitar limites de velocidade e observar constantemente o ambiente ao redor são atitudes essenciais. Motoristas que praticam direção defensiva contribuem para um trânsito mais seguro para todos.",
+    "data_publicacao": "19/02/2026"
+  },
+  {
+    "id": "#020",
+    "imagem": "https://picsum.photos/seed/carro20/600/400",
+    "titulo": "Infrações de trânsito mais comuns incluem excesso de velocidade e uso do celular ao volante",
+    "conteudo": "Entre as multas mais registradas no Brasil estão aquelas relacionadas ao excesso de velocidade, estacionamento irregular e uso do celular enquanto dirige. Essas infrações não apenas resultam em penalidades financeiras, mas também aumentam significativamente o risco de acidentes. A conscientização dos motoristas é essencial para reduzir esse tipo de comportamento.",
+    "data_publicacao": "18/02/2026"
+  },
+
+  {
+    "id": "#021",
+    "imagem": "https://picsum.photos/seed/carro21/600/400",
+    "titulo": "Hábitos de direção mais suaves ajudam a economizar combustível e reduzir desgaste do veículo",
+    "conteudo": "Evitar acelerações bruscas, trocar marchas no momento adequado e manter velocidade constante são práticas que contribuem para melhorar o consumo de combustível. Além da economia financeira, esse estilo de condução também diminui o desgaste de componentes mecânicos como freios, transmissão e motor.",
+    "data_publicacao": "17/02/2026"
+  },
+  {
+    "id": "#022",
+    "imagem": "https://picsum.photos/seed/carro22/600/400",
+    "titulo": "Desenvolvimento de veículos autônomos avança rapidamente em diversos países",
+    "conteudo": "A tecnologia de carros autônomos tem evoluído de forma significativa nos últimos anos. Sensores avançados, inteligência artificial e sistemas de navegação permitem que esses veículos identifiquem obstáculos e tomem decisões em tempo real. Apesar dos avanços, ainda existem desafios regulatórios e de infraestrutura antes da adoção em larga escala.",
+    "data_publicacao": "16/02/2026"
+  },
+  {
+    "id": "#023",
+    "imagem": "https://picsum.photos/seed/carro23/600/400",
+    "titulo": "Checklist básico de revisão ajuda a identificar problemas antes que se tornem mais graves",
+    "conteudo": "Verificar regularmente itens como óleo do motor, fluido de freio, estado dos pneus e funcionamento das luzes pode evitar problemas inesperados. Pequenas inspeções feitas pelo próprio motorista ajudam a identificar sinais de desgaste e permitem que a manutenção seja realizada antes que ocorra uma falha mais séria no veículo.",
+    "data_publicacao": "15/02/2026"
+  },
+  {
+    "id": "#024",
+    "imagem": "https://picsum.photos/seed/carro24/600/400",
+    "titulo": "Financiamento de veículos exige planejamento financeiro e análise das taxas de juros",
+    "conteudo": "Antes de financiar um carro é importante avaliar o valor total que será pago ao longo do contrato. Taxas de juros, prazo de pagamento e valor da entrada influenciam diretamente no custo final do veículo. Comparar diferentes opções oferecidas por bancos e financeiras ajuda o consumidor a tomar uma decisão mais consciente.",
+    "data_publicacao": "14/02/2026"
+  },
+  {
+    "id": "#025",
+    "imagem": "https://picsum.photos/seed/carro25/600/400",
+    "titulo": "Modelos de carros econômicos continuam sendo preferência entre motoristas brasileiros",
+    "conteudo": "Veículos com baixo consumo de combustível e manutenção acessível continuam sendo os mais procurados no mercado nacional. Esse tipo de carro costuma apresentar bom equilíbrio entre desempenho, custo de aquisição e economia no uso diário, tornando-se uma escolha popular entre famílias e motoristas que utilizam o veículo para trabalho.",
+    "data_publicacao": "13/02/2026"
+  },
+  {
+    "id": "#026",
+    "imagem": "https://picsum.photos/seed/carro26/600/400",
+    "titulo": "Limpeza adequada do interior do carro contribui para conforto e preservação dos materiais",
+    "conteudo": "Manter o interior do veículo limpo ajuda a preservar bancos, painel e carpetes. Utilizar produtos adequados para cada tipo de material evita danos e prolonga a aparência de novo do carro. Além disso, remover poeira e resíduos regularmente melhora a qualidade do ambiente interno para motorista e passageiros.",
+    "data_publicacao": "12/02/2026"
+  },
+  {
+    "id": "#027",
+    "imagem": "https://picsum.photos/seed/carro27/600/400",
+    "titulo": "Motoristas devem sempre portar documentos obrigatórios ao conduzir um veículo",
+    "conteudo": "Para circular legalmente é necessário que o motorista possua carteira de habilitação válida e que o veículo esteja devidamente licenciado. Atualmente muitos desses documentos podem ser apresentados em formato digital por meio de aplicativos oficiais, o que facilita o acesso durante abordagens de fiscalização.",
+    "data_publicacao": "11/02/2026"
+  },
+  {
+    "id": "#028",
+    "imagem": "https://picsum.photos/seed/carro28/600/400",
+    "titulo": "Carros esportivos continuam despertando interesse por design e desempenho diferenciado",
+    "conteudo": "Modelos esportivos chamam atenção pelo visual marcante, motores potentes e desempenho elevado. Embora não sejam os mais econômicos para uso diário, esses veículos representam inovação tecnológica e paixão automotiva para muitos entusiastas. Ao longo da história, diversos modelos se tornaram verdadeiros ícones da indústria.",
+    "data_publicacao": "10/02/2026"
+  },
+  {
+    "id": "#029",
+    "imagem": "https://picsum.photos/seed/carro29/600/400",
+    "titulo": "Superaquecimento do motor pode causar danos sérios se não for tratado rapidamente",
+    "conteudo": "O sistema de arrefecimento é responsável por manter a temperatura do motor dentro de níveis seguros. Vazamentos de líquido, falhas na bomba d'água ou radiador obstruído podem provocar superaquecimento. Ao perceber aumento excessivo na temperatura, o motorista deve parar o veículo com segurança e buscar assistência mecânica.",
+    "data_publicacao": "09/02/2026"
+  },
+  {
+    "id": "#030",
+    "imagem": "https://picsum.photos/seed/carro30/600/400",
+    "titulo": "Carros populares seguem dominando vendas no mercado automotivo brasileiro",
+    "conteudo": "Veículos compactos e acessíveis continuam liderando as vendas no país devido ao custo mais baixo de aquisição e manutenção. Esses modelos geralmente oferecem bom consumo de combustível e facilidade para circulação em áreas urbanas, características valorizadas por grande parte dos consumidores.",
+    "data_publicacao": "08/02/2026"
+  },
+  {
+    "id": "#031",
+    "imagem": "https://picsum.photos/seed/carro31/600/400",
+    "titulo": "Sistema de freios ABS ajuda a manter controle do veículo durante frenagens bruscas",
+    "conteudo": "O sistema antibloqueio de freios impede que as rodas travem completamente durante uma frenagem intensa. Isso permite que o motorista mantenha o controle da direção e reduz o risco de derrapagem. Essa tecnologia se tornou obrigatória em muitos veículos por contribuir significativamente para a segurança no trânsito.",
+    "data_publicacao": "07/02/2026"
+  },
+  {
+    "id": "#032",
+    "imagem": "https://picsum.photos/seed/carro32/600/400",
+    "titulo": "Diferenças entre gasolina, etanol e diesel influenciam desempenho e consumo do veículo",
+    "conteudo": "Cada tipo de combustível possui características próprias que afetam potência, eficiência energética e emissão de poluentes. Motores flex permitem que o motorista escolha entre gasolina e etanol dependendo do preço e disponibilidade. Já motores a diesel são comuns em veículos maiores devido ao maior torque oferecido.",
+    "data_publicacao": "06/02/2026"
+  },
+  {
+    "id": "#033",
+    "imagem": "https://picsum.photos/seed/carro33/600/400",
+    "titulo": "Cuidados com a pintura do carro ajudam a manter aparência e valor de revenda",
+    "conteudo": "Lavar o carro regularmente, evitar exposição prolongada ao sol e utilizar produtos apropriados para proteção da pintura ajudam a preservar a aparência do veículo. Pequenos riscos e manchas podem ser evitados com cuidados simples, mantendo o carro com aspecto de novo por mais tempo.",
+    "data_publicacao": "05/02/2026"
+  },
+  {
+    "id": "#034",
+    "imagem": "https://picsum.photos/seed/carro34/600/400",
+    "titulo": "Veículos conectados oferecem integração com smartphones e serviços digitais",
+    "conteudo": "A conectividade se tornou um dos principais diferenciais nos carros modernos. Sistemas multimídia permitem integração com aplicativos de navegação, música e comunicação. Além disso, alguns veículos já oferecem atualizações de software remotas e monitoramento de funções do carro diretamente pelo celular.",
+    "data_publicacao": "04/02/2026"
+  },
+  {
+    "id": "#035",
+    "imagem": "https://picsum.photos/seed/carro35/600/400",
+    "titulo": "Técnicas simples de estacionamento ajudam motoristas a lidar com vagas apertadas",
+    "conteudo": "Estacionar em espaços reduzidos pode ser um desafio para muitos motoristas. Utilizar referências visuais, movimentar o volante de forma gradual e aproveitar recursos como sensores de estacionamento ajudam a realizar a manobra com mais segurança e precisão.",
+    "data_publicacao": "03/02/2026"
+  },
+  {
+    "id": "#036",
+    "imagem": "https://picsum.photos/seed/carro36/600/400",
+    "titulo": "Equipamentos obrigatórios no veículo devem estar sempre em boas condições de uso",
+    "conteudo": "Itens como triângulo de sinalização, estepe em boas condições e macaco para troca de pneus são fundamentais em situações de emergência. Manter esses equipamentos organizados no porta-malas garante que o motorista esteja preparado caso precise realizar reparos rápidos durante uma viagem.",
+    "data_publicacao": "02/02/2026"
+  },
+  {
+    "id": "#037",
+    "imagem": "https://picsum.photos/seed/carro37/600/400",
+    "titulo": "Carros elétricos mais acessíveis começam a surgir no mercado brasileiro",
+    "conteudo": "Nos últimos anos o preço dos veículos elétricos tem diminuído gradualmente, permitindo que mais consumidores considerem essa opção. Além do menor impacto ambiental, esses carros costumam apresentar custos de manutenção reduzidos e funcionamento silencioso, características que têm atraído novos compradores.",
+    "data_publicacao": "01/02/2026"
+  },
+  {
+    "id": "#038",
+    "imagem": "https://picsum.photos/seed/carro38/600/400",
+    "titulo": "Escolha correta dos pneus influencia diretamente na segurança e desempenho do veículo",
+    "conteudo": "Pneus adequados garantem melhor aderência ao solo, estabilidade em curvas e eficiência na frenagem. Ao escolher novos pneus é importante considerar medidas recomendadas pelo fabricante, tipo de uso do veículo e condições das estradas percorridas com mais frequência.",
+    "data_publicacao": "31/01/2026"
+  },
+  {
+    "id": "#039",
+    "imagem": "https://picsum.photos/seed/carro39/600/400",
+    "titulo": "Saber como agir em caso de pane mecânica pode evitar riscos maiores na estrada",
+    "conteudo": "Quando um veículo apresenta falha durante uma viagem, o motorista deve sinalizar o local adequadamente e procurar parar em uma área segura. Utilizar o triângulo de sinalização e manter distância do fluxo de veículos são medidas importantes até que o problema seja resolvido ou chegue assistência.",
+    "data_publicacao": "30/01/2026"
+  },
+  {
+    "id": "#040",
+    "imagem": "https://picsum.photos/seed/carro40/600/400",
+    "titulo": "Alguns cuidados simples podem aumentar o valor de revenda do carro no futuro",
+    "conteudo": "Manter revisões em dia, preservar a aparência do veículo e guardar registros de manutenção são fatores que influenciam positivamente na hora de vender o carro. Compradores costumam valorizar veículos bem cuidados e com histórico transparente, o que pode resultar em negociação mais vantajosa para o proprietário.",
+    "data_publicacao": "29/01/2026"
+  }
+]
