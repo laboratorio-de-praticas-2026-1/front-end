@@ -4,7 +4,7 @@ import { FiMenu, FiX, FiUser } from "react-icons/fi";
 // Lista centralizada de rotas da navbar
 const navLinks = [
   { name: "Sobre Nós", href: "#" },
-  { name: "Serviços", href: "#" },
+  { name: "Serviços", href: "#ServiceCarousel" },
   { name: "Mapa", href: "#" },
   { name: "Blog", href: "#" },
   { name: "Dúvidas", href: "#" },
