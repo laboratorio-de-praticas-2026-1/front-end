@@ -50,3 +50,5 @@ export function HeaderSection() {
     </section>
   );
 }
+
+export default HeaderSection;
