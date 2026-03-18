@@ -2,7 +2,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { HeaderSection } from "@/components/sections/HeaderSection";
 import ServiceCarousel from "@/components/sections/ServiceCarousel"; // Ajuste se for export default
 import SobreGrupo from '../components/sections/AboutSection';
-import FAQ from '../components/sections/FAQ';
+import FAQ from '../components/sections/FaqSection';
 
 export function Home() {
   return (
