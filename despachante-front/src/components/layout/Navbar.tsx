@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { FiMenu, FiX, FiUser } from "react-icons/fi"; 
 
-// Lista centralizada de rotas da navbar
 const navLinks = [
   { name: "Sobre Nós", href: "#" },
   { name: "Serviços", href: "#ServiceCarousel" },
@@ -16,11 +15,10 @@ export function Navbar() {
 
   return (
     <>
-      {/* HEADER PRINCIPAL (DESKTOP E BARRA DO MOBILE) backdrop-blur-sm*/}
-      <header className="fixed top-0 left-0 right-0 z-50 w-full bg-white/80 shadow-sm border-b border-border transition-all duration-300">
+      {/* HEADER PRINCIPAL */}
+      <header className="fixed top-0 left-0 right-0 z-40 w-full bg-white/80 backdrop-blur-sm shadow-sm border-b border-border transition-all duration-300">
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 md:px-12">
           
-          {/* 1. Logo com animação de scale (aumento de 5%) */}
           <a href="/" className="flex-shrink-0">
             <img 
               src="/src/assets/logo-bortone-escura.png" 
@@ -29,7 +27,6 @@ export function Navbar() {
             />
           </a>
 
-          {/* 2. Navegação Desktop (Escondida no Mobile) */}
           <nav className="hidden md:flex items-center gap-1 lg:gap-2">
             {navLinks.map((link) => (
               <a
@@ -42,8 +39,7 @@ export function Navbar() {
             ))}
           </nav>
 
-          {/* 3. Botão Entrar Desktop */}
-          <div className="bg-primary hidden md:block  rounded-full transition-all duration-300 hover:scale-105 hover:opacity-90">
+          <div className="bg-primary hidden md:block rounded-full transition-all duration-300 hover:scale-105 hover:opacity-90">
             <a 
               href="/login"
               className="inline-flex items-center justify-center gap-2.5 rounded-full px-6 py-3 text-base font-semibold text-white shadow-sm "
@@ -53,7 +49,6 @@ export function Navbar() {
             </a>
           </div>
 
-          {/* 4. Ícone do Menu Hamburger */}
           <button 
             className="md:hidden p-2 text-foreground transition-transform duration-300 hover:scale-110"
             onClick={() => setIsMobileOpen(true)}
@@ -64,12 +59,28 @@ export function Navbar() {
         </div>
       </header>
 
-      {/* MENU MOBILE OVERLAY (Tela Cheia) */}
-      {isMobileOpen && (
-        <div className="fixed inset-0 z-[60] flex flex-col bg-[#F9F9F9] animate-in slide-in-from-right-full duration-300">
+      {/* --- INÍCIO DA ÁREA DO MENU MOBILE --- */}
+      <div className="md:hidden">
+        
+        {/* 1. OVERLAY (Fundo escuro que clareia suavemente) */}
+        {/* Ao clicar neste fundo escuro, o menu também fecha! */}
+        <div 
+          className={`fixed inset-0 z-50 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ease-in-out ${
+            isMobileOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
+          onClick={() => setIsMobileOpen(false)}
+          aria-hidden="true"
+        />
+
+        {/* 2. O PAINEL DO MENU (Desliza da direita para a esquerda) */}
+        <div 
+          className={`fixed inset-y-0 right-0 z-[60] w-full max-w-sm flex flex-col bg-[#F9F9F9] shadow-2xl transform transition-transform duration-300 ease-in-out ${
+            isMobileOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
           
-          {/* Topo do Menu Mobile */}
-          <div className="flex h-20 items-center justify-between px-6">
+          {/* Topo do Menu Mobile (Logo e Botão Fechar) */}
+          <div className="flex h-20 items-center justify-between px-6 border-b border-border/50 shrink-0">
             <img 
               src="/src/assets/logo-bortone-escura.png" 
               alt="Logo Bortone" 
@@ -77,32 +88,32 @@ export function Navbar() {
             />
             <button 
               onClick={() => setIsMobileOpen(false)}
-              className="p-2 text-foreground transition-transform duration-300 hover:scale-110 hover:text-destructive"
+              className="p-2 -mr-2 text-foreground/70 hover:text-destructive bg-zinc-200/50 hover:bg-red-100 rounded-full transition-all duration-300"
               aria-label="Fechar menu"
             >
-              <FiX className="h-6 w-6 stroke-[2]" />
+              <FiX className="h-6 w-6 stroke-[2.5]" />
             </button>
           </div>
 
           {/* Links do Menu Mobile */}
-          <nav className="flex flex-col px-4 pt-6 pb-2 gap-2 overflow-y-auto">
+          <nav className="flex flex-col flex-1 px-4 pt-6 pb-2 gap-2 overflow-y-auto custom-scrollbar">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
                 onClick={() => setIsMobileOpen(false)} 
-                className="px-6 py-4 text-base font-medium text-foreground rounded-full transition-all duration-300 hover:bg-zinc-200 hover:[text-shadow:0_0_1px_currentColor]"
+                className="px-6 py-4 text-lg font-medium text-foreground/90 rounded-2xl transition-all duration-200 active:scale-[0.98] hover:bg-zinc-200 hover:text-foreground hover:[text-shadow:0_0_1px_currentColor]"
               >
                 {link.name}
               </a>
             ))}
           </nav>
 
-          {/* Botão Entrar no rodapé do Menu Mobile */}
-          <div className="mt-auto p-6 pb-8">
+          {/* Botão Entrar no rodapé */}
+          <div className="mt-auto p-6 pb-8 border-t border-border/50 bg-[#F9F9F9] shrink-0">
             <a 
               href="/login"
-              className="bg-primary flex w-full items-center justify-center gap-2.5 rounded-full h-14 text-lg font-semibold text-white shadow-sm transition-all duration-300 hover:scale-[1.02] hover:opacity-90"
+              className="bg-primary flex w-full items-center justify-center gap-2.5 rounded-2xl h-14 text-lg font-semibold text-white shadow-md transition-all duration-300 active:scale-[0.98] hover:opacity-90"
             >
               <FiUser className="h-6 w-6 stroke-[2.5]" />
               Entrar
@@ -110,7 +121,7 @@ export function Navbar() {
           </div>
           
         </div>
-      )}
+      </div>
     </>
   );
 }

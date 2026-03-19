@@ -10,18 +10,11 @@ interface CarouselItem {
     imageUrl: string;
 }
 
-// Cria a interface que será usada no Props para que possa ser adicionado classes externas no componente
 interface CarouselProps {
     className? : string
 }
 
-/*
-Lista de serviços exibidos no carrossel.
-Cada item contém:
-- id: identificador único (sequencial)
-- title: texto exibido no carrossel
-- imageUrl: imagem usada no carrossel
-*/
+
 const items: CarouselItem[] = [
     { id: 1, title: "Licenciamento do veículo", imageUrl: CarouselImage1 },
     { id: 2, title: "Renovação de CNH", imageUrl: CarouselImage2 },
@@ -48,14 +41,11 @@ const Carousel = ({className}: CarouselProps) => { //
     const scrollRef = useRef<HTMLDivElement>(null);
 
     /* timeoutRef armazena a referência do timer para que possamos limpá-lo.
-    Usamos o tipo de retorno nativo do setTimeout para garantir compatibilidade total.
     */
     const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     /*
     Efeito responsável pelo auto-play de 10 segundos.
-    Sempre que o activeIndex muda, o timer anterior é descartado e um novo começa,
-    garantindo que o próximo slide só venha após 10 segundos de inatividade real.
     */
     useEffect(() => {
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -70,10 +60,6 @@ const Carousel = ({className}: CarouselProps) => { //
         };
     }, [activeIndex]);
 
-    /*
-    IntersectionObserver é usado apenas no MOBILE. O objetivo dele é detectar qual card está mais visível quando o usuário arrasta o carrossel.
-    Quando um card entra 70% na tela, ele se torna o ativo e assim alterna o título exibido abaixo do carrossel e o dot ativo.
-    */
     useEffect(() => {
         const isMobile = window.innerWidth < 640;
         if (!isMobile) return;
@@ -82,53 +68,61 @@ const Carousel = ({className}: CarouselProps) => { //
             (entries) => {
                 entries.forEach((entry) => {
 
-                    // Se o card estiver suficientemente visível
                     if (entry.isIntersecting) {
 
-                        // Pegamos o índice salvo no atributo data-index
                         const index = Number(entry.target.getAttribute("data-index"));
 
-                        // Atualizamos o card ativo
                         setActiveIndex(index);
                     }
                 });
             },
             {
-                root: scrollRef.current, // container onde ocorre o scroll
-                threshold: 0.7 // porcentagem de visibilidade necessária - 70%
+                root: scrollRef.current,
+                threshold: 0.7 
             }
         );
 
-        // Seleciona todos os cards do carrossel
         const cards = scrollRef.current?.querySelectorAll(".carousel-card");
 
-        // Observa cada card
         cards?.forEach((card) => observer.observe(card));
 
-        // Limpa o observer ao desmontar o componente
         return () => observer.disconnect();
 
     }, [scrollRef.current]);
 
 
-    // Função executada quando um card ou dot é clicado. Ela atualiza o estado do card ativo e move o scroll para posicionar o card corretamente
+
+    
+
+
 
     const handleCardClick = (index: number) => {
-
-        // Atualiza o card ativo
         setActiveIndex(index);
 
-        // Busca o card correspondente
-        const card = scrollRef.current?.querySelectorAll(".carousel-card")[index];
+        const container = scrollRef.current;
+        const card = container?.querySelectorAll(".carousel-card")[index] as HTMLElement;
 
-        if (card) {
-            card.scrollIntoView({
-                behavior: "smooth",
-                block: "nearest",// mantém alinhamento vertical
-                inline: window.innerWidth < 640 ? "center" : "start"
+        if (container && card) {
+            const cardLeft = card.offsetLeft;
+            const cardWidth = card.offsetWidth;
+            const containerWidth = container.offsetWidth;
+
+            const scrollPosition = window.innerWidth < 640 
+                ? cardLeft - (containerWidth / 2) + (cardWidth / 2) 
+                : cardLeft;
+
+            container.scrollTo({
+                left: scrollPosition,
+                behavior: "smooth"
             });
         }
     };
+
+
+
+
+
+
 
     return (
         <div className={`w-full md:w-1/2 p-4 flex flex-col items-start font-sans overflow-x-hidden ${className}`}>
