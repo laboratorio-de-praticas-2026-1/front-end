@@ -2,6 +2,7 @@ import { Navbar } from "@/components/layout/Navbar"
 import { FaReact } from "react-icons/fa"
 import { HeaderSection } from "./components/sections/HeaderSection"
 import ServiceCarousel from "./components/sections/ServiceCarousel"
+import ServicosSection from "./components/sections/ServicosDisponiveis"
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <HeaderSection />
         <ServiceCarousel/>
         {/* Futuras seções entrarão aqui embaixo */}
+        <ServicosSection />
       </main>
     </div>
   )
