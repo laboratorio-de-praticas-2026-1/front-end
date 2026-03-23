@@ -75,7 +75,7 @@ export default function BlogTable() {
   return (
     <div className="w-9/10  rounded-lg overflow-hidden mx-auto">
       <Table>
-        <TableHeader className="bg-[#3b4b89]">
+        <TableHeader className="bg-secondary">
           <TableRow>
             <TableHead className="text-white font-medium">ID</TableHead>
             <TableHead className="text-white font-medium">Imagem</TableHead>
