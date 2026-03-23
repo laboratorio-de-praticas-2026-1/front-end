@@ -3,6 +3,8 @@ import { HeaderSection } from "@/components/sections/HeaderSection";
 import ServiceCarousel from "@/components/sections/ServiceCarousel"; // Ajuste se for export default
 import SobreGrupo from '../components/sections/AboutSection';
 import FAQ from '../components/sections/FaqSection';
+import { Footer } from "@/components/layout/Footer";
+
 
 export function Home() {
   return (
@@ -14,6 +16,7 @@ export function Home() {
         <SobreGrupo />
         <FAQ />
       </main>
+      <Footer/>
     </div>
   );
 }

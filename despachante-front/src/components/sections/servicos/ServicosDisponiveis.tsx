@@ -1,4 +1,4 @@
-import CardServicos from "../ui/CardServicos";
+import CardServicos from "../../ui/CardServicos";
 import { FaWhatsapp } from "react-icons/fa";
 
 export default function ServicosSection() {

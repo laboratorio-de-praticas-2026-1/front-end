@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { FiMenu, FiX, FiUser } from "react-icons/fi"; 
+// 1. IMPORTANTE: Importe o Link do react-router-dom
+import { Link } from "react-router-dom";
 
 const navLinks = [
-  { name: "Sobre Nós", href: "#" },
-  { name: "Serviços", href: "#ServiceCarousel" },
-  { name: "Mapa", href: "#" },
-  { name: "Blog", href: "#" },
-  { name: "Dúvidas", href: "#" },
-  { name: "Contato", href: "#" },
+  { name: "Sobre Nós", href: "/#sobre" },
+  // 2. Mudamos de "#servicos" para a nova URL "/servicos"
+  { name: "Serviços", href: "/servicos" },
+  { name: "Mapa", href: "/#mapa" },
+  { name: "Blog", href: "/#blog" },
+  { name: "Dúvidas", href: "/#duvidas" },
+  { name: "Contato", href: "/#contato" },
 ];
 
 export function Navbar() {
@@ -19,34 +22,35 @@ export function Navbar() {
       <header className="fixed top-0 left-0 right-0 z-40 w-full bg-white/80 backdrop-blur-sm shadow-sm border-b border-border transition-all duration-300">
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 md:px-12">
           
-          <a href="/" className="flex-shrink-0">
+          <Link to="/" className="flex-shrink-0">
             <img 
               src="/src/assets/logo-bortone-escura.png" 
               alt="Logo Bortone" 
               className="h-12 w-auto object-contain transition-transform duration-300 hover:scale-105"
             />
-          </a>
+          </Link>
 
           <nav className="hidden md:flex items-center gap-1 lg:gap-2">
             {navLinks.map((link) => (
-              <a
+              // 3. Trocamos a tag <a> por <Link> e href por to={}
+              <Link
                 key={link.name}
-                href={link.href}
+                to={link.href}
                 className="px-4 py-2 text-sm font-medium text-foreground/80 rounded-full transition-all duration-300 hover:bg-muted hover:text-foreground hover:[text-shadow:0_0_1px_currentColor]"
               >
                 {link.name}
-              </a>
+              </Link>
             ))}
           </nav>
 
           <div className="bg-primary hidden md:block rounded-full transition-all duration-300 hover:scale-105 hover:opacity-90">
-            <a 
-              href="/login"
+            <Link 
+              to="/login"
               className="inline-flex items-center justify-center gap-2.5 rounded-full px-6 py-3 text-base font-semibold text-white shadow-sm "
             >
               <FiUser className="h-5 w-5 stroke-[2.5]" />
               Entrar
-            </a>
+            </Link>
           </div>
 
           <button 
@@ -54,16 +58,13 @@ export function Navbar() {
             onClick={() => setIsMobileOpen(true)}
             aria-label="Abrir menu"
           >
-            <FiMenu className="h-6 w-6 stroke-[2]" />
+            <FiMenu className="h-6 w-6 stroke-" />
           </button>
         </div>
       </header>
 
-      {/* --- INÍCIO DA ÁREA DO MENU MOBILE --- */}
+      {/* --- MENU MOBILE --- */}
       <div className="md:hidden">
-        
-        {/* 1. OVERLAY (Fundo escuro que clareia suavemente) */}
-        {/* Ao clicar neste fundo escuro, o menu também fecha! */}
         <div 
           className={`fixed inset-0 z-50 bg-black/40 backdrop-blur-sm transition-opacity duration-300 ease-in-out ${
             isMobileOpen ? "opacity-100" : "opacity-0 pointer-events-none"
@@ -72,14 +73,11 @@ export function Navbar() {
           aria-hidden="true"
         />
 
-        {/* 2. O PAINEL DO MENU (Desliza da direita para a esquerda) */}
         <div 
-          className={`fixed inset-y-0 right-0 z-[60] w-full max-w-sm flex flex-col bg-[#F9F9F9] shadow-2xl transform transition-transform duration-300 ease-in-out ${
+          className={`fixed inset-y-0 right-0 z- w-full max-w-sm flex flex-col bg-[#F9F9F9] shadow-2xl transform transition-transform duration-300 ease-in-out ${
             isMobileOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
-          
-          {/* Topo do Menu Mobile (Logo e Botão Fechar) */}
           <div className="flex h-20 items-center justify-between px-6 border-b border-border/50 shrink-0">
             <img 
               src="/src/assets/logo-bortone-escura.png" 
@@ -95,31 +93,30 @@ export function Navbar() {
             </button>
           </div>
 
-          {/* Links do Menu Mobile */}
           <nav className="flex flex-col flex-1 px-4 pt-6 pb-2 gap-2 overflow-y-auto custom-scrollbar">
             {navLinks.map((link) => (
-              <a
+              // 4. Também trocamos aqui no mobile!
+              <Link
                 key={link.name}
-                href={link.href}
+                to={link.href}
                 onClick={() => setIsMobileOpen(false)} 
                 className="px-6 py-4 text-lg font-medium text-foreground/90 rounded-2xl transition-all duration-200 active:scale-[0.98] hover:bg-zinc-200 hover:text-foreground hover:[text-shadow:0_0_1px_currentColor]"
               >
                 {link.name}
-              </a>
+              </Link>
             ))}
           </nav>
 
-          {/* Botão Entrar no rodapé */}
           <div className="mt-auto p-6 pb-8 border-t border-border/50 bg-[#F9F9F9] shrink-0">
-            <a 
-              href="/login"
+            <Link 
+              to="/login"
+              onClick={() => setIsMobileOpen(false)} 
               className="bg-primary flex w-full items-center justify-center gap-2.5 rounded-2xl h-14 text-lg font-semibold text-white shadow-md transition-all duration-300 active:scale-[0.98] hover:opacity-90"
             >
               <FiUser className="h-6 w-6 stroke-[2.5]" />
               Entrar
-            </a>
+            </Link>
           </div>
-          
         </div>
       </div>
     </>

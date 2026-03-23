@@ -1,5 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
+// Importando as páginas públicas
 import { Home } from "@/pages/Home"; 
+import { Servicos } from "@/pages/Servicos"; 
+
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { BlogAdmin } from "@/pages/admin/BlogAdmin";
 
@@ -7,20 +11,21 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* ROTAS PÚBLICAS DO SITE */}
         <Route path="/" element={<Home />} />
+        
+        <Route path="/servicos" element={<Servicos />} /> 
 
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="/admin/posts" replace />} />
           <Route path="posts" element={<BlogAdmin />} />
           
-          {/* NOVA ROTA CORINGA: Salva a sua Sidebar de sumir! */}
           <Route path="*" element={
             <div className="flex flex-col items-center justify-center h-[60vh] text-zinc-500 text-center">
                <h2 className="text-2xl font-bold mb-2 text-zinc-700">Página em Construção 🚧</h2>
-               <p>Esta área será implementada futuramente.</p>
+               <p>Esta área será implementada pelo back-end futuramente.</p>
             </div>
           } />
-          
         </Route>
       </Routes>
     </BrowserRouter>

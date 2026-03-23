@@ -1,4 +1,4 @@
-import BuscaBlog from "@/components/sections/BuscaCadastroBlog"
+import BuscaBlog from "@/components/sections/admin/blog/BuscaCadastroBlog"
 import BlogTable from "@/components/tables/BlogTable";
 
 export function BlogAdmin() {

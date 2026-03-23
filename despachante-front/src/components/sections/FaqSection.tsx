@@ -70,8 +70,7 @@ const FAQ = () => {
             <div className="mt-8 flex justify-center">
               <a 
                 href="#" 
-                className="inline-flex items-center gap-2 text-white font-medium px-8 py-4 rounded-full transition-colors hover:opacity-90"
-                style={{ backgroundColor: '#EB951C' }}
+                className="bg-primary inline-flex items-center gap-2 text-white font-medium px-8 py-4 rounded-full transition-colors hover:opacity-90"
               >
                 <span>Veja mais dúvidas</span>
                 <span className="text-xl">→</span>

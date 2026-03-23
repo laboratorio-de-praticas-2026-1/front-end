@@ -1,6 +1,6 @@
 const AboutSection = () => {
   return (
-    <section className="py-16 px-4 md:py-24" style={{ backgroundColor: '#384486' }}>
+    <section className="py-16 px-4 md:py-24 bg-secondary">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Coluna da imagem - AGORA PRIMEIRO (ESQUERDA) */}
