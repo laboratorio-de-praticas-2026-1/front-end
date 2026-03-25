@@ -3,12 +3,11 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Home } from "@/pages/Home"; 
 import { Servicos } from "@/pages/Servicos"; 
 import { Blog } from "@/pages/Blog";
+import { Artigo } from "@/pages/Artigo";
 import { BlogPost } from "@/pages/BlogPost";
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { BlogAdmin } from "@/pages/admin/BlogAdmin";
 import EditPostCMS from "@/components/sections/admin/blog/EditPostCMS";
-
-// 1. IMPORTANTE: Importe o seu componente CreatePostCMS aqui!
 import CreatePostCMS from "@/components/sections/admin/blog/CreatePostCMS";
 
 function App() {
@@ -18,8 +17,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/servicos" element={<Servicos />} /> 
         <Route path="/blog" element={<Blog />} />
-        <Route path="/blog/:id" element={<BlogPost />} />
-
+        <Route path="/blog/:id" element={<Artigo />} />
+        
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="/admin/posts" replace />} />
           
@@ -29,7 +28,7 @@ function App() {
           {/* ROTA DE CRIAÇÃO DE BLOGS*/}
           <Route path="posts/novo" element={<CreatePostCMS />} />
 
-          {/* ROTA DE EDIÇÃO (O :id é o que o React vai capturar) */}
+          {/* ROTA DE EDIÇÃO (O :id é o que o React vai pegar) */}
           <Route path="posts/editar/:id" element={<EditPostCMS />} />
           
           <Route path="*" element={
