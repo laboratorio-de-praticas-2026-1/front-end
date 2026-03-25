@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
+import { Home } from "@/pages/Home"; 
+import { Servicos } from "@/pages/Servicos"; 
+import { AdminLayout } from "@/components/layout/AdminLayout";
+import { BlogAdmin } from "@/pages/admin/BlogAdmin";
+import EditPostCMS from "@/components/sections/admin/blog/EditPostCMS";
+
+// 1. IMPORTANTE: Importe o seu componente CreatePostCMS aqui!
+import CreatePostCMS from "@/components/sections/admin/blog/CreatePostCMS";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/servicos" element={<Servicos />} /> 
+
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Navigate to="/admin/posts" replace />} />
+          
+          {/* Rota da tabela de posts */}
+          <Route path="posts" element={<BlogAdmin />} />
+          
+          {/* ROTA DE CRIAÇÃO DE BLOGS*/}
+          <Route path="posts/novo" element={<CreatePostCMS />} />
+
+          {/* ROTA DE EDIÇÃO (O :id é o que o React vai capturar) */}
+          <Route path="posts/editar/:id" element={<EditPostCMS />} />
+          
+          <Route path="*" element={
+            <div className="flex flex-col items-center justify-center h-[60vh] text-zinc-500 text-center">
+               <h2 className="text-2xl font-bold mb-2 text-zinc-700">Página em Construção 🚧</h2>
+               <p>Esta área será implementada futuramente.</p>
+            </div>
+          } />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
