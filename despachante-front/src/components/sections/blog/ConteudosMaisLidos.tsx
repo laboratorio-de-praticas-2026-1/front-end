@@ -28,7 +28,7 @@ export function ConteudosMaisLidos({ posts, onPostClick }: ConteudosMaisLidosPro
           
           <div 
             className="w-full h-full bg-cover bg-center bg-no-repeat shadow-2xl"
-            style={{ backgroundImage: `url('/src/assets/mais-lidos.jpg')` }}
+            style={{ backgroundImage: `url(${postDestaque.imagem})` }}
           />
           
           <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 bg-gradient-to-t from-[#f4f9ff] to-transparent" />
