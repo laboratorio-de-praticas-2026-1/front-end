@@ -14,10 +14,12 @@ export interface Post {
 
 interface BlogTableProps {
   posts: Post[]
-  carregando: boolean
+  carregando: Boolean
+  excluindoId?: number | null
+  onExcluirPost: (id: number) => Promise<void> | void
 }
 
-export default function BlogTable({ posts, carregando }: BlogTableProps) {
+export default function BlogTable({ posts, carregando, excluindoId, onExcluirPost }: BlogTableProps) {
   const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
@@ -109,7 +111,8 @@ export default function BlogTable({ posts, carregando }: BlogTableProps) {
                 </TableCell>
                 <TableCell className="font-semibold text-zinc-800 truncate max-w-[200px]">{post.titulo}</TableCell>
                 <TableCell className="text-zinc-500 text-sm truncate max-w-[250px]">{post.conteudo}</TableCell>
-                <TableCell className="text-zinc-600 text-sm text-center">{post.dataPublicacao}</TableCell>
+                {/* Converte a data de publicação do formato "YYYY-MM-DD" para "DD/MM/YYYY" */}
+                <TableCell className="text-zinc-600 text-sm text-center">{post.dataPublicacao ? post.dataPublicacao.split('-').reverse().join('/') : ''}</TableCell>
                 <TableCell className="text-right px-6">
                   <div className="flex justify-end gap-2">
                     <button 
@@ -117,7 +120,12 @@ export default function BlogTable({ posts, carregando }: BlogTableProps) {
                       className="p-2 text-primary hover:bg-primary/10 rounded-md transition-colors cursor-pointer" title="Editar">
                         <SquarePen size={18} />
                     </button>
-                    <button className="p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors cursor-pointer" title="Excluir">
+                    <button 
+                      onClick={() => onExcluirPost(post.id)}
+                      disabled={excluindoId === post.id}
+                      className="p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                      title={excluindoId === post.id ? "Excluindo..." : "Excluir"}
+                    >
                       <Trash2 size={18} />
                     </button>
                   </div>
