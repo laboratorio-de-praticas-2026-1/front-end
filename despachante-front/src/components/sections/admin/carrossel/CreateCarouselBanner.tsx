@@ -51,9 +51,9 @@ export function CreateCarouselBanner() {
       await Promise.all(
         bannerFiles.map((file) => {
           const formData = new FormData();
-          formData.append("image", file);
-          formData.append("description", description.trim());
-          formData.append("status", isActive ? "Ativo" : "Inativo");
+          formData.append("imagem", file);
+          formData.append("descricao", description.trim());
+          formData.append("ativo", isActive ? "true" : "false");
           return carouselService.criar(formData);
         })
       );

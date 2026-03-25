@@ -2,16 +2,16 @@ const API_URL = import.meta.env.VITE_API_URL || "https://despachante-bortone-rel
 
 export interface CarouselBanner {
   id: number;
-  image: string;
-  description: string;
-  status: "Ativo" | "Inativo";
+  urlImagem: string;
+  descricao: string;
+  ativo: boolean;
 }
 
 export const carouselService = {
   // 1. GET /carrossel - Lista todos os banners
   listarTodos: async (): Promise<CarouselBanner[]> => {
     try {
-      const resposta = await fetch(`${API_URL}/carrossel`);
+      const resposta = await fetch(`${API_URL}/header`);
       if (!resposta.ok) throw new Error("Erro ao buscar banners");
       
       return await resposta.json();
@@ -24,7 +24,7 @@ export const carouselService = {
   // 2. GET /carrossel/{id} - Busca apenas um banner específico
   buscarPorId: async (id: number): Promise<CarouselBanner | null> => {
     try {
-      const resposta = await fetch(`${API_URL}/carrossel/${id}`);
+      const resposta = await fetch(`${API_URL}/header/${id}`);
       if (!resposta.ok) throw new Error("Erro ao buscar o banner");
       
       return await resposta.json();
@@ -37,7 +37,7 @@ export const carouselService = {
 // 3. POST /carrossel - Cria um novo banner
   criar: async (dadosDoFormulario: FormData) => {
     try {
-      const resposta = await fetch(`${API_URL}/carrossel`, {
+      const resposta = await fetch(`${API_URL}/header`, {
         method: "POST",
         body: dadosDoFormulario, 
       });
@@ -55,12 +55,12 @@ export const carouselService = {
       throw erro;
     }
   },
-
+  
   // 4. PUT /carrossel/{id} - Atualiza um banner existente
   atualizar: async (id: number, dadosDoFormulario: FormData) => {
     try {
-      const resposta = await fetch(`${API_URL}/carrossel/${id}`, {
-        method: "PUT",
+      const resposta = await fetch(`${API_URL}/header/${id}`, {
+        method: "PATCH",
         body: dadosDoFormulario,
       });
 
@@ -75,7 +75,7 @@ export const carouselService = {
   // 5. DELETE /carrossel/{id} - Exclui um banner
   deletar: async (id: number) => {
     try {
-      const resposta = await fetch(`${API_URL}/carrossel/${id}`, {
+      const resposta = await fetch(`${API_URL}/header/${id}`, {
         method: "DELETE",
       });
 

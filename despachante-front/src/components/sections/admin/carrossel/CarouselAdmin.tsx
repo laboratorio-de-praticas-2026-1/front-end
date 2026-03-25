@@ -3,72 +3,63 @@ import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell, TableCaption } from "@/components/ui/table";
-import { SquarePen, Trash2, ChevronRight } from "lucide-react";
+import { SquarePen, Trash2, ChevronRight, Loader2 } from "lucide-react";
+import { carouselService } from "@/services/carrosselService";
+import type { CarouselBanner } from "@/services/carrosselService";
 
 export function CarouselAdmin() {
-  type Banner = {
-    id: string;
-    image: string;
-    description: string;
-    status: "Ativo" | "Inativo";
-  };
-
   const [statusFilter, setStatusFilter] = useState("Todos");
   const [searchTerm, setSearchTerm] = useState("");
-  const [bannerToDelete, setBannerToDelete] = useState<string | null>(null);
-  
+  const [bannerToDelete, setBannerToDelete] = useState<CarouselBanner | null>(null);
+  const [carregando, setCarregando] = useState(true);
+  const [excluindoId, setExcluindoId] = useState<number | null>(null);
+
   // Estados para controlar a paginação (Igual ao Blog)
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const [banners] = useState<Banner[]>([
-    {
-      id: "#001",
-      image: "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=400&q=70",
-      description: "O licenciamento SP 2026 já pode ser feito de maneira simples",
-      status: "Ativo",
-    },
-    {
-      id: "#002",
-      image: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=70",
-      description: "Carros 2026: 5 modelos que vão ganhar as ruas",
-      status: "Inativo",
-    },
-    {
-      id: "#003",
-      image: "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=400&q=70",
-      description: "Como parcelar o IPVA 2026 atrasado",
-      status: "Ativo",
-    },
-    {
-      id: "#004",
-      image: "https://images.unsplash.com/photo-1558980664-4bd4e7d17a0f?auto=format&fit=crop&w=400&q=70",
-      description: "Como funcionará o pedágio free flow na anchieta",
-      status: "Ativo",
-    },
-    {
-      id: "#005",
-      image: "https://images.unsplash.com/photo-1470312881728-2952259723d0?auto=format&fit=crop&w=400&q=70",
-      description: "Licenciamento RJ 2026: Taxa do detran, prazo e consulta",
-      status: "Inativo",
-    },
-    {
-      id: "#006",
-      image: "https://images.unsplash.com/photo-1554136898-4eed26652beb?auto=format&fit=crop&w=400&q=70",
-      description: "Estacionamento Allianz Parque: preço, reserva e…",
-      status: "Ativo",
-    },
-  ]);
+  const [banners, setBanners] = useState<CarouselBanner[]>([]);
+
+  const carregarBanners = async () => {
+    setCarregando(true);
+    try {
+      const dados = await carouselService.listarTodos();
+      setBanners(dados);
+    } catch (error) {
+      console.error("Erro ao buscar banners:", error);
+    } finally {
+      setCarregando(false);
+    }
+  };
+
+  useEffect(() => {
+    let cancelado = false;
+
+    const carregar = async () => {
+      setCarregando(true);
+      try {
+        const dados = await carouselService.listarTodos();
+        if (!cancelado) setBanners(dados);
+      } catch (error) {
+        console.error("Erro ao buscar banners:", error);
+      } finally {
+        if (!cancelado) setCarregando(false);
+      }
+    };
+
+    carregar();
+    return () => { cancelado = true; };
+  }, []);
 
   // Filtra os resultados
   const filteredBanners = useMemo(() => {
     return banners.filter((banner) => {
       const term = searchTerm.toLowerCase();
       const matchesTerm =
-        banner.id.toLowerCase().includes(term) ||
-        banner.description.toLowerCase().includes(term);
+        String(banner.id).toLowerCase().includes(term) ||
+        banner.descricao.toLowerCase().includes(term);
       const matchesStatus =
-        statusFilter === "Todos" ? true : banner.status === statusFilter;
+        statusFilter === "Todos" ? true : banner.ativo === (statusFilter === "Ativo");
       return matchesTerm && matchesStatus;
     });
   }, [banners, searchTerm, statusFilter]);
@@ -101,16 +92,31 @@ export function CarouselAdmin() {
   const navigate = useNavigate();
 
   const handleAddNew = () => navigate("/admin/carrossel/novo");
-  const handleEdit = (id: string) => navigate(`/admin/carrossel/${encodeURIComponent(id)}/editar`);
-  const handleDelete = (id: string) => setBannerToDelete(id);
-
-  const confirmDelete = () => {
-    if (!bannerToDelete) return;
-    alert(`Banner ${bannerToDelete} excluído com sucesso`);
-    setBannerToDelete(null);
+  const handleEdit = (id: number) => navigate(`/admin/carrossel/${id}/editar`);
+  const handleDelete = (id: number) => {
+    const selecionado = banners.find((b) => b.id === id) || null;
+    setBannerToDelete(selecionado);
   };
 
-  const cancelDelete = () => setBannerToDelete(null);
+  const confirmDelete = async () => {
+    if (!bannerToDelete) return;
+    setExcluindoId(bannerToDelete.id);
+    try {
+      await carouselService.deletar(bannerToDelete.id);
+      await carregarBanners();
+      setBannerToDelete(null);
+    } catch (error) {
+      console.error("Erro ao excluir banner:", error);
+      alert("N\u00e3o foi poss\u00edvel excluir o banner.");
+    } finally {
+      setExcluindoId(null);
+    }
+  };
+
+  const cancelDelete = () => {
+    if (excluindoId) return;
+    setBannerToDelete(null);
+  };
 
   return (
     <div className=" rounded-[28px]  p-7">
@@ -165,21 +171,31 @@ export function CarouselAdmin() {
             </TableHeader>
 
             <TableBody className="border-b border-zinc-200">
-              {/* Agora renderizamos currentBanners em vez de filteredBanners */}
-              {currentBanners.map((banner) => (
-                <TableRow key={banner.id} className="hover:bg-zinc-50 bg-white">
-                  <TableCell className="text-muted-foreground font-medium">{banner.id}</TableCell>
-                  <TableCell className="p-2">
-                    <img src={banner.image} alt={banner.description} className="h-14 w-24 object-cover rounded-md shadow-sm border border-zinc-200" />
+              {carregando ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="py-16 text-center">
+                    <div className="flex flex-col items-center gap-2 text-zinc-500">
+                      <Loader2 className="h-7 w-7 animate-spin text-primary" />
+                      <span>Buscando banners...</span>
+                    </div>
                   </TableCell>
-                  <TableCell className="font-medium text-foreground truncate max-w-[420px]">{banner.description}</TableCell>
+                </TableRow>
+              ) : (
+              /* Agora renderizamos currentBanners em vez de filteredBanners */
+              currentBanners.map((banner) => (
+                <TableRow key={banner.id} className="hover:bg-zinc-50 bg-white">
+                  <TableCell className="text-muted-foreground font-medium">#{banner.id}</TableCell>
+                  <TableCell className="p-2">
+                    <img src={banner.urlImagem} alt={banner.descricao} className="h-14 w-24 object-cover rounded-md shadow-sm border border-zinc-200" />
+                  </TableCell>
+                  <TableCell className="font-medium text-foreground truncate max-w-[420px]">{banner.descricao}</TableCell>
                   <TableCell>
                     <span
                       className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${
-                        banner.status === "Ativo" ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"
+                        banner.ativo === true ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"
                       }`}
                     >
-                      {banner.status}
+                      {banner.ativo ? "Ativo" : "Inativo"}
                     </span>
                   </TableCell>
                   <TableCell className="text-right px-6">
@@ -192,8 +208,9 @@ export function CarouselAdmin() {
                         <SquarePen size={18} />
                       </button>
                       <button 
-                        onClick={() => handleDelete(banner.id)} 
-                        className="p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors cursor-pointer" 
+                        onClick={() => handleDelete(banner.id)}
+                        disabled={excluindoId === banner.id}
+                        className="p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                         aria-label={`Excluir ${banner.id}`}
                       >
                         <Trash2 size={18} />
@@ -201,12 +218,13 @@ export function CarouselAdmin() {
                     </div>
                   </TableCell>
                 </TableRow>
-              ))}
+              ))
+              )}
             </TableBody>
             <TableCaption className="hidden">{filteredBanners.length} resultados</TableCaption>
           </Table>
 
-          {filteredBanners.length === 0 && (
+          {!carregando && filteredBanners.length === 0 && (
             <div className="text-center py-10 text-zinc-500">Nenhum banner encontrado.</div>
           )}
         </div>
@@ -266,16 +284,16 @@ export function CarouselAdmin() {
             <div className="p-4 text-center border-b border-zinc-200">
               <h3 className="text-lg font-bold text-zinc-900">Excluir banner?</h3>
               <p className="mt-2 text-sm text-zinc-500">
-                Tem certeza que deseja excluir o banner {bannerToDelete}?<br />
+                Tem certeza que deseja excluir o banner #{bannerToDelete.id}?<br />
                 O banner será removido do fluxo do carrossel imediatamente.
               </p>
             </div>
             <div className="flex justify-end gap-2 p-4">
-              <Button variant="outline" onClick={cancelDelete} className="h-10 cursor-pointer">
+              <Button variant="outline" onClick={cancelDelete} className="h-10 cursor-pointer" disabled={Boolean(excluindoId)}>
                 Voltar
               </Button>
-              <Button variant="destructive" onClick={confirmDelete} className="h-10 cursor-pointer">
-                Excluir
+              <Button variant="destructive" onClick={confirmDelete} className="h-10 cursor-pointer" disabled={Boolean(excluindoId)}>
+                {excluindoId ? <Loader2 className="h-4 w-4 animate-spin" /> : "Excluir"}
               </Button>
             </div>
           </div>

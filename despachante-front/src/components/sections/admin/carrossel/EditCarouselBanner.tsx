@@ -2,57 +2,53 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { FiImage, FiEye, FiTrash2 } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
-
-type Banner = {
-  id: string;
-  image: string;
-  description: string;
-  status: "Ativo" | "Inativo";
-};
-
-const mockBanners: Banner[] = [
-  {
-    id: "#001",
-    image: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=800&q=80",
-    description: "Carros 2026: 5 modelos que vão ganhar as ruas",
-    status: "Ativo",
-  },
-  {
-    id: "#002",
-    image: "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=800&q=80",
-    description: "O licenciamento SP 2026 já pode ser feito de maneira simples",
-    status: "Inativo",
-  },
-  {
-    id: "#003",
-    image: "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=800&q=80",
-    description: "Como parcelar o IPVA 2026 atrasado",
-    status: "Ativo",
-  },
-];
+import { carouselService } from "@/services/carrosselService";
+import type { CarouselBanner } from "@/services/carrosselService";
 
 export function EditCarouselBanner() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [banner, setBanner] = useState<Banner | null>(null);
+  const [banner, setBanner] = useState<CarouselBanner | null>(null);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-  const [description, setDescription] = useState("");
+  const [descricao, setDescricao] = useState("");
   const [isActive, setIsActive] = useState(true);
   const [imgFiles, setImgFiles] = useState<File[]>([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    if (!id) return;
-    const decodedId = decodeURIComponent(id);
-    const data = mockBanners.find((item) => item.id === decodedId);
-    if (data) {
-      setBanner(data);
-      setImagePreviews([data.image]);
-      setDescription(data.description);
-      setIsActive(data.status === "Ativo");
-    }
+    const carregarBanner = async () => {
+      if (!id) {
+        setLoading(false);
+        return;
+      }
+
+      const parsedId = Number(decodeURIComponent(id));
+      if (Number.isNaN(parsedId)) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const data = await carouselService.buscarPorId(parsedId);
+        if (data) {
+          setBanner(data);
+          setImagePreviews([data.urlImagem]);
+          setDescricao(data.descricao);
+          setIsActive(data.ativo);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar banner:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    carregarBanner();
   }, [id]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,7 +61,7 @@ export function EditCarouselBanner() {
       const reader = new FileReader();
       reader.onload = (e) => {
         if (e.target?.result) {
-          setImagePreviews((prev) => [...prev, e.target.result as string]);
+          setImagePreviews((prev) => [...prev, e.target?.result as string]);
         }
       };
       reader.readAsDataURL(arquivo);
@@ -79,26 +75,70 @@ export function EditCarouselBanner() {
     setImgFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleSave = () => {
-    // Substituir por chamada de API real para edição de banner
-    alert("Banner salvo com sucesso!");
-    navigate("/admin/carrossel");
+  const handleSave = async () => {
+    if (!banner) return;
+
+    if (!descricao.trim()) {
+      alert("Preencha a descrição do banner.");
+      return;
+    }
+
+    setSaving(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("descricao", descricao.trim());
+      formData.append("ativo", isActive ? "true" : "false");
+
+      if (imgFiles[0]) {
+        formData.append("imagem", imgFiles[0]);
+      }
+
+      await carouselService.atualizar(banner.id, formData);
+      alert("Banner salvo com sucesso!");
+      navigate("/admin/carrossel");
+    } catch (error) {
+      console.error("Erro ao salvar banner:", error);
+      alert("Não foi possível salvar o banner.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleDelete = () => {
     setShowDeleteModal(true);
   };
 
-  const confirmDelete = () => {
-    // Substituir por chamada de API real para exclusão de banner
-    alert("Banner excluído com sucesso!");
-    setShowDeleteModal(false);
-    navigate("/admin/carrossel");
+  const confirmDelete = async () => {
+    if (!banner) return;
+
+    setDeleting(true);
+    try {
+      await carouselService.deletar(banner.id);
+      alert("Banner excluído com sucesso!");
+      setShowDeleteModal(false);
+      navigate("/admin/carrossel");
+    } catch (error) {
+      console.error("Erro ao excluir banner:", error);
+      alert("Não foi possível excluir o banner.");
+    } finally {
+      setDeleting(false);
+    }
   };
 
   const cancelDelete = () => {
     setShowDeleteModal(false);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6">
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-zinc-200 text-center">
+          <p className="text-zinc-600">Carregando banner...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!banner) {
     return (
@@ -118,7 +158,7 @@ export function EditCarouselBanner() {
       <div className="bg-white rounded-3xl shadow-sm border border-zinc-200 overflow-hidden">
         <div className="p-6 md:p-8 border-b border-zinc-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-zinc-900">Detalhes do banner {banner.id}</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-zinc-900">Detalhes do banner #{banner.id}</h1>
             <p className="text-sm text-zinc-500">Gerencie e atualize as informações deste banner.</p>
           </div>
           <Button
@@ -142,7 +182,7 @@ export function EditCarouselBanner() {
                 onClick={() => fileInputRef.current?.click()}
               >
                 {imagePreviews.length > 0 ? (
-                  <img src={imagePreviews} alt="Banner" className="w-full h-full object-cover" />
+                  <img src={imagePreviews[0]} alt="Banner" className="w-full h-full object-cover" />
                 ) : (
                   <span className="text-zinc-400 text-center px-4">Clique para inserir uma ou mais imagens</span>
                 )}
@@ -184,8 +224,8 @@ export function EditCarouselBanner() {
             <section className="bg-zinc-50 rounded-xl border border-zinc-200 p-4">
               <label className="block text-sm text-zinc-700 mb-2 font-medium">Descrição</label>
               <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                value={descricao}
+                onChange={(e) => setDescricao(e.target.value)}
                 rows={4}
                 className="w-full rounded-lg border border-zinc-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
               />
@@ -202,12 +242,12 @@ export function EditCarouselBanner() {
               <div className="rounded-xl border border-zinc-200 bg-white overflow-hidden">
                 <div className="h-48 bg-zinc-100 flex items-center justify-center">
                   {imagePreviews.length > 0 ? (
-                    <img src={imagePreviews} alt="preview" className="w-full h-full object-cover" />
+                    <img src={imagePreviews[0]} alt="preview" className="w-full h-full object-cover" />
                   ) : (
                     <span className="text-zinc-400">Sem imagem</span>
                   )}
                 </div>
-                <div className="p-3 text-sm text-zinc-600">{description || "Descrição do banner aparecerá aqui."}</div>
+                <div className="p-3 text-sm text-zinc-600">{descricao || "Descrição do banner aparecerá aqui."}</div>
               </div>
             </section>
 
@@ -236,11 +276,12 @@ export function EditCarouselBanner() {
           <Button
             variant="outline"
             onClick={() => navigate("/admin/carrossel")}
+            disabled={saving}
             className="h-11 shadow-sm transition-transform hover:scale-105"
           >
             Cancelar alterações
           </Button>
-          <Button onClick={handleSave} className="h-11 shadow-sm transition-transform hover:scale-105 bg-primary hover:bg-primary">
+          <Button onClick={handleSave} disabled={saving} className="h-11 shadow-sm transition-transform hover:scale-105 bg-primary hover:bg-primary">
             Salvar Carrossel
           </Button>
         </div>
@@ -252,15 +293,15 @@ export function EditCarouselBanner() {
             <div className="p-4 text-center border-b border-zinc-200">
               <h3 className="text-lg font-bold text-zinc-900">Excluir banner?</h3>
               <p className="mt-2 text-sm text-zinc-500">
-                Tem certeza que deseja excluir o banner {banner.id}?<br />
+                Tem certeza que deseja excluir o banner #{banner.id}?<br />
                 O banner será removido do fluxo do carrossel imediatamente.
               </p>
             </div>
             <div className="flex justify-end gap-2 p-4">
-              <Button variant="outline" onClick={cancelDelete} className="h-10">
+              <Button variant="outline" onClick={cancelDelete} className="h-10" disabled={deleting}>
                 Voltar
               </Button>
-              <Button variant="destructive" onClick={confirmDelete} className="h-10">
+              <Button variant="destructive" onClick={confirmDelete} className="h-10" disabled={deleting}>
                 Excluir
               </Button>
             </div>
