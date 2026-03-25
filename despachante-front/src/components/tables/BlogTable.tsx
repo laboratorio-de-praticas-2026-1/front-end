@@ -1,15 +1,7 @@
 "use client"
 import { useNavigate } from "react-router-dom"
-
 import { useState } from "react" 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { SquarePen, Trash2, ChevronRight, ArrowUpDown, Loader2 } from "lucide-react"
 
 export interface Post {
@@ -22,11 +14,12 @@ export interface Post {
 
 interface BlogTableProps {
   posts: Post[]
-  carregando: boolean
+  carregando: Boolean
+  excluindoId?: number | null
+  onExcluirPost: (id: number) => Promise<void> | void
 }
 
-export default function BlogTable({ posts, carregando }: BlogTableProps) {
-
+export default function BlogTable({ posts, carregando, excluindoId, onExcluirPost }: BlogTableProps) {
   const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
@@ -35,7 +28,6 @@ export default function BlogTable({ posts, carregando }: BlogTableProps) {
   const sortedPosts = [...posts].sort((a, b) => {
     const dateA = new Date(a.dataPublicacao.split('/').reverse().join('-')).getTime()
     const dateB = new Date(b.dataPublicacao.split('/').reverse().join('-')).getTime()
-
     return sortOrder === 'asc' ? dateA - dateB : dateB - dateA
   })
 
@@ -65,7 +57,7 @@ export default function BlogTable({ posts, carregando }: BlogTableProps) {
 
   if (carregando) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 text-zinc-500 bg-white rounded-xl shadow-sm border border-zinc-200 min-h-[400px]">
+      <div className="w-full flex flex-col items-center justify-center py-20 text-zinc-500 bg-white rounded-xl shadow-sm border border-zinc-200 mt-6">
         <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
         <p>Buscando postagens reais no banco de dados...</p>
       </div>
@@ -74,7 +66,7 @@ export default function BlogTable({ posts, carregando }: BlogTableProps) {
 
   if (!carregando && posts.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 text-zinc-500 bg-white rounded-xl shadow-sm border border-zinc-200 min-h-[400px]">
+      <div className="w-full flex flex-col items-center justify-center py-20 text-zinc-500 bg-white rounded-xl shadow-sm border border-zinc-200 mt-6">
         <p className="text-lg font-medium text-zinc-800">Nenhum post encontrado</p>
         <p className="text-sm">As postagens aparecerão aqui quando o back-end enviar algo.</p>
       </div>
@@ -82,63 +74,71 @@ export default function BlogTable({ posts, carregando }: BlogTableProps) {
   }
 
   return (
-    <div className="w-full bg-white rounded-xl shadow-sm border border-zinc-200 overflow-hidden">
-      <Table>
-        <TableHeader className="bg-secondary">
-          <TableRow>
-            <TableHead className="text-white font-medium">ID</TableHead>
-            <TableHead className="text-white font-medium">Imagem</TableHead>
-            <TableHead className="text-white font-medium">Título</TableHead>
-            <TableHead className="text-white font-medium">Conteúdo</TableHead>
-            
-            <TableHead 
-              className="text-white font-medium text-center cursor-pointer hover:bg-secondary/90 transition-colors"
-              onClick={toggleSort}
-            >
-              <div className="flex items-center justify-center gap-1">
-                Data de publicação
-                <ArrowUpDown size={14} className={sortOrder === 'asc' ? "opacity-100" : "opacity-50"} />
-              </div>
-            </TableHead>
-
-            <TableHead className="text-white font-medium text-right px-6">Ações</TableHead>
-          </TableRow>
-        </TableHeader>
-        
-        <TableBody className="border border-zinc-200">
-          {currentPosts.map((post) => (
-            <TableRow key={post.id} className="hover:bg-zinc-50 border-b border-zinc-100 bg-white">
-              <TableCell className="text-muted-foreground font-medium">{post.id}</TableCell>
-              <TableCell>
-                {/* Ajuste para lidar com posts sem imagem que podem vir do banco */}
-                {post.imagem ? (
-                   <img src={post.imagem} alt="Thumb" className="w-20 h-14 object-cover rounded-md shadow-sm" />
-                ) : (
-                   <div className="w-20 h-14 bg-zinc-100 rounded-md border border-zinc-200 flex items-center justify-center text-xs text-zinc-400">Sem Foto</div>
-                )}
-              </TableCell>
-              <TableCell className="font-medium text-foreground truncate max-w-[200px]">{post.titulo}</TableCell>
-              <TableCell className="text-zinc-500 text-sm truncate max-w-[250px]">{post.conteudo}</TableCell>
-
-              {/* Ajustado para dataPublicacao */}
-              <TableCell className="text-zinc-600 text-sm text-center">{post.dataPublicacao}</TableCell>
-              <TableCell className="text-right px-6">
-                <div className="flex justify-end gap-2">
-                  <button 
-                  onClick={() => navigate(`/admin/posts/editar/${post.id}`)}
-                  className="p-2 text-primary hover:bg-primary/10 rounded-md transition-colors cursor-pointer"><SquarePen size={18} />
-                  </button>
-                  <button className="p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors"><Trash2 size={18} /></button>
+    <div className="w-full bg-white rounded-xl shadow-sm border border-zinc-200 overflow-hidden mt-6">
+      <div className="w-full overflow-x-auto">
+        <Table className="w-full">
+          <TableHeader className="bg-secondary">
+            <TableRow className="hover:bg-secondary">
+              <TableHead className="text-white font-medium w-16">ID</TableHead>
+              <TableHead className="text-white font-medium w-32">Imagem</TableHead>
+              <TableHead className="text-white font-medium min-w-[200px]">Título</TableHead>
+              <TableHead className="text-white font-medium min-w-[250px]">Conteúdo</TableHead>
+              
+              <TableHead 
+                className="text-white font-medium text-center cursor-pointer hover:bg-secondary/90 transition-colors w-48"
+                onClick={toggleSort}
+              >
+                <div className="flex items-center justify-center gap-1">
+                  Data de publicação
+                  <ArrowUpDown size={14} className={sortOrder === 'asc' ? "opacity-100" : "opacity-50"} />
                 </div>
-              </TableCell>
+              </TableHead>
+
+              <TableHead className="text-white font-medium text-right px-6 w-32">Ações</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          
+          <TableBody className="border-b border-zinc-200">
+            {currentPosts.map((post) => (
+              <TableRow key={post.id} className="hover:bg-zinc-50 bg-white">
+                <TableCell className="text-muted-foreground font-medium">{post.id}</TableCell>
+                <TableCell>
+                  {post.imagem ? (
+                     <img src={post.imagem} alt="Thumb" className="w-20 h-14 object-cover rounded-md shadow-sm border border-zinc-200" />
+                  ) : (
+                     <div className="w-20 h-14 bg-zinc-100 rounded-md border border-zinc-200 flex items-center justify-center text-xs text-zinc-400 font-medium">Sem Foto</div>
+                  )}
+                </TableCell>
+                <TableCell className="font-semibold text-zinc-800 truncate max-w-[200px]">{post.titulo}</TableCell>
+                <TableCell className="text-zinc-500 text-sm truncate max-w-[250px]">{post.conteudo}</TableCell>
+                {/* Converte a data de publicação do formato "YYYY-MM-DD" para "DD/MM/YYYY" */}
+                <TableCell className="text-zinc-600 text-sm text-center">{post.dataPublicacao ? post.dataPublicacao.split('-').reverse().join('/') : ''}</TableCell>
+                <TableCell className="text-right px-6">
+                  <div className="flex justify-end gap-2">
+                    <button 
+                      onClick={() => navigate(`/admin/posts/editar/${post.id}`)}
+                      className="p-2 text-primary hover:bg-primary/10 rounded-md transition-colors cursor-pointer" title="Editar">
+                        <SquarePen size={18} />
+                    </button>
+                    <button 
+                      onClick={() => onExcluirPost(post.id)}
+                      disabled={excluindoId === post.id}
+                      className="p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                      title={excluindoId === post.id ? "Excluindo..." : "Excluir"}
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
       
-      {/* Footer Paginação com as cores ajustadas para o tema */}
-      <div className="py-4 grid grid-cols-3 items-center border-t border-zinc-100 px-6">
-        <div></div>
+      {/* Footer Paginação */}
+      <div className="py-4 grid grid-cols-1 sm:grid-cols-3 items-center border-t border-zinc-100 px-6 bg-white gap-4 sm:gap-0">
+        <div className="hidden sm:block"></div>
         <div className="flex items-center justify-center gap-2 text-sm text-secondary">
           <button 
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
@@ -176,7 +176,7 @@ export default function BlogTable({ posts, carregando }: BlogTableProps) {
           </button>
         </div>
         
-        <div className="text-sm text-zinc-500 text-right hidden sm:block">
+        <div className="text-sm text-zinc-500 text-center sm:text-right">
           {posts.length} {posts.length === 1 ? 'resultado' : 'resultados'}
         </div>
       </div>

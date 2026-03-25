@@ -8,6 +8,28 @@ export interface BlogPost {
   imagem?: string; // caso o post venha sem foto
 }
 
+type ApiBlogPost = {
+  id: number;
+  titulo: string;
+  conteudo: string;
+  dataPublicacao: string;
+  imagem?: string;
+  urlImagem?: string;
+};
+
+const normalizeImageUrl = (url?: string): string | undefined => {
+  if (!url) return undefined;
+  if (url.startsWith("http://") || url.startsWith("https://")) return url;
+  return `${API_URL}${url.startsWith("/") ? "" : "/"}${url}`;
+};
+
+const normalizePost = (post: ApiBlogPost): BlogPost => {
+  return {
+    ...post,
+    imagem: normalizeImageUrl(post.imagem || post.urlImagem),
+  };
+};
+
 export const blogService = {
   // 1. GET /blog - Lista todos os posts
   listarTodos: async (): Promise<BlogPost[]> => {
@@ -15,7 +37,8 @@ export const blogService = {
       const resposta = await fetch(`${API_URL}/blog`);
       if (!resposta.ok) throw new Error("Erro ao buscar posts");
       
-      return await resposta.json();
+      const dados: ApiBlogPost[] = await resposta.json();
+      return dados.map(normalizePost);
     } catch (erro) {
       console.error("Erro no listarTodos:", erro);
       return []; // Retorna um array vazio para não quebrar a tela do usuário
@@ -28,7 +51,8 @@ export const blogService = {
       const resposta = await fetch(`${API_URL}/blog/${id}`);
       if (!resposta.ok) throw new Error("Erro ao buscar o post");
       
-      return await resposta.json();
+      const dados: ApiBlogPost = await resposta.json();
+      return normalizePost(dados);
     } catch (erro) {
       console.error("Erro no buscarPorId:", erro);
       return null;
@@ -50,23 +74,40 @@ export const blogService = {
         throw new Error("Erro ao criar post");
       }
       
-      return await resposta.json();
+      const dados: ApiBlogPost = await resposta.json();
+      return normalizePost(dados);
     } catch (erro) {
       console.error("Erro no criar:", erro);
       throw erro;
     }
   },
 
-  // 4. PUT /blog/{id} - Atualiza um post existente
+  // 4. PATCH/PUT /blog/{id} - Atualiza um post existente
   atualizar: async (id: number, dadosDoFormulario: FormData) => {
     try {
-      const resposta = await fetch(`${API_URL}/blog/${id}`, {
-        method: "PUT",
-        body: dadosDoFormulario,
+      let resposta = await fetch(`${API_URL}/blog/${id}`, {
+        method: "GET",
       });
 
-      if (!resposta.ok) throw new Error("Erro ao atualizar post");
-      return await resposta.json();
+      if (resposta.status != 404) {
+        resposta = await fetch(`${API_URL}/blog/${id}`, {
+          method: "PUT",
+          body: dadosDoFormulario,
+        });
+      }
+
+      if (resposta.status == 400) {
+        const motivoDoErro = await resposta.text();
+        console.error(`O Servidor recusou update (Status ${resposta.status}). Motivo:`, motivoDoErro);
+        throw new Error("Erro ao atualizar post");
+      }
+
+      if (resposta.status === 204) {
+        return null;
+      }
+
+      const dados: ApiBlogPost = await resposta.json();
+      return normalizePost(dados);
     } catch (erro) {
       console.error("Erro no atualizar:", erro);
       throw erro;

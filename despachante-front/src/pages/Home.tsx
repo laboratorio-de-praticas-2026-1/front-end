@@ -1,6 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { HeaderSection } from "@/components/sections/HeaderSection";
-import ServiceCarousel from "@/components/sections/ServiceCarousel"; // Ajuste se for export default
+import ServiceCarousel from "@/components/sections/ServiceCarousel"; 
 import SobreGrupo from '../components/sections/AboutSection';
 import FAQ from '../components/sections/FaqSection';
 import { Footer } from "@/components/layout/Footer";
