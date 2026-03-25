@@ -123,7 +123,7 @@ export function EditCarouselBanner() {
           </div>
           <Button
             variant="destructive"
-            className="h-11"
+            className="h-11 shadow-sm transition-transform hover:scale-105"
             onClick={handleDelete}
           >
             <FiTrash2 className="mr-2" /> Excluir
@@ -142,7 +142,7 @@ export function EditCarouselBanner() {
                 onClick={() => fileInputRef.current?.click()}
               >
                 {imagePreviews.length > 0 ? (
-                  <img src={imagePreviews[0]} alt="Banner" className="w-full h-full object-cover" />
+                  <img src={imagePreviews} alt="Banner" className="w-full h-full object-cover" />
                 ) : (
                   <span className="text-zinc-400 text-center px-4">Clique para inserir uma ou mais imagens</span>
                 )}
@@ -202,7 +202,7 @@ export function EditCarouselBanner() {
               <div className="rounded-xl border border-zinc-200 bg-white overflow-hidden">
                 <div className="h-48 bg-zinc-100 flex items-center justify-center">
                   {imagePreviews.length > 0 ? (
-                    <img src={imagePreviews[0]} alt="preview" className="w-full h-full object-cover" />
+                    <img src={imagePreviews} alt="preview" className="w-full h-full object-cover" />
                   ) : (
                     <span className="text-zinc-400">Sem imagem</span>
                   )}
@@ -236,12 +236,12 @@ export function EditCarouselBanner() {
           <Button
             variant="outline"
             onClick={() => navigate("/admin/carrossel")}
-            className="h-11"
+            className="h-11 shadow-sm transition-transform hover:scale-105"
           >
             Cancelar alterações
           </Button>
-          <Button onClick={handleSave} className="h-11">
-            Salvar banner
+          <Button onClick={handleSave} className="h-11 shadow-sm transition-transform hover:scale-105 bg-primary hover:bg-primary">
+            Salvar Carrossel
           </Button>
         </div>
       </div>

@@ -71,7 +71,6 @@ export default function BuscaBlog({ onSearch, onNovaPostagem }: BuscaBlogProps) 
             />
           </div>
 
-          {/* O botão fica AQUI, dentro da div da borda azul */}
           <Button 
             className="w-full sm:w-auto rounded-lg h-10 text-sm cursor-pointer flex gap-2 items-center justify-center shrink-0 shadow-sm transition-transform hover:scale-[1.02] active:scale-[0.98] bg-primary text-white" 
             type="button" 
