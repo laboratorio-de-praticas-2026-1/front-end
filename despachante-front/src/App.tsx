@@ -2,24 +2,24 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import { Home } from "@/pages/Home"; 
 import { Servicos } from "@/pages/Servicos"; 
+import { Blog } from "@/pages/Blog";
+import { BlogPost } from "@/pages/BlogPost";
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { BlogAdmin } from "@/pages/admin/BlogAdmin";
 import EditPostCMS from "@/components/sections/admin/blog/EditPostCMS";
-import { Blog } from "@/pages/Blog";
+
+// 1. IMPORTANTE: Importe o seu componente CreatePostCMS aqui!
 import CreatePostCMS from "@/components/sections/admin/blog/CreatePostCMS";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* === ROTAS PÚBLICAS === */}
         <Route path="/" element={<Home />} />
         <Route path="/servicos" element={<Servicos />} /> 
-        
-        {/* ROTA DA LANDING PAGE DO BLOG AQUI */}
-        <Route path="/blog" element={<Blog />} /> 
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:id" element={<BlogPost />} />
 
-        {/* === ROTAS ADMINISTRATIVAS === */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="/admin/posts" replace />} />
           
