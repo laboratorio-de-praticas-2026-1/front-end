@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import { Home } from "@/pages/Home"; 
 import { Servicos } from "@/pages/Servicos"; 
+import { Blog } from "@/pages/Blog";
+import { BlogPost } from "@/pages/BlogPost";
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { BlogAdmin } from "@/pages/admin/BlogAdmin";
 import EditPostCMS from "@/components/sections/admin/blog/EditPostCMS";
@@ -15,6 +17,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/servicos" element={<Servicos />} /> 
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:id" element={<BlogPost />} />
 
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="/admin/posts" replace />} />
