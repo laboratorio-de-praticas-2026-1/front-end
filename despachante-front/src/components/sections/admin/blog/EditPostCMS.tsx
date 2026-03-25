@@ -38,7 +38,9 @@ export default function EditPostCMS() {
           setConteudo(post.conteudo);
           
           if (post.dataPublicacao) {
-            setDate(new Date(post.dataPublicacao));
+            // Parseia a data como horário local para evitar deslocamento de 1 dia causado pela interpretação em UTC
+            const parts = post.dataPublicacao.split('T')[0].split('-');
+            setDate(new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2])));
           }
           if (post.imagem) {
             setSelectedImage(post.imagem);
@@ -85,7 +87,10 @@ export default function EditPostCMS() {
       formData.append("conteudo", conteudo);
       
       const dataPostagem = date ? date : new Date();
-      formData.append("dataPublicacao", dataPostagem.toISOString());
+      // Formata a data usando componentes locais (YYYY-MM-DD) para não converter para UTC via toISOString()
+      const pad = (n: number) => String(n).padStart(2, '0');
+      const dataFormatada = `${dataPostagem.getFullYear()}-${pad(dataPostagem.getMonth() + 1)}-${pad(dataPostagem.getDate())}`;
+      formData.append("dataPublicacao", dataFormatada);
 
       // Só envia a imagem se o usuário escolheu uma foto NOVA
       if (arquivoParaEnvio) {
