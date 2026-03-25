@@ -26,16 +26,15 @@ export default function BuscaBlog({ onSearch, onNovaPostagem }: BuscaBlogProps) 
   };
 
   return (
-    <div className="w-full flex flex-col p-6 md:p-10">
-      <h1 className="font-bold text-secondary text-2xl mb-2">Blog</h1>
+    <div className="w-full flex flex-col">
+      <h1 className="font-bold text-secondary text-4xl mb-2">Blog</h1>
       <p className="text-muted-foreground text-sm">Visualize, crie, organize e acompanhe todas as postagens do seu blog.</p>
 
       <div className="w-full flex flex-col lg:flex-row mt-10 md:mt-12 gap-5 items-stretch lg:items-center">
         
-        {/* CORREÇÃO AQUI: Usei border-2 (para ficar mais grossa) e border-secondary (para ficar azul) */}
-        <div className="flex-1 flex flex-col sm:flex-row gap-3 sm:gap-2 border-2 border-secondary rounded-xl p-2 sm:p-1.5 bg-white">
+        {/* Container da borda azul com w-full para se igualar à tabela */}
+        <div className="flex-1 flex flex-col sm:flex-row gap-3 sm:gap-2 border-2 border-secondary rounded-xl p-2 sm:p-1.5 bg-white w-full">
           
-          {/* Campo 'De' */}
           <div className="relative w-full sm:w-auto flex-shrink-0 group">
             <CalendarDays className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-secondary transition-colors" />
             <Input 
@@ -48,7 +47,6 @@ export default function BuscaBlog({ onSearch, onNovaPostagem }: BuscaBlogProps) 
 
           <div className="hidden sm:block w-px h-6 bg-border self-center" />
 
-          {/* Campo 'Até' */}
           <div className="relative w-full sm:w-auto flex-shrink-0 group">
             <CalendarDays className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-secondary transition-colors" />
             <Input 
@@ -61,7 +59,6 @@ export default function BuscaBlog({ onSearch, onNovaPostagem }: BuscaBlogProps) 
 
           <div className="hidden sm:block w-px h-6 bg-border self-center" />
 
-          {/* Campo de Pesquisa */}
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-secondary transition-colors" />
             <Input 
@@ -74,21 +71,17 @@ export default function BuscaBlog({ onSearch, onNovaPostagem }: BuscaBlogProps) 
             />
           </div>
 
-        {/* Botão Nova Postagem agora é irmão da caixa de pesquisa, e não filho dela */}
-        <Button 
-          className="w-full lg:w-auto rounded-lg h-12 lg:h-11 text-md cursor-pointer flex gap-2 items-center justify-center shrink-0 shadow-sm transition-transform hover:scale-105" 
-          type="button" 
-          onClick={onNovaPostagem}
-        > 
-          <Plus className="h-5 w-5" />
-          Nova postagem 
-        </Button>
-
+          {/* O botão fica AQUI, dentro da div da borda azul */}
+          <Button 
+            className="w-full sm:w-auto rounded-lg h-10 text-sm cursor-pointer flex gap-2 items-center justify-center shrink-0 shadow-sm transition-transform hover:scale-[1.02] active:scale-[0.98] bg-primary text-white" 
+            type="button" 
+            onClick={onNovaPostagem}
+          > 
+            <Plus className="h-4 w-4" />
+            Nova postagem 
+          </Button>
 
         </div>
-
-
-
       </div>
     </div>
   );

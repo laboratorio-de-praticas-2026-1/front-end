@@ -7,9 +7,9 @@ import { Artigo } from "@/pages/Artigo";
 import { BlogPost } from "@/pages/BlogPost";
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { BlogAdmin } from "@/pages/admin/blog/BlogAdmin";
-import { CarouselAdmin } from "@/pages/admin/carrossel/CarouselAdmin";
-import { CreateCarouselBanner } from "@/pages/admin/carrossel/CreateCarouselBanner";
-import { EditCarouselBanner } from "@/pages/admin/carrossel/EditCarouselBanner";
+import { CarouselAdmin } from "@/components/sections/admin/carrossel/CarouselAdmin";
+import { CreateCarouselBanner } from "@/components/sections/admin/carrossel/CreateCarouselBanner";
+import { EditCarouselBanner } from "@/components/sections/admin/carrossel/EditCarouselBanner";
 import EditPostCMS from "@/components/sections/admin/blog/EditPostCMS";
 import CreatePostCMS from "@/components/sections/admin/blog/CreatePostCMS";
 
