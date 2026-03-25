@@ -9,12 +9,12 @@ export function AdminLayout() {
   return (
     <div className="flex h-screen w-full bg-zinc-50 font-sans overflow-hidden">
       
-      {/* 1. SIDEBAR DESKTOP (Fixa na tela grande, escondida no celular) */}
+      {/* SIDEBAR DESKTOP  */}
       <div className="hidden md:block">
         <AdminSidebar />
       </div>
 
-      {/* 2. SIDEBAR MOBILE (Sempre no código, animada pelo Tailwind) */}
+      {/*  SIDEBAR MOBILE */}
       <div className="md:hidden">
         
         {/* Fundo preto com transparência (Overlay) */}

@@ -35,8 +35,7 @@ export const blogService = {
     }
   },
 
-  // 3. POST /blog - Cria um novo post
-  // Recebe FormData porque tem envio de imagem ($binary)
+// 3. POST /blog - Cria um novo post
   criar: async (dadosDoFormulario: FormData) => {
     try {
       const resposta = await fetch(`${API_URL}/blog`, {
@@ -44,7 +43,13 @@ export const blogService = {
         body: dadosDoFormulario, 
       });
 
-      if (!resposta.ok) throw new Error("Erro ao criar post");
+      // Se o servidor recusar, vamos ler o que ele disse!
+      if (!resposta.ok) {
+        const motivoDoErro = await resposta.text();
+        console.error(`O Servidor recusou (Status ${resposta.status}). Motivo:`, motivoDoErro);
+        throw new Error("Erro ao criar post");
+      }
+      
       return await resposta.json();
     } catch (erro) {
       console.error("Erro no criar:", erro);

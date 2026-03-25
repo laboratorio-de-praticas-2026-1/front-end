@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { FiMenu, FiX, FiUser } from "react-icons/fi"; 
-// 1. IMPORTANTE: Importe o Link do react-router-dom
 import { Link } from "react-router-dom";
 
 const navLinks = [
   { name: "Sobre Nós", href: "/#sobre" },
-  // 2. Mudamos de "#servicos" para a nova URL "/servicos"
   { name: "Serviços", href: "/servicos" },
   { name: "Mapa", href: "/#mapa" },
   { name: "Blog", href: "/#blog" },
@@ -32,7 +30,6 @@ export function Navbar() {
 
           <nav className="hidden md:flex items-center gap-1 lg:gap-2">
             {navLinks.map((link) => (
-              // 3. Trocamos a tag <a> por <Link> e href por to={}
               <Link
                 key={link.name}
                 to={link.href}
@@ -58,7 +55,8 @@ export function Navbar() {
             onClick={() => setIsMobileOpen(true)}
             aria-label="Abrir menu"
           >
-            <FiMenu className="h-6 w-6 stroke-" />
+            {/* CORREÇÃO 1: stroke estava incompleto, mudei para stroke-[2.5] */}
+            <FiMenu className="h-6 w-6 stroke-[2.5]" />
           </button>
         </div>
       </header>
@@ -74,7 +72,8 @@ export function Navbar() {
         />
 
         <div 
-          className={`fixed inset-y-0 right-0 z- w-full max-w-sm flex flex-col bg-[#F9F9F9] shadow-2xl transform transition-transform duration-300 ease-in-out ${
+          // CORREÇÃO 2: A classe z- estava incompleta. Alterei para z-50 para ficar na frente do blur
+          className={`fixed inset-y-0 right-0 z-50 w-full max-w-sm flex flex-col bg-[#F9F9F9] shadow-2xl transform transition-transform duration-300 ease-in-out ${
             isMobileOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
@@ -95,7 +94,6 @@ export function Navbar() {
 
           <nav className="flex flex-col flex-1 px-4 pt-6 pb-2 gap-2 overflow-y-auto custom-scrollbar">
             {navLinks.map((link) => (
-              // 4. Também trocamos aqui no mobile!
               <Link
                 key={link.name}
                 to={link.href}

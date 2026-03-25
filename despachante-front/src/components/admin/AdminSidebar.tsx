@@ -28,12 +28,11 @@ const sidebarLinks: SidebarLink[] = [
   { name: "Clientes", href: "/admin/clientes", icon: FiUsers },
 ];
 
-// 1. CRIAMOS UMA INTERFACE PARA RECEBER O COMANDO DE FECHAR
+
 interface AdminSidebarProps {
   onLinkClick?: () => void;
 }
 
-// 2. PASSAMOS A PROP PARA O COMPONENTE
 export function AdminSidebar({ onLinkClick }: AdminSidebarProps) {
   const currentUser = {
     name: "Amanda Oliveira C...",
@@ -59,7 +58,7 @@ export function AdminSidebar({ onLinkClick }: AdminSidebarProps) {
             key={link.name}
             to={link.href}
             end
-            onClick={onLinkClick} // 3. ADICIONAMOS O CLICK AQUI!
+            onClick={onLinkClick} 
             className={({ isActive }) => `flex items-center gap-4 px-4 py-3.5 rounded-lg text-sm font-medium transition-all duration-200 
               ${isActive 
                 ? "bg-black/20 text-white shadow-inner" 

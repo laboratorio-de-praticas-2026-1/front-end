@@ -1,6 +1,7 @@
 "use client"
+import { useNavigate } from "react-router-dom"
 
-import { useState } from "react" // <-- Removemos o useEffect daqui
+import { useState } from "react" 
 import {
   Table,
   TableBody,
@@ -11,8 +12,6 @@ import {
 } from "@/components/ui/table"
 import { SquarePen, Trash2, ChevronRight, ArrowUpDown, Loader2 } from "lucide-react"
 
-// 1. Interface atualizada para bater com o formato do banco de dados real
-// Mudamos de id: string para id: number, e de data_publicacao para dataPublicacao
 export interface Post {
   id: number
   imagem?: string
@@ -21,31 +20,25 @@ export interface Post {
   dataPublicacao: string
 }
 
-// 2. Definimos as Props que este componente espera receber do componente pai (BlogAdmin)
 interface BlogTableProps {
   posts: Post[]
   carregando: boolean
 }
 
-// 3. O componente agora recebe { posts, carregando } como argumentos
 export default function BlogTable({ posts, carregando }: BlogTableProps) {
-  
-  // 4. Removemos o [posts, setPosts] e [loading, setLoading] daqui, pois agora vêm das props.
-  // Mantemos apenas os estados de controle visual da tabela (página e ordenação)
+
+  const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const postsPerPage = 7
 
-  // Lógica de Ordenação
   const sortedPosts = [...posts].sort((a, b) => {
-    // Ajustado para 'dataPublicacao'
     const dateA = new Date(a.dataPublicacao.split('/').reverse().join('-')).getTime()
     const dateB = new Date(b.dataPublicacao.split('/').reverse().join('-')).getTime()
 
     return sortOrder === 'asc' ? dateA - dateB : dateB - dateA
   })
 
-  // Lógica de Paginação
   const totalPages = Math.ceil(sortedPosts.length / postsPerPage) || 1
   const indexOfLastPost = currentPage * postsPerPage
   const indexOfFirstPost = indexOfLastPost - postsPerPage
@@ -70,7 +63,6 @@ export default function BlogTable({ posts, carregando }: BlogTableProps) {
     return items
   }
 
-  // 5. Novo estado visual: Se o BlogAdmin disser que está carregando, mostramos um spinner
   if (carregando) {
     return (
       <div className="flex flex-col items-center justify-center p-12 text-zinc-500 bg-white rounded-xl shadow-sm border border-zinc-200 min-h-[400px]">
@@ -80,7 +72,6 @@ export default function BlogTable({ posts, carregando }: BlogTableProps) {
     )
   }
 
-  // 6. Se terminou de carregar e não veio nada do banco, mostramos mensagem vazia
   if (!carregando && posts.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center p-12 text-zinc-500 bg-white rounded-xl shadow-sm border border-zinc-200 min-h-[400px]">
@@ -90,7 +81,6 @@ export default function BlogTable({ posts, carregando }: BlogTableProps) {
     )
   }
 
-  // 7. Renderização normal da tabela caso existam posts
   return (
     <div className="w-full bg-white rounded-xl shadow-sm border border-zinc-200 overflow-hidden">
       <Table>
@@ -129,11 +119,15 @@ export default function BlogTable({ posts, carregando }: BlogTableProps) {
               </TableCell>
               <TableCell className="font-medium text-foreground truncate max-w-[200px]">{post.titulo}</TableCell>
               <TableCell className="text-zinc-500 text-sm truncate max-w-[250px]">{post.conteudo}</TableCell>
+
               {/* Ajustado para dataPublicacao */}
               <TableCell className="text-zinc-600 text-sm text-center">{post.dataPublicacao}</TableCell>
               <TableCell className="text-right px-6">
                 <div className="flex justify-end gap-2">
-                  <button className="p-2 text-primary hover:bg-primary/10 rounded-md transition-colors"><SquarePen size={18} /></button>
+                  <button 
+                  onClick={() => navigate(`/admin/posts/editar/${post.id}`)}
+                  className="p-2 text-primary hover:bg-primary/10 rounded-md transition-colors cursor-pointer"><SquarePen size={18} />
+                  </button>
                   <button className="p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors"><Trash2 size={18} /></button>
                 </div>
               </TableCell>

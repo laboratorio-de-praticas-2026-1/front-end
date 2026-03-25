@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useRef } from 'react';
-import { useNavigate } from "react-router-dom";
-import { Info, Image as ImageIcon, Settings, Plus, CalendarIcon, Printer } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate, useParams } from "react-router-dom";
+import { Info, Image as ImageIcon, Settings, Plus, CalendarIcon, Save } from 'lucide-react';
 import PreviewImage from "@/assets/mock-add-image.png";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -11,8 +11,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 
 import { blogService } from "@/services/blogService";
 
-export default function CreatePostCMS() {
+export default function EditPostCMS() {
   const navigate = useNavigate();
+  const { id } = useParams(); // Pega o ID da URL
   
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
@@ -20,22 +21,46 @@ export default function CreatePostCMS() {
   const [titulo, setTitulo] = useState("");
   const [conteudo, setConteudo] = useState("");
   const [salvando, setSalvando] = useState(false);
+  const [carregandoDados, setCarregandoDados] = useState(true);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [selectedImage, setSelectedImage] = useState(PreviewImage);
-  
-  // SOLUÇÃO DEFINITIVA: Criamos um estado específico para guardar o arquivo para o back-end
+  const [selectedImage, setSelectedImage] = useState<string>(PreviewImage);
   const [arquivoParaEnvio, setArquivoParaEnvio] = useState<File | null>(null);
 
+  // Busca os dados do post assim que a tela abre
+  useEffect(() => {
+    const buscarPost = async () => {
+      if (!id) return;
+      try {
+        const post = await blogService.buscarPorId(Number(id));
+        if (post) {
+          setTitulo(post.titulo);
+          setConteudo(post.conteudo);
+          
+          if (post.dataPublicacao) {
+            setDate(new Date(post.dataPublicacao));
+          }
+          if (post.imagem) {
+            setSelectedImage(post.imagem);
+          }
+        }
+      } catch (error) {
+        console.error("Erro ao carregar post:", error);
+        alert("Não foi possível carregar os dados desta postagem.");
+        navigate(-1);
+      } finally {
+        setCarregandoDados(false);
+      }
+    };
+
+    buscarPost();
+  }, [id, navigate]);
+
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Pegamos a lista de arquivos com segurança e verificamos se há algo nela
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0]; // Extrai o arquivo real (File/Blob)
-      
-      // 1. Guarda o arquivo real no nosso novo estado (Isso resolve todos os erros de tipagem do submit!)
       setArquivoParaEnvio(file);
 
-      // 2. Faz a leitura visual para mostrar na tela (Preview)
       const reader = new FileReader();
       reader.onload = (e) => {
         if (e.target?.result) {
@@ -46,8 +71,8 @@ export default function CreatePostCMS() {
     }
   };
 
-  const handleCriarPost = async () => {
-    if (!titulo || !conteudo) {
+  const handleSalvarEdicao = async () => {
+    if (!titulo || !conteudo || !id) {
       alert("Por favor, preencha o título e o conteúdo da postagem.");
       return;
     }
@@ -62,39 +87,40 @@ export default function CreatePostCMS() {
       const dataPostagem = date ? date : new Date();
       formData.append("dataPublicacao", dataPostagem.toISOString());
 
-      // SOLUÇÃO DEFINITIVA: Em vez de caçar o input HTML, pegamos direto da memória do React
+      // Só envia a imagem se o usuário escolheu uma foto NOVA
       if (arquivoParaEnvio) {
         formData.append("imagem", arquivoParaEnvio);
       }
 
-      await blogService.criar(formData);
+      await blogService.atualizar(Number(id), formData);
       navigate(-1);
 
     } catch (error) {
-      console.error("Erro ao salvar:", error);
-      alert("Ocorreu um erro ao salvar a postagem no servidor.");
+      console.error("Erro ao atualizar:", error);
+      alert("Ocorreu um erro ao atualizar a postagem no servidor.");
     } finally {
       setSalvando(false);
     }
   };
 
+  if (carregandoDados) {
+    return <div className="p-8 text-center text-zinc-500">Carregando dados da postagem...</div>;
+  }
+
   return (
     <div className="min-h-screen p-8 text-muted-foreground animate-in fade-in duration-500">
-      
       <header className="mb-8">
-        <h1 className="text-2xl font-bold text-secondary">Criar novo post</h1>
-        <p className="text-sm text-gray-500">Preencha os campos abaixo para configurar e publicar sua postagem.</p>
+        <h1 className="text-2xl font-bold text-secondary">Editar postagem</h1>
+        <p className="text-sm text-gray-500">Altere os campos abaixo para atualizar sua postagem.</p>
       </header>
 
       <main className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        
         <div className="lg:col-span-2 space-y-6 h-full">
           <section className="bg-white rounded-lg border border-gray-300 overflow-hidden h-full shadow-sm">
             <div className="flex items-center gap-2 p-4 border-b border-gray-300 bg-gray-50">
               <Info size={20} className="text-secondary" />
               <h2 className="font-semibold text-gray-800">Informações do post</h2>
             </div>
-
             <div className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-1.5">
@@ -105,10 +131,8 @@ export default function CreatePostCMS() {
                   value={titulo}
                   onChange={(e) => setTitulo(e.target.value)}
                   className="w-full px-4 py-2 rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                  placeholder="Ex: Novo serviço disponível..."
                 />
               </div>
-
               <div>
                 <label className="block text-sm font-medium mb-1.5">
                   Conteúdo do post <span className="text-red-500">*</span>
@@ -118,7 +142,6 @@ export default function CreatePostCMS() {
                   value={conteudo}
                   onChange={(e) => setConteudo(e.target.value)}
                   className="w-full px-4 py-2 rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none"
-                  placeholder="Escreva o conteúdo da postagem aqui..."
                 />
               </div>
             </div>
@@ -152,9 +175,6 @@ export default function CreatePostCMS() {
                   <Plus size={24} className="text-secondary" />
                 </div>
               </div>
-              <p className="mt-4 text-[12px] text-gray-400 text-center">
-                Tamanho recomendado: 1200x630px (máx. 2MB)
-              </p>
             </div>
           </section>
 
@@ -175,7 +195,6 @@ export default function CreatePostCMS() {
                       <PopoverTrigger asChild>
                         <Button
                           variant="outline"
-                          id="date"
                           className="w-full justify-start font-normal pl-10 cursor-pointer"
                         >
                           {date ? date.toLocaleDateString('pt-BR') : "Selecione a data"}
@@ -186,18 +205,12 @@ export default function CreatePostCMS() {
                           mode="single"
                           selected={date}
                           defaultMonth={date}
-                          onSelect={(newDate) => {
-                            setDate(newDate);
-                            setOpen(false);
-                          }}
+                          onSelect={(newDate) => { setDate(newDate); setOpen(false); }}
                         />
                       </PopoverContent>
                     </Popover>
                   </Field>
                 </div>
-                <p className="mt-2 text-xs text-gray-400 leading-relaxed">
-                  Se nenhuma data for inserida, será publicado imediatamente ao salvar.
-                </p>
               </div>
             </div>
           </section>
@@ -212,17 +225,17 @@ export default function CreatePostCMS() {
           disabled={salvando}
           className="cursor-pointer transition-opacity hover:opacity-70 active:opacity-100 disabled:opacity-50 h-11 px-6 rounded-lg font-medium"
         >
-          Cancelar criação
+          Cancelar
         </Button>
 
         <Button 
           type="button"
-          onClick={handleCriarPost}
+          onClick={handleSalvarEdicao}
           disabled={salvando}
           className="cursor-pointer bg-secondary text-white font-bold shadow-sm transition-all hover:brightness-110 hover:scale-[1.02] active:scale-[0.98] flex items-center gap-2 disabled:opacity-50 disabled:pointer-events-none disabled:scale-100 h-11 px-6 rounded-lg"
         >
-          <Printer size={18} />
-          {salvando ? "Salvando postagem..." : "Criar postagem"}
+          <Save size={18} />
+          {salvando ? "Atualizando..." : "Atualizar postagem"}
         </Button>
       </footer>
     </div>
