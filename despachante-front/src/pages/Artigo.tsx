@@ -31,11 +31,6 @@ export function Artigo() {
     const carregarBanner = async () => {
       try {
         const API_URL = import.meta.env.VITE_API_URL || "https://despachante-bortone-release-production.up.railway.app";
-        // const resposta = await fetch(`${API_URL}/sua-rota-de-banners`);
-        // if (resposta.ok) {
-        //   const dadosBanner = await resposta.json();
-        //   setBannerUrl(dadosBanner.imagem); 
-        // }
       } catch (error) {
         console.error("Erro ao buscar publicidade:", error);
       }
