@@ -46,7 +46,7 @@ export function AdminSidebar({ onLinkClick }: AdminSidebarProps) {
     <aside className="w-64 bg-secondary text-secondary-foreground flex flex-col h-full">
       <div className="h-28 flex items-center justify-center px-6 border-b border-white/10 shrink-0">
         <img 
-          src="../src/assets/logo-despachante.png" 
+          src="../src/assets/logo-despachante-escura.png" 
           alt="Grupo Bortone" 
           className="h-16 w-auto object-contain"
         />
