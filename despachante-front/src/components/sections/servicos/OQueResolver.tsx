@@ -1,90 +1,86 @@
-import vectorWhiteCar from "@/assets/vector-white-car.svg";
-import vectorOrangeCar from "@/assets/vector-orange-car.svg";
-import vectorLine from "@/assets/vector-line.svg";
+import { FaCar } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 export function OQueResolver() {
   const servicos = [
-    { titulo: "Transferência de Veículo", offset: false, corEspecial: false, icone: "white", temGradiente: true },
-    { titulo: "Licenciamento anual", offset: true, corEspecial: true, icone: "orange", temGradiente: false },
-    { titulo: "Primeiro emplacamento", offset: false, corEspecial: true, icone: "orange", temGradiente: false },
-    { titulo: "Consulta de Multas", offset: true, corEspecial: false, icone: "white", temGradiente: true }
-  ]
+    { 
+      titulo: "Transferência\nde Veículo", 
+      isGradient: true 
+    },
+    { 
+      titulo: "Licenciamento\nanual", 
+      isGradient: false 
+    },
+    { 
+      titulo: "Primeiro\nemplacamento", 
+      isGradient: false 
+    },
+    { 
+      titulo: "Transferência\nde Veículo", 
+      isGradient: true 
+    }
+  ];
 
   return (
-    <section className="py-24 bg-[#F4F4F4]">
-      <div className="container mx-auto px-4 max-w-6xl">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
-          {/* Lado Esquerdo - Texto */}
-          <div className="flex flex-col justify-center h-full">
-            <img 
-              src={vectorLine} 
-              alt="Linha decorativa" 
-              className="mb-4 w-3/5 max-w-md -ml-14"
-            />
-            <h2 className="text-3xl md:text-4xl font-bold mb-2 max-w-sm">
-              O que você precisa resolver hoje?
+    <section className="py-24 bg-[#EAECEE] overflow-hidden">
+      <div className="container mx-auto px-6 max-w-6xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-8 items-center">
+          
+          {/* LADO ESQUERDO - Textos */}
+          <div className="flex flex-col justify-center max-w-md mx-auto md:mx-0">
+            <div className="w-32 h-1.5 bg-primary mb-8 rounded-full"></div>
+            
+            <h2 className="text-4xl md:text-[2.75rem] leading-tight font-bold text-zinc-800 mb-6 tracking-tight">
+              O que você<br />precisa resolver<br />hoje?
             </h2>
-            <p className="text-gray-600 text-lg max-w-sm">
+            
+            <p className="text-zinc-600 text-lg leading-relaxed">
               Nosso despachante reúne os principais serviços para facilitar sua vida e eliminar a burocracia do dia a dia.
             </p>
           </div>
 
-          {/* Lado Direito - Cards e Botão */}
-          <div>
-            <div className="grid grid-cols-2 gap-6">
+          {/* LADO DIREITO - Cards em Grid */}
+          <div className="relative">
+            <div className="grid grid-cols-2 gap-4 md:gap-6">
               {servicos.map((servico, index) => {
-                const isLaranja = index === 0 || index === 3
-                const offsetClass = servico.offset ? "transform -translate-y-8" : ""
-                
-                const iconeSrc = servico.icone === "white" ? vectorWhiteCar : vectorOrangeCar
+                const isRightColumn = index === 1 || index === 3;
+                const offsetClass = isRightColumn ? "translate-y-0 md:translate-y-12" : "";
                 
                 return (
                   <div 
                     key={index}
-                    className={`rounded-xl p-6 shadow-sm hover:shadow-md transition-all cursor-pointer ${offsetClass} ${
-                      isLaranja 
-                        ? "bg-gradient-to-br from-[#E99E2E] to-[#f5b85e]" 
-                        : servico.temGradiente
-                          ? "bg-gradient-to-br from-[#F39200] to-[#FFB347]"
-                          : "bg-white"
+                    className={`flex flex-col items-center justify-center p-8 rounded-[1.5rem] shadow-lg transition-transform hover:-translate-y-1 cursor-pointer min-h-[180px] md:min-h-[220px] ${offsetClass} ${
+                      servico.isGradient 
+                        ? "bg-gradient-to-b from-[#1E84CF] to-[#135A91] text-white border border-white/10" 
+                        : "bg-white text-primary"
                     }`}
                   >
-                    <div className="flex flex-col items-center text-center">
-                      <div className="mb-3">
-                        <img 
-                          src={iconeSrc} 
-                          alt="Ícone de carro" 
-                          className="w-10 h-10"
-                        />
-                      </div>
-                      <h3 
-                        className={`text-lg font-semibold ${
-                          isLaranja 
-                            ? "text-white" 
-                            : servico.corEspecial 
-                              ? "text-[#F49C17]" 
-                              : "text-gray-900"
-                        }`}
-                      >
-                        {servico.titulo}
-                      </h3>
-                    </div>
+
+                    <FaCar 
+                      size={44} 
+                      className={`mb-4 ${servico.isGradient ? "text-white" : "text-primary"}`} 
+                    />
+                    <h3 className="text-center font-bold text-lg md:text-xl leading-tight whitespace-pre-line">
+                      {servico.titulo}
+                    </h3>
                   </div>
-                )
+                );
               })}
             </div>
             
-            <div className="flex justify-end mr-12 -mt-2">
-              <button 
-                className="px-8 py-3 rounded-2xl transition-colors font-medium text-white"
-                style={{ backgroundColor: "#324587" }}
+            {/* Botão Ver Todos */}
+            <div className="flex justify-center md:justify-end mt-12 md:mt-20 md:pr-12">
+              <Link 
+                to="/servicos"
+                className="bg-secondary text-white px-8 py-3 rounded-full font-semibold text-sm hover:bg-secondary/90 transition-colors shadow-md"
               >
                 Ver Todos
-              </button>
+              </Link>
             </div>
           </div>
+
         </div>
       </div>
     </section>
-  )
+  );
 }
