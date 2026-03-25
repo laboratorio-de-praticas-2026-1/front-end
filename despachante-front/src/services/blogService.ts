@@ -5,7 +5,7 @@ export interface BlogPost {
   titulo: string;
   conteudo: string;
   dataPublicacao: string;
-  imagem?: string; // Opcional, caso o post venha sem foto
+  imagem?: string; // caso o post venha sem foto
 }
 
 export const blogService = {
@@ -42,7 +42,6 @@ export const blogService = {
       const resposta = await fetch(`${API_URL}/blog`, {
         method: "POST",
         body: dadosDoFormulario, 
-        // Não usamos "Content-Type" manual aqui, o navegador gerencia isso para arquivos
       });
 
       if (!resposta.ok) throw new Error("Erro ao criar post");

@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
-import BuscaBlog from "@/components/sections/admin/blog/BuscaCadastroBlog"; // Verifique se o caminho do seu import está correto
+import { useNavigate } from "react-router-dom"; 
+import BuscaBlog from "@/components/sections/admin/blog/BuscaCadastroBlog"; 
 import BlogTable from "@/components/tables/BlogTable";
-import { blogService, type BlogPost } from "@/services/blogService";
+import { blogService } from "@/services/blogService";
+import type { BlogPost } from "@/services/blogService";
 
 export function BlogAdmin() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [carregando, setCarregando] = useState(true);
+  
+  // Inicializar o hook de navegação
+  const navigate = useNavigate();
 
-  // Assim que a tela abrir, ele chama a função carregarPosts
   useEffect(() => {
     carregarPosts();
   }, []);
@@ -15,9 +19,7 @@ export function BlogAdmin() {
   const carregarPosts = async () => {
     setCarregando(true);
     try {
-      // Chama o back-end lá na nuvem (Railway)
       const dados = await blogService.listarTodos();
-      console.log("Dados que chegaram do Back-end:", dados); 
       setPosts(dados);
     } catch (error) {
       console.error("Erro ao buscar posts:", error);
@@ -26,9 +28,16 @@ export function BlogAdmin() {
     }
   };
 
+  // 3. Função que executa a navegação
+  const irParaCriarPost = () => {
+    navigate("/admin/posts/novo");
+  };
+
   return (
     <div className="flex flex-col gap-6">
-      <BuscaBlog />
+
+      {/* 4. Passando a função irParaCriarPost para a prop onNovaPostagem */}
+      <BuscaBlog onNovaPostagem={irParaCriarPost} />
       
       <BlogTable posts={posts} carregando={carregando} />
     </div>

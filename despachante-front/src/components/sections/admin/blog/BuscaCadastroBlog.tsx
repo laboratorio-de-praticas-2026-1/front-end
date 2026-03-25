@@ -84,7 +84,7 @@ export default function BuscaBlog({ onSearch, onNovaPostagem }: BuscaBlogProps) 
           Nova postagem 
         </Button>
 
-        {/* CORREÇÃO AQUI: Esta tag </div> fecha a caixa branca de inputs ANTES do botão! */}
+
         </div>
 
 
