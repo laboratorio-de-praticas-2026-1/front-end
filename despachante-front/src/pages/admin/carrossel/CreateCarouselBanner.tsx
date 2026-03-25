@@ -2,54 +2,67 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiImage, FiEye, FiCheckCircle } from "react-icons/fi";
 import { Button } from "@/components/ui/button";
+import { carouselService } from "@/services/carrosselService";
 
 export function CreateCarouselBanner() {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [bannerImage, setBannerImage] = useState<string>("");
-  const [bannerFile, setBannerFile] = useState<File | null>(null);
+  const [bannerImages, setBannerImages] = useState<string[]>([]);
+  const [bannerFiles, setBannerFiles] = useState<File[]>([]);
   const [description, setDescription] = useState("");
   const [isActive, setIsActive] = useState(true);
   const [saving, setSaving] = useState(false);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files || event.target.files.length === 0) return;
-    const file = event.target.files[0];
-    setBannerFile(file);
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      if (e.target?.result) {
-        setBannerImage(e.target.result as string);
-      }
-    };
-    reader.readAsDataURL(file);
+    const arquivosSelecionados = Array.from(event.target.files);
+    setBannerFiles((prev) => [...prev, ...arquivosSelecionados]);
+
+    arquivosSelecionados.forEach((arquivo) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target?.result) {
+          setBannerImages((prev) => [...prev, e.target?.result as string]);
+        }
+      };
+      reader.readAsDataURL(arquivo);
+    });
+
+    // Permite selecionar o mesmo arquivo em cliques consecutivos.
+    event.target.value = "";
+  };
+
+  const removeSelectedImage = (index: number) => {
+    setBannerFiles((prev) => prev.filter((_, i) => i !== index));
+    setBannerImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleCreate = async () => {
-    if (!bannerFile || !description.trim()) {
-      alert("Preencha a imagem e a descrição para criar o banner.");
+    if (bannerFiles.length === 0 || !description.trim()) {
+      alert("Selecione ao menos uma imagem e preencha a descrição para criar os banners.");
       return;
     }
 
     setSaving(true);
 
     try {
-      // Aqui normalmente faria chamada API para salvar banner
-      // const formData = new FormData();
-      // formData.append("image", bannerFile);
-      // formData.append("description", description);
-      // formData.append("status", isActive ? "Ativo" : "Inativo");
-      // await carouselService.createBanner(formData);
+      await Promise.all(
+        bannerFiles.map((file) => {
+          const formData = new FormData();
+          formData.append("image", file);
+          formData.append("description", description.trim());
+          formData.append("status", isActive ? "Ativo" : "Inativo");
+          return carouselService.criar(formData);
+        })
+      );
 
-      setTimeout(() => {
-        alert("Banner criado com sucesso!");
-        navigate("/admin/carrossel");
-      }, 400);
+      alert(`${bannerFiles.length} banner(s) criado(s) com sucesso!`);
+      navigate("/admin/carrossel");
     } catch (error) {
       console.error(error);
-      alert("Falha ao salvar banner, tente novamente.");
+      alert("Falha ao salvar os banners, tente novamente.");
     } finally {
       setSaving(false);
     }
@@ -71,18 +84,18 @@ export function CreateCarouselBanner() {
             <div className="bg-zinc-50 rounded-xl border border-zinc-200 p-4">
               <div className="flex items-center gap-2 mb-3">
                 <FiImage size={18} className="text-blue-600" />
-                <h2 className="font-semibold text-zinc-800">Imagem de destaque</h2>
+                <h2 className="font-semibold text-zinc-800">Imagens do carrossel</h2>
               </div>
 
               <div
                 className="h-72 rounded-lg border border-dashed border-zinc-300 bg-white flex items-center justify-center cursor-pointer overflow-hidden relative"
                 onClick={() => fileInputRef.current?.click()}
               >
-                {bannerImage ? (
-                  <img src={bannerImage} alt="Banner preview" className="w-full h-full object-cover" />
+                {bannerImages.length > 0 ? (
+                  <img src={bannerImages[0]} alt="Banner preview" className="w-full h-full object-cover" />
                 ) : (
                   <div className="text-zinc-400 text-center px-6">
-                    <p className="font-semibold">Clique para selecionar uma imagem</p>
+                    <p className="font-semibold">Clique para selecionar uma ou mais imagens</p>
                     <p className="text-xs mt-1">Tamanho recomendado: 416x556px (máx. 2MB)</p>
                   </div>
                 )}
@@ -91,9 +104,33 @@ export function CreateCarouselBanner() {
                   ref={fileInputRef}
                   className="hidden"
                   accept="image/*"
+                  multiple
                   onChange={handleImageChange}
                 />
               </div>
+
+              {bannerImages.length > 0 && (
+                <div className="mt-3">
+                  <p className="text-xs text-zinc-500 mb-2">{bannerImages.length} imagem(ns) selecionada(s)</p>
+                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                    {bannerImages.map((image, index) => (
+                      <div key={`${image}-${index}`} className="relative h-20 rounded-md overflow-hidden border border-zinc-200">
+                        <img src={image} alt={`Preview ${index + 1}`} className="w-full h-full object-cover" />
+                        <button
+                          type="button"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            removeSelectedImage(index);
+                          }}
+                          className="absolute top-1 right-1 bg-black/70 text-white text-xs rounded px-1.5 py-0.5"
+                        >
+                          x
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="bg-zinc-50 rounded-xl border border-zinc-200 p-4">
@@ -118,8 +155,8 @@ export function CreateCarouselBanner() {
 
               <div className="rounded-xl border border-zinc-200 bg-white overflow-hidden">
                 <div className="h-48 bg-zinc-100 flex items-center justify-center">
-                  {bannerImage ? (
-                    <img src={bannerImage} alt="Preview" className="w-full h-full object-cover" />
+                  {bannerImages.length > 0 ? (
+                    <img src={bannerImages[0]} alt="Preview" className="w-full h-full object-cover" />
                   ) : (
                     <span className="text-zinc-400">Sem imagem selecionada</span>
                   )}

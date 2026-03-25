@@ -37,10 +37,10 @@ export function EditCarouselBanner() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [banner, setBanner] = useState<Banner | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>("");
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [description, setDescription] = useState("");
   const [isActive, setIsActive] = useState(true);
-  const [imgFile, setImgFile] = useState<File | null>(null);
+  const [imgFiles, setImgFiles] = useState<File[]>([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export function EditCarouselBanner() {
     const data = mockBanners.find((item) => item.id === decodedId);
     if (data) {
       setBanner(data);
-      setImagePreview(data.image);
+      setImagePreviews([data.image]);
       setDescription(data.description);
       setIsActive(data.status === "Ativo");
     }
@@ -57,14 +57,26 @@ export function EditCarouselBanner() {
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files || event.target.files.length === 0) return;
-    const file = event.target.files[0];
-    setImgFile(file);
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      if (e.target?.result) setImagePreview(e.target.result as string);
-    };
-    reader.readAsDataURL(file);
+    const arquivosSelecionados = Array.from(event.target.files);
+    setImgFiles((prev) => [...prev, ...arquivosSelecionados]);
+
+    arquivosSelecionados.forEach((arquivo) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target?.result) {
+          setImagePreviews((prev) => [...prev, e.target.result as string]);
+        }
+      };
+      reader.readAsDataURL(arquivo);
+    });
+
+    event.target.value = "";
+  };
+
+  const removeSelectedImage = (index: number) => {
+    setImagePreviews((prev) => prev.filter((_, i) => i !== index));
+    setImgFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSave = () => {
@@ -123,25 +135,49 @@ export function EditCarouselBanner() {
             <section className="bg-zinc-50 rounded-xl border border-zinc-200 p-4">
               <div className="flex items-center gap-2 mb-3">
                 <FiImage size={18} className="text-blue-600" />
-                <h2 className="font-semibold text-zinc-800">Imagem de destaque</h2>
+                <h2 className="font-semibold text-zinc-800">Imagens do carrossel</h2>
               </div>
               <div
                 className="h-[380px] rounded-lg border border-dashed border-zinc-300 bg-white flex items-center justify-center overflow-hidden relative cursor-pointer"
                 onClick={() => fileInputRef.current?.click()}
               >
-                {imagePreview ? (
-                  <img src={imagePreview} alt="Banner" className="w-full h-full object-cover" />
+                {imagePreviews.length > 0 ? (
+                  <img src={imagePreviews[0]} alt="Banner" className="w-full h-full object-cover" />
                 ) : (
-                  <span className="text-zinc-400 text-center px-4">Clique para inserir uma imagem</span>
+                  <span className="text-zinc-400 text-center px-4">Clique para inserir uma ou mais imagens</span>
                 )}
                 <input
                   type="file"
                   ref={fileInputRef}
                   className="hidden"
                   accept="image/*"
+                  multiple
                   onChange={handleImageChange}
                 />
               </div>
+
+              {imagePreviews.length > 0 && (
+                <div className="mt-3">
+                  <p className="text-xs text-zinc-500 mb-2">{imagePreviews.length} imagem(ns) selecionada(s)</p>
+                  <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                    {imagePreviews.map((image, index) => (
+                      <div key={`${image}-${index}`} className="relative h-20 rounded-md overflow-hidden border border-zinc-200">
+                        <img src={image} alt={`Preview ${index + 1}`} className="w-full h-full object-cover" />
+                        <button
+                          type="button"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            removeSelectedImage(index);
+                          }}
+                          className="absolute top-1 right-1 bg-black/70 text-white text-xs rounded px-1.5 py-0.5"
+                        >
+                          x
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               <p className="mt-2 text-[12px] text-zinc-400 text-center">Tamanho recomendado: 416x556px (máx. 2MB)</p>
             </section>
 
@@ -165,8 +201,8 @@ export function EditCarouselBanner() {
 
               <div className="rounded-xl border border-zinc-200 bg-white overflow-hidden">
                 <div className="h-48 bg-zinc-100 flex items-center justify-center">
-                  {imagePreview ? (
-                    <img src={imagePreview} alt="preview" className="w-full h-full object-cover" />
+                  {imagePreviews.length > 0 ? (
+                    <img src={imagePreviews[0]} alt="preview" className="w-full h-full object-cover" />
                   ) : (
                     <span className="text-zinc-400">Sem imagem</span>
                   )}
