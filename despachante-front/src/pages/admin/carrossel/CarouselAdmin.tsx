@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell, TableCaption} from "@/components/ui/table";
-import { FiEdit3, FiTrash2, FiChevronRight, FiMoreHorizontal } from "react-icons/fi";
+import { FiChevronRight, FiMoreHorizontal } from "react-icons/fi";
+import { SquarePen, Trash2 } from "lucide-react"; // Importando os mesmos ícones do Blog
 
 export function CarouselAdmin() {
   type Banner = {
@@ -94,10 +95,10 @@ export function CarouselAdmin() {
   };
 
   return (
-    <div className="bg-zinc-100 rounded-[28px] shadow-sm border border-zinc-200 p-7">
+    <div className=" rounded-[28px] border-zinc-200 p-7">
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-[34px] leading-none font-bold text-[#032a4e]">Carrossel</h1>
+          <h1 className="text-[34px] leading-none font-bold text-secondary">Carrossel</h1>
           <p className="text-sm text-zinc-500 mt-2">Visualize, crie, organize e gerencie todos os banners do seu carrossel de serviços.</p>
         </div>
       </div>
@@ -123,7 +124,11 @@ export function CarouselAdmin() {
           />
         </div>
 
-        <Button onClick={handleAddNew} className="w-full sm:w-auto rounded-lg bg-blue-600 hover:bg-blue-700 h-10 px-5">
+        {/* Botão padronizado com o CMS do Blog */}
+        <Button 
+          onClick={handleAddNew} 
+          className="w-full sm:w-auto cursor-pointer bg-primary text-white shadow-sm transition-all hover:brightness-110 hover:scale-[1.02] active:scale-[0.98] h-10 px-6 rounded-lg"
+        >
             + Novo banner
         </Button>
       </div>
@@ -132,22 +137,22 @@ export function CarouselAdmin() {
         <Table>
           <TableHeader>
             <TableRow className="bg-[#032a4e] hover:bg-[#032a4e]">
-              <TableHead className="text-white font-semibold">ID</TableHead>
-              <TableHead className="text-white font-semibold">Imagem</TableHead>
-              <TableHead className="text-white font-semibold">Descrição</TableHead>
-              <TableHead className="text-white font-semibold w-28">Status</TableHead>
-              <TableHead className="text-white font-semibold w-24">Ações</TableHead>
+              <TableHead className="text-white font-medium">ID</TableHead>
+              <TableHead className="text-white font-medium">Imagem</TableHead>
+              <TableHead className="text-white font-medium">Descrição</TableHead>
+              <TableHead className="text-white font-medium w-28">Status</TableHead>
+              <TableHead className="text-white font-medium text-right px-6 w-32">Ações</TableHead>
             </TableRow>
           </TableHeader>
 
           <TableBody>
             {filteredBanners.map((banner) => (
-              <TableRow key={banner.id} className="hover:bg-zinc-50">
-                <TableCell className="text-zinc-500">{banner.id}</TableCell>
+              <TableRow key={banner.id} className="hover:bg-zinc-50 border-b border-zinc-100 bg-white">
+                <TableCell className="text-muted-foreground font-medium">{banner.id}</TableCell>
                 <TableCell className="p-2">
-                  <img src={banner.image} alt={banner.description} className="h-12 w-20 object-cover rounded-md" />
+                  <img src={banner.image} alt={banner.description} className="h-14 w-24 object-cover rounded-md shadow-sm" />
                 </TableCell>
-                <TableCell className="max-w-[420px] truncate text-zinc-700">{banner.description}</TableCell>
+                <TableCell className="font-medium text-foreground truncate max-w-[420px]">{banner.description}</TableCell>
                 <TableCell>
                   <span
                     className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${
@@ -157,13 +162,22 @@ export function CarouselAdmin() {
                     {banner.status}
                   </span>
                 </TableCell>
-                <TableCell>
-                  <div className="flex gap-3">
-                    <button onClick={() => handleEdit(banner.id)} className="text-blue-500 hover:text-blue-700" aria-label={`Editar ${banner.id}`}>
-                      <FiEdit3 />
+                <TableCell className="text-right px-6">
+                  {/* Ícones padronizados com o CMS do Blog */}
+                  <div className="flex justify-end gap-2">
+                    <button 
+                      onClick={() => handleEdit(banner.id)} 
+                      className="p-2 text-primary hover:bg-primary/10 rounded-md transition-colors cursor-pointer" 
+                      aria-label={`Editar ${banner.id}`}
+                    >
+                      <SquarePen size={18} />
                     </button>
-                    <button onClick={() => handleDelete(banner.id)} className="text-rose-500 hover:text-rose-700" aria-label={`Excluir ${banner.id}`}>
-                      <FiTrash2 />
+                    <button 
+                      onClick={() => handleDelete(banner.id)} 
+                      className="p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors cursor-pointer" 
+                      aria-label={`Excluir ${banner.id}`}
+                    >
+                      <Trash2 size={18} />
                     </button>
                   </div>
                 </TableCell>
@@ -181,16 +195,16 @@ export function CarouselAdmin() {
 
       <div className="mt-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-zinc-500 px-1">
         <div className="flex items-center gap-2">
-          <button className="text-zinc-400 hover:text-zinc-600">Previous</button>
-          <button className="h-7 min-w-7 px-2 rounded-md border border-zinc-300 text-zinc-700 bg-white">1</button>
-          <button className="h-7 min-w-7 px-2 rounded-md text-zinc-700">2</button>
-          <button className="h-7 min-w-7 px-2 rounded-md text-zinc-700">3</button>
+          <button className="text-zinc-400 hover:text-zinc-600 cursor-pointer">Previous</button>
+          <button className="h-7 min-w-7 px-2 rounded-md border border-zinc-300 text-zinc-700 bg-white cursor-pointer">1</button>
+          <button className="h-7 min-w-7 px-2 rounded-md text-zinc-700 hover:bg-zinc-200 cursor-pointer">2</button>
+          <button className="h-7 min-w-7 px-2 rounded-md text-zinc-700 hover:bg-zinc-200 cursor-pointer">3</button>
           <span className="px-1 text-zinc-500"><FiMoreHorizontal /></span>
-          <button className="text-[#032a4e] hover:text-[#011f3a] flex items-center gap-1">
+          <button className="text-[#032a4e] hover:text-[#011f3a] flex items-center gap-1 cursor-pointer">
             Next <FiChevronRight size={14} />
           </button>
         </div>
-        <div>1.234 resultados</div>
+        <div>{filteredBanners.length} resultados</div>
       </div>
 
       {bannerToDelete && (
@@ -204,10 +218,10 @@ export function CarouselAdmin() {
               </p>
             </div>
             <div className="flex justify-end gap-2 p-4">
-              <Button variant="outline" onClick={cancelDelete} className="h-10">
+              <Button variant="outline" onClick={cancelDelete} className="h-10 cursor-pointer">
                 Voltar
               </Button>
-              <Button variant="destructive" onClick={confirmDelete} className="h-10">
+              <Button variant="destructive" onClick={confirmDelete} className="h-10 cursor-pointer">
                 Excluir
               </Button>
             </div>
