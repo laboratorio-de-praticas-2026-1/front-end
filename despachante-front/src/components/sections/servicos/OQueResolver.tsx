@@ -41,7 +41,8 @@ export function OQueResolver() {
 
           {/* LADO DIREITO - Cards em Grid */}
           <div className="relative">
-            <div className="grid grid-cols-2 gap-4 md:gap-6">
+            {/* Ajustado o gap para mobile (gap-3) para ganhar mais espaço interno nos cards */}
+            <div className="grid grid-cols-2 gap-3 md:gap-6">
               {servicos.map((servico, index) => {
                 const isRightColumn = index === 1 || index === 3;
                 const offsetClass = isRightColumn ? "translate-y-0 md:translate-y-12" : "";
@@ -49,18 +50,19 @@ export function OQueResolver() {
                 return (
                   <div 
                     key={index}
-                    className={`flex flex-col items-center justify-center p-8 rounded-[1.5rem] shadow-lg transition-transform hover:-translate-y-1 cursor-pointer min-h-[180px] md:min-h-[220px] ${offsetClass} ${
+                    className={`flex flex-col items-center justify-center p-4 md:p-8 rounded-[1.5rem] shadow-lg transition-transform hover:-translate-y-1 cursor-pointer min-h-[150px] md:min-h-[220px] ${offsetClass} ${
                       servico.isGradient 
                         ? "bg-gradient-to-b from-[#1E84CF] to-[#135A91] text-white border border-white/10" 
                         : "bg-white text-primary"
                     }`}
                   >
-
+                    {/* Ícone menor no mobile (size 32) e maior no desktop (size 44) */}
                     <FaCar 
-                      size={44} 
-                      className={`mb-4 ${servico.isGradient ? "text-white" : "text-primary"}`} 
+                      className={`mb-3 md:mb-4 text-3xl md:text-5xl ${servico.isGradient ? "text-white" : "text-primary"}`} 
                     />
-                    <h3 className="text-center font-bold text-lg md:text-xl leading-tight whitespace-pre-line">
+                    
+                    {/* Fonte ajustada: text-sm no mobile, text-xl no desktop */}
+                    <h3 className="text-center font-bold text-sm md:text-xl leading-tight whitespace-pre-line break-words">
                       {servico.titulo}
                     </h3>
                   </div>
@@ -72,7 +74,7 @@ export function OQueResolver() {
             <div className="flex justify-center md:justify-end mt-12 md:mt-20 md:pr-12">
               <Link 
                 to="/servicos"
-                className="bg-secondary text-white px-8 py-3 rounded-full font-semibold text-sm hover:bg-secondary/90 transition-colors shadow-md"
+                className="bg-primary text-white px-8 py-3 rounded-full font-semibold text-sm hover:bg-secondary/90 transition-colors shadow-md"
               >
                 Ver Todos
               </Link>
