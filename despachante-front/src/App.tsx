@@ -5,17 +5,21 @@ import { Servicos } from "@/pages/Servicos";
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { BlogAdmin } from "@/pages/admin/BlogAdmin";
 import EditPostCMS from "@/components/sections/admin/blog/EditPostCMS";
-
-// 1. IMPORTANTE: Importe o seu componente CreatePostCMS aqui!
+import { Blog } from "@/pages/Blog";
 import CreatePostCMS from "@/components/sections/admin/blog/CreatePostCMS";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* === ROTAS PÚBLICAS === */}
         <Route path="/" element={<Home />} />
         <Route path="/servicos" element={<Servicos />} /> 
+        
+        {/* ROTA DA LANDING PAGE DO BLOG AQUI */}
+        <Route path="/blog" element={<Blog />} /> 
 
+        {/* === ROTAS ADMINISTRATIVAS === */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="/admin/posts" replace />} />
           

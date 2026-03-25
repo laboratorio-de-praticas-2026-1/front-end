@@ -6,7 +6,7 @@ const navLinks = [
   { name: "Sobre Nós", href: "/#sobre" },
   { name: "Serviços", href: "/servicos" },
   { name: "Mapa", href: "/#mapa" },
-  { name: "Blog", href: "/#blog" },
+  { name: "Blog", href: "/blog" },
   { name: "Dúvidas", href: "/#duvidas" },
   { name: "Contato", href: "/#contato" },
 ];
@@ -15,11 +15,8 @@ export function Navbar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
-  // Lógica para monitorar o scroll e mostrar/esconder a Navbar
   useEffect(() => {
     const handleScroll = () => {
-      // Define a partir de quantos pixels de scroll a navbar deve aparecer
-      // 100px é geralmente o ideal para passar o impacto inicial da Hero
       if (window.scrollY > 100) {
         setIsVisible(true);
       } else {
@@ -29,7 +26,6 @@ export function Navbar() {
 
     window.addEventListener("scroll", handleScroll);
     
-    // Cleanup ao desmontar o componente
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -48,7 +44,7 @@ export function Navbar() {
           {/* LOGO */}
           <Link to="/" className="flex-shrink-0">
             <img 
-              src="/src/assets/logo-bortone-escura.png" 
+              src="/src/assets/logo-despachante-escura.png" 
               alt="Logo Bortone" 
               className="h-12 w-auto object-contain transition-transform duration-300 hover:scale-105"
             />
