@@ -51,7 +51,7 @@ export function Blog() {
     }
   };
 
-  const handleCategoryFilter = (category: string) => {
+  const handleCategoryFilter = (_category: string) => {
     // Lógica futura de categoria
     setFilteredPosts(posts); 
   };

@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Calendar, Image as ImageIcon } from "lucide-react"; // 1. ADICIONAMOS ImageIcon
+import { ArrowLeft, Calendar, Image as ImageIcon } from "lucide-react";
 
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { blogService, type BlogPost } from "@/services/blogService";
 
-// MOCK DO BANNER PUBLICITÁRIO (já puxando o dinâmico)
+// MOCK DO BANNER PUBLICITÁRIO 
 export function Artigo() {
   const { id } = useParams();
   const navigate = useNavigate();
   
   const [post, setPost] = useState<BlogPost | null>(null);
   const [carregando, setCarregando] = useState(true);
-  const [bannerUrl, setBannerUrl] = useState<string | null>(null);
+  const [bannerUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const carregarPost = async () => {
@@ -30,7 +30,7 @@ export function Artigo() {
 
     const carregarBanner = async () => {
       try {
-        const API_URL = import.meta.env.VITE_API_URL || "https://despachante-bortone-release-production.up.railway.app";
+        // const API_URL = import.meta.env.VITE_API_URL || "https://despachante-bortone-release-production.up.railway.app";
       } catch (error) {
         console.error("Erro ao buscar publicidade:", error);
       }
@@ -98,19 +98,16 @@ export function Artigo() {
             </button>
           </div>
 
-          {/* 2. NOVO: Container da Imagem do Artigo Fixo (O container div sempre renderiza) */}
           <div className="w-full max-w-4xl h-64 md:h-[450px] bg-zinc-200 rounded-3xl shadow-2xl overflow-hidden border-4 border-white mb-16">
             
-            {/* LÓGICA INTERNA: Verificamos se há imagem só aqui dentro */}
+            {/* LÓGICA INTERNA */}
             {post.imagem ? (
-              // Se o back-end devolveu a imagem, nós mostramos ela
               <img 
                 src={post.imagem} 
                 alt={post.titulo} 
                 className="w-full h-full object-cover"
               />
             ) : (
-              // Se não houver imagem, mostra o placeholder minimalista para não quebrar o layout
               <div className="w-full h-full flex flex-col items-center justify-center text-zinc-400 text-center gap-4 p-8">
                   <ImageIcon size={48} className="stroke-[1.5]" /> {/* Ícone de imagem */}
                   <p className="text-zinc-500 font-medium text-sm md:text-base">

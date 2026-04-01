@@ -40,7 +40,7 @@ export function EditCarouselBanner() {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [description, setDescription] = useState("");
   const [isActive, setIsActive] = useState(true);
-  const [imgFiles, setImgFiles] = useState<File[]>([]);
+  const [, setImgFiles] = useState<File[]>([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
@@ -65,7 +65,7 @@ export function EditCarouselBanner() {
       const reader = new FileReader();
       reader.onload = (e) => {
         if (e.target?.result) {
-          setImagePreviews((prev) => [...prev, e.target.result as string]);
+          setImagePreviews((prev) => [...prev, e.target?.result as string]);
         }
       };
       reader.readAsDataURL(arquivo);
@@ -142,7 +142,7 @@ export function EditCarouselBanner() {
                 onClick={() => fileInputRef.current?.click()}
               >
                 {imagePreviews.length > 0 ? (
-                  <img src={imagePreviews} alt="Banner" className="w-full h-full object-cover" />
+                  <img src={imagePreviews[0]} alt="Banner" className="w-full h-full object-cover" />
                 ) : (
                   <span className="text-zinc-400 text-center px-4">Clique para inserir uma ou mais imagens</span>
                 )}
@@ -202,7 +202,7 @@ export function EditCarouselBanner() {
               <div className="rounded-xl border border-zinc-200 bg-white overflow-hidden">
                 <div className="h-48 bg-zinc-100 flex items-center justify-center">
                   {imagePreviews.length > 0 ? (
-                    <img src={imagePreviews} alt="preview" className="w-full h-full object-cover" />
+                    <img src={imagePreviews[0]} alt="preview" className="w-full h-full object-cover" />
                   ) : (
                     <span className="text-zinc-400">Sem imagem</span>
                   )}

@@ -4,7 +4,7 @@ import { Home } from "@/pages/Home";
 import { Servicos } from "@/pages/Servicos"; 
 import { Blog } from "@/pages/Blog";
 import { Artigo } from "@/pages/Artigo";
-import { BlogPost } from "@/pages/BlogPost";
+
 
 // 1. IMPORT DO NOVO LAYOUT DO CLIENTE
 import { ClienteLayout } from "@/components/layout/ClienteLayout";
