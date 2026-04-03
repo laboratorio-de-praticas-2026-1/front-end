@@ -9,6 +9,10 @@ import { Artigo } from "@/pages/Artigo";
 // 1. IMPORT DO NOVO LAYOUT DO CLIENTE
 import { ClienteLayout } from "@/components/layout/ClienteLayout";
 
+// Importações das páginas do cliente
+import Solicitacoes from "@/pages/cliente/Solicitacoes";
+import SolicitacaoSucesso from "@/pages/cliente/SolicitacaoSucesso";
+
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { BlogAdmin } from "@/pages/admin/blog/BlogAdmin";
 import { CarouselAdmin } from "@/components/sections/admin/carrossel/CarouselAdmin";
@@ -33,6 +37,10 @@ function App() {
         <Route path="/cliente" element={<ClienteLayout />}>
           {/* Se a pessoa digitar só /cliente, ela é jogada para as solicitações */}
           <Route index element={<Navigate to="/cliente/solicitacoes" replace />} />
+          
+          {/* Rotas específicas do cliente */}
+          <Route path="solicitacoes" element={<Solicitacoes />} />
+          <Route path="solicitacoes/sucesso" element={<SolicitacaoSucesso />} />
           
           {/* Tela temporária: Pega qualquer link dentro do /cliente e mostra a sidebar */}
           <Route path="*" element={
