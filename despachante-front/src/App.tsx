@@ -17,6 +17,7 @@ import { EditCarouselBanner } from "@/components/sections/admin/carrossel/EditCa
 import EditPostCMS from "@/components/sections/admin/blog/EditPostCMS";
 import CreatePostCMS from "@/components/sections/admin/blog/CreatePostCMS";
 import Solicitacoes from "@/components/admin/Solicitacoes";
+import EditarSolicitacao from "./components/admin/EditarSolicitacao";
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="/admin/posts" replace />} />
           <Route path="solicitacoes" element={<Solicitacoes />} />
+          <Route path="solicitacoes/:id/editar" element={<EditarSolicitacao />} />
           
           {/* Rota da tabela de posts */}
           <Route path="posts" element={<BlogAdmin />} />
