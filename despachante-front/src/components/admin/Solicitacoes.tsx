@@ -9,6 +9,7 @@ import { DatePicker } from '@/components/ui/DatePicker';
 import { Button } from '../ui/button';
 import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors, useDroppable, useDraggable, type DragEndEvent, type DragStartEvent } from '@dnd-kit/core';
 import ModalCancelarSolicitacao from './solicitacoes/ModalCancelarSolicitacao';
+import ModalRecuperarSolicitacao from './solicitacoes/ModalRecuperarSolicitacao';
 
 const COLUMNS = [
   { id: 'recebido', label: 'Recebido', headerColor: 'bg-[#E5E7EA]', borderColor: 'border-[#E5E7EA]' },
@@ -135,6 +136,11 @@ const Solicitacoes = () => {
     novoStatus: string;
   } | null>(null);
 
+  const [recuperando, setRecuperando] = useState<{
+    solicitacao: Solicitacao;
+    novoStatus: string;
+  } | null>(null);
+
   // pra saber quando é click ou drag and drop
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
@@ -188,9 +194,18 @@ const Solicitacoes = () => {
     if (!solicitacao || solicitacao.status === novoStatus) return;
 
     const estaCancelando = novoStatus === 'cancelado';
+    const estaRecuperando = solicitacao.status === 'cancelado' && novoStatus !== 'cancelado';
 
     if (estaCancelando) {
       setCancelando({
+        solicitacao,
+        novoStatus,
+      });
+      return;
+    }
+
+    if (estaRecuperando) {
+      setRecuperando({
         solicitacao,
         novoStatus,
       });
@@ -219,8 +234,23 @@ const Solicitacoes = () => {
     setCancelando(null);
   };
 
+  const confirmarRecuperacao = () => {
+    if (!recuperando) return;
+
+    setSolicitacoes(prev =>
+      prev.map(s =>
+        s.id === recuperando.solicitacao.id
+          ? { ...s, status: recuperando.novoStatus }
+          : s
+      )
+    );
+
+    setRecuperando(null);
+  };
+
   const fecharModal = () => {
     setCancelando(null);
+    setRecuperando(null);
   };
 
   // coluna do card que tá sendo arrastado, usada para mostrar a borda colorida no card flutuante
@@ -237,6 +267,14 @@ const Solicitacoes = () => {
         <ModalCancelarSolicitacao
           solicitacao={cancelando.solicitacao}
           onConfirm={confirmarCancelamento}
+          onCancel={fecharModal}
+        />
+      )}
+
+      {recuperando && (
+        <ModalRecuperarSolicitacao
+          solicitacao={recuperando.solicitacao}
+          onConfirm={confirmarRecuperacao}
           onCancel={fecharModal}
         />
       )}
