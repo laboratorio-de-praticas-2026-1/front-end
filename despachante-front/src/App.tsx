@@ -4,7 +4,7 @@ import { Home } from "@/pages/Home";
 import { Servicos } from "@/pages/Servicos"; 
 import { Blog } from "@/pages/Blog";
 import { Artigo } from "@/pages/Artigo";
-
+import { BlogPost } from "@/pages/BlogPost";
 
 // 1. IMPORT DO NOVO LAYOUT DO CLIENTE
 import { ClienteLayout } from "@/components/layout/ClienteLayout";
@@ -16,6 +16,7 @@ import { CreateCarouselBanner } from "@/components/sections/admin/carrossel/Crea
 import { EditCarouselBanner } from "@/components/sections/admin/carrossel/EditCarouselBanner";
 import EditPostCMS from "@/components/sections/admin/blog/EditPostCMS";
 import CreatePostCMS from "@/components/sections/admin/blog/CreatePostCMS";
+import Solicitacoes from "@/components/admin/Solicitacoes";
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
         {/* ========================================= */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="/admin/posts" replace />} />
+          <Route path="solicitacoes" element={<Solicitacoes />} />
           
           {/* Rota da tabela de posts */}
           <Route path="posts" element={<BlogAdmin />} />
