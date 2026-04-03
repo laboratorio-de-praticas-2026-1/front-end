@@ -1,9 +1,8 @@
 import {useForm} from "react-hook-form"
 import {Form,FormItem,FormControl,FormMessage,FormField,} from "@/components/ui/form"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { cn } from "@/lib/utils"
+
 
 type FormData = {
     placa: string
@@ -18,7 +17,7 @@ export default function HeaderForm() {
         },
     })
 
-    function onSubmit(data: FormData){
+    function onSubmit(_data: FormData){
         alert("Formulário enviado!")
     }
 

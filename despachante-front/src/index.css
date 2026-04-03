@@ -30,10 +30,15 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 20%;
-    --primary: 35 92% 50%;
+    
+    /* Nova cor Primary (#1E84CF) */
+    --primary: 205.4 74.7% 46.5%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 226 40% 35%;
+    
+    /* Nova cor Secondary (#002749) */
+    --secondary: 207.9 100% 14.3%;
     --secondary-foreground: 0 0% 100%;
+    
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
     --muted: 0 0% 96.1%;
@@ -46,7 +51,10 @@
     --accent-foreground: 0 0% 20%;
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
-    --ring: 35 92% 50%;
+    
+    /* Ring atualizado para a nova cor Primary */
+    --ring: 205.4 74.7% 46.5%;
+    
     --radius: 0.5rem;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
@@ -58,10 +66,14 @@
   .dark {
     --background: 0 0% 10%;
     --foreground: 0 0% 98%;
-    --primary: 35 92% 50%;
+    
+    /* Novas cores aplicadas no Dark Mode também */
+    --primary: 205.4 74.7% 46.5%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 226 40% 35%;
+    
+    --secondary: 207.9 100% 14.3%;
     --secondary-foreground: 0 0% 98%;
+    
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 98%;
     --muted: 0 0% 20%;
@@ -74,6 +86,8 @@
     --accent-foreground: 0 0% 98%;
     --border: 0 0% 20%;
     --input: 0 0% 20%;
-    --ring: 35 92% 50%;
+    
+    /* Ring do Dark Mode atualizado */
+    --ring: 205.4 74.7% 46.5%;
   }
 }
