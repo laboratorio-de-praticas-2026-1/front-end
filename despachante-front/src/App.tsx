@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Home } from "@/pages/Home"; 
 import { Servicos } from "@/pages/Servicos"; 
 import { Blog } from "@/pages/Blog";
+import {Contato} from "@/pages/Contato"
 import { Artigo } from "@/pages/Artigo";
 
 
@@ -25,6 +26,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/servicos" element={<Servicos />} /> 
         <Route path="/blog" element={<Blog />} />
+        <Route path="/contato" element={<Contato />} />
         <Route path="/blog/:id" element={<Artigo />} />
         
         {/* ========================================= */}
