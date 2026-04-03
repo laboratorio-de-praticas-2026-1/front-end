@@ -1,0 +1,50 @@
+{
+  "contacts": [
+    {
+      "id": 1,
+      "name": "Amanda",
+      "online": true,
+      "unreadCount": 2,
+      "lastMessage": "Olá! Você poderia me ajudar? ",
+      "lastMessageTime": "09:42"
+    },
+    {
+      "id": 2,
+      "name": "Carlos",
+      "online": false,
+      "unreadCount": 0,
+      "lastMessage": "Obrigado !",
+      "lastMessageTime": "Ontem"
+    }
+  ],
+  "messages": {
+    "1": [
+      {
+        "id": 1,
+        "sender": "client",
+        "text": "Olá! Você poderia me ajudar com o status dos documentos solicitação #4592? Deu recusado o documento da minha moto, queria saber o motivo.",
+        "time": "09:30"
+      },
+      {
+        "id": 2,
+        "sender": "admin",
+        "text": "Olá Amanda, um momento. Vou consultar o sistema agora mesmo para verificar.",
+        "time": "09:31"
+      },
+      {
+        "id": 3,
+        "sender": "client",
+        "text": "Perfeito. Fico aguardando o retorno.",
+        "time": "09:31"
+      }
+    ],
+    "2": [
+      {
+        "id": 1,
+        "sender": "client",
+        "text": "Tudo certo",
+        "time": "08:00"
+      }
+    ]
+  }
+}
