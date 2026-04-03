@@ -7,18 +7,24 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import mockData from '@/mocks/mockAdminSolicitacoes.json';
 import { DatePicker } from '@/components/ui/DatePicker';
 import { Button } from '../ui/button';
-import {
-  DndContext,
-  DragOverlay,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  useDroppable,
-  useDraggable,
-  type DragEndEvent,
-  type DragStartEvent,
-} from '@dnd-kit/core';
+import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors, useDroppable, useDraggable, type DragEndEvent, type DragStartEvent } from '@dnd-kit/core';
+import ModalCancelarSolicitacao from './solicitacoes/ModalCancelarSolicitacao';
 
+const COLUMNS = [
+  { id: 'recebido', label: 'Recebido', headerColor: 'bg-[#E5E7EA]', borderColor: 'border-[#E5E7EA]' },
+  { id: 'em_andamento', label: 'Em andamento', headerColor: 'bg-[#8ACEFF]', borderColor: 'border-[#8ACEFF]' },
+  { id: 'aguardando_pagamento', label: 'Aguardando pagamento', headerColor: 'bg-[#FFC654]', borderColor: 'border-[#FFC654]' },
+  { id: 'aguardando_documento', label: 'Aguardando documento', headerColor: 'bg-[#B57900]', borderColor: 'border-[#B57900]' },
+  { id: 'cancelado', label: 'Cancelado', headerColor: 'bg-[#F7A9A7]', borderColor: 'border-[#F7A9A7]' },
+  { id: 'concluido', label: 'Concluído', headerColor: 'bg-[#A9DEB4]', borderColor: 'border-[#A9DEB4]' },
+];
+
+const defaultStats = [
+  { label: "Total solicitações", value: "0", type: "total" },
+  { label: "Em progresso", value: "0", type: "progress" },
+  { label: "Cancelados", value: "0", type: "canceled" },
+  { label: "Concluídos", value: "0", type: "finished" },
+];
 
 type Solicitacao = {
   id: number;
@@ -35,27 +41,16 @@ type Column = {
   borderColor: string;
 };
 
-
-const COLUMNS: Column[] = [
-  { id: 'recebido',  label: 'Recebido',  headerColor: 'bg-[#E5E7EA]', borderColor: 'border-[#E5E7EA]' },
-  { id: 'em_andamento', label: 'Em andamento', headerColor: 'bg-[#8ACEFF]', borderColor: 'border-[#8ACEFF]' },
-  { id: 'aguardando_pagamento', label: 'Aguardando pagamento', headerColor: 'bg-[#FFC654]', borderColor: 'border-[#FFC654]' },
-  { id: 'aguardando_documento', label: 'Aguardando documento', headerColor: 'bg-[#B57900]', borderColor: 'border-[#B57900]' },
-  { id: 'cancelado', label: 'Cancelado', headerColor: 'bg-[#F7A9A7]', borderColor: 'border-[#F7A9A7]' },
-  { id: 'concluido', label: 'Concluído', headerColor: 'bg-[#A9DEB4]', borderColor: 'border-[#A9DEB4]' },
-];
-
-const defaultStats = [
-  { label: "Total solicitações", value: "0", type: "total" },
-  { label: "Em progresso", value: "0", type: "progress" },
-  { label: "Cancelados", value: "0", type: "canceled" },
-  { label: "Concluídos", value: "0", type: "finished" },
-];
-
 type KanbanCardProps = {
   item: Solicitacao;
   borderColor: string;
   onClick: () => void;
+};
+
+type KanbanColumnProps = {
+  col: Column;
+  items: Solicitacao[];
+  onCardClick: (id: number) => void;
 };
 
 // card do kanban
@@ -86,12 +81,6 @@ const KanbanCard = ({ item, borderColor, onClick }: KanbanCardProps) => {
       </CardContent>
     </Card>
   );
-};
-
-type KanbanColumnProps = {
-  col: Column;
-  items: Solicitacao[];
-  onCardClick: (id: number) => void;
 };
 
 // coluna do kanban
@@ -141,6 +130,11 @@ const Solicitacoes = () => {
   const [dateDe, setDateDe] = useState<Date | undefined>(undefined);
   const [dateAte, setDateAte] = useState<Date | undefined>(undefined);
 
+  const [cancelando, setCancelando] = useState<{
+    solicitacao: Solicitacao;
+    novoStatus: string;
+  } | null>(null);
+
   // pra saber quando é click ou drag and drop
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
@@ -148,7 +142,7 @@ const Solicitacoes = () => {
 
   const getStatIcon = (type: string) => {
     switch (type) {
-      case 'total':    return <div className="bg-[#F39200]/14 rounded-lg w-8 min-w-8 h-8 md:w-10 md:h-10 flex items-center justify-center"><List className="text-orange-500 size-4 md:size-6" /></div>;
+      case 'total': return <div className="bg-[#F39200]/14 rounded-lg w-8 min-w-8 h-8 md:w-10 md:h-10 flex items-center justify-center"><List className="text-orange-500 size-4 md:size-6" /></div>;
       case 'progress': return <div className="bg-[#7ec8ff]/14 rounded-lg w-8 min-w-8 h-8 md:w-10 md:h-10 flex items-center justify-center"><CircleEllipsis className="text-blue-500 size-4 md:size-6" /></div>;
       case 'canceled': return <div className="bg-[#ffabab]/14 rounded-lg w-8 min-w-8 h-8 md:w-10 md:h-10 flex items-center justify-center"><CircleSlash className="text-red-500 size-4 md:size-6" /></div>;
       case 'finished': return <div className="bg-[#a3e4b8]/14 rounded-lg w-8 min-w-8 h-8 md:w-10 md:h-10 flex items-center justify-center"><CheckCircle className="text-green-500 size-4 md:size-6" /></div>;
@@ -160,17 +154,17 @@ const Solicitacoes = () => {
     return solicitacoes.filter(s => {
       const matchesSearch =
         (s.cliente ?? "").toLowerCase().includes(search.toLowerCase()) ||
-        (s.servico  ?? "").toLowerCase().includes(search.toLowerCase()) ||
+        (s.servico ?? "").toLowerCase().includes(search.toLowerCase()) ||
         String(s.id ?? "").includes(search);
 
       const dataSolicitacao = new Date(s.data + "T00:00:00");
-      const inicio = dateDe ? new Date(dateDe.getFullYear(), dateDe.getMonth(), dateDe.getDate(), 0, 0, 0)    : null;
-      const fim    = dateAte ? new Date(dateAte.getFullYear(), dateAte.getMonth(), dateAte.getDate(), 23, 59, 59) : null;
+      const inicio = dateDe ? new Date(dateDe.getFullYear(), dateDe.getMonth(), dateDe.getDate(), 0, 0, 0) : null;
+      const fim = dateAte ? new Date(dateAte.getFullYear(), dateAte.getMonth(), dateAte.getDate(), 23, 59, 59) : null;
 
       return (
         matchesSearch &&
         (inicio ? dataSolicitacao >= inicio : true) &&
-        (fim    ? dataSolicitacao <= fim    : true)
+        (fim ? dataSolicitacao <= fim : true)
       );
     });
   }, [solicitacoes, search, dateDe, dateAte]);
@@ -188,12 +182,45 @@ const Solicitacoes = () => {
 
     if (!over) return;
 
-    const newStatus = over.id as string;
+    const novoStatus = over.id as string;
+    const solicitacao = solicitacoes.find(s => s.id === active.id);
 
-    // a API vai ser chamada aqui para atualizar o status no backend, mas por enquanto só atualiza localmente
+    if (!solicitacao || solicitacao.status === novoStatus) return;
+
+    const estaCancelando = novoStatus === 'cancelado';
+
+    if (estaCancelando) {
+      setCancelando({
+        solicitacao,
+        novoStatus,
+      });
+      return;
+    }
+
+    // a APi vai ser chamada aqui para atualizar o status do banco
     setSolicitacoes(prev =>
-      prev.map(solicitacao => solicitacao.id === active.id ? { ...solicitacao, status: newStatus } : solicitacao)
+      prev.map(s =>
+        s.id === active.id ? { ...s, status: novoStatus } : s
+      )
     );
+  };
+
+  const confirmarCancelamento = () => {
+    if (!cancelando) return;
+
+    setSolicitacoes(prev =>
+      prev.map(s =>
+        s.id === cancelando.solicitacao.id
+          ? { ...s, status: cancelando.novoStatus }
+          : s
+      )
+    );
+
+    setCancelando(null);
+  };
+
+  const fecharModal = () => {
+    setCancelando(null);
   };
 
   // coluna do card que tá sendo arrastado, usada para mostrar a borda colorida no card flutuante
@@ -203,6 +230,16 @@ const Solicitacoes = () => {
 
   return (
     <div className="bg-[#f8fafc] space-y-6 font-sans">
+
+
+      {/* modal de cancelamento */}
+      {cancelando && (
+        <ModalCancelarSolicitacao
+          solicitacao={cancelando.solicitacao}
+          onConfirm={confirmarCancelamento}
+          onCancel={fecharModal}
+        />
+      )}
 
       <header>
         <h1 className="text-2xl font-bold text-secondary">Solicitações</h1>
@@ -222,7 +259,7 @@ const Solicitacoes = () => {
       </div>
 
       <div className="flex flex-wrap gap-3 items-center bg-white p-2 rounded-lg border-[#002749] border-[1.5px] justify-between">
-        <DatePicker date={dateDe} setDate={setDateDe} placeholder="De"   className="w-full xl:w-auto min-w-35" />
+        <DatePicker date={dateDe} setDate={setDateDe} placeholder="De" className="w-full xl:w-auto min-w-35" />
         <DatePicker date={dateAte} setDate={setDateAte} placeholder="Até" className="w-full xl:w-auto min-w-35" />
 
         <Select value={statusFilter} onValueChange={setStatusFilter}>
