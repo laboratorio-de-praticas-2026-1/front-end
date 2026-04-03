@@ -2,22 +2,22 @@
   "stats": [
     {
       "label": "Total solicitações",
-      "value": "1.234",
+      "value": "1.240",
       "type": "total"
     },
     {
       "label": "Em progresso",
-      "value": "856",
+      "value": "860",
       "type": "progress"
     },
     {
       "label": "Cancelados",
-      "value": "856",
+      "value": "857",
       "type": "canceled"
     },
     {
       "label": "Finalizados",
-      "value": "856",
+      "value": "858",
       "type": "finished"
     }
   ],
@@ -34,82 +34,70 @@
         { "arquivo": "comprovante_residencia.pdf", "tipo": "PDF Document", "status": "validado" },
         { "arquivo": "foto_carro.jpg", "tipo": "JPEG Image", "status": "aguardando_revisao" },
         { "arquivo": "foto_documento.png", "tipo": "PNG Image", "status": "negado" }
-      ],
-      "tipo_servico": "Transferência"
+      ]
     },
     {
       "id": "002",
       "cliente": "Ana Luiza",
-      "servico": "Transferência",
+      "servico": "Licenciamento",
       "data": "2026-04-10",
       "status": "em_andamento",
       "veiculo": "Honda Civic 2022 - DEF - 5678",
       "observacao": "Cliente enviou documentação incompleta, aguardando atualização.",
       "documentos": [
         { "arquivo": "rg.pdf", "tipo": "PDF Document", "status": "validado" },
-        { "arquivo": "cpf.pdf", "tipo": "PDF Document", "status": "validado" },
-        { "arquivo": "comprovante_residencia.pdf", "tipo": "PDF Document", "status": "aguardando_revisao" }
-      ],
-      "tipo_servico": "Transferência"
+        { "arquivo": "crlv_anterior.pdf", "tipo": "PDF Document", "status": "validado" }
+      ]
     },
     {
       "id": "003",
       "cliente": "Gean Oliveira",
-      "servico": "Transferência",
+      "servico": "Renovação",
       "data": "2026-04-11",
       "status": "aguardando_pagamento",
       "veiculo": "Volkswagen Gol 2020 - GHI - 9012",
-      "observacao": "Pagamento pendente via boleto.",
+      "observacao": "Pagamento da taxa de renovação pendente.",
       "documentos": [
-        { "arquivo": "documento_veiculo.pdf", "tipo": "PDF Document", "status": "validado" },
-        { "arquivo": "comprovante_residencia.pdf", "tipo": "PDF Document", "status": "validado" }
-      ],
-      "tipo_servico": "Transferência"
+        { "arquivo": "cnh_vencida.pdf", "tipo": "PDF Document", "status": "validado" },
+        { "arquivo": "exame_medico.pdf", "tipo": "PDF Document", "status": "validado" }
+      ]
     },
     {
       "id": "004",
-      "cliente": "Vinicius Martins",
-      "servico": "Transferência",
-      "data": "2026-04-12",
-      "status": "aguardando_documento",
-      "veiculo": "Fiat Argo 2021 - JKL - 3456",
-      "observacao": "Falta envio da foto do CRLV.",
+      "cliente": "Mariana Souza",
+      "servico": "Licenciamento",
+      "data": "2026-04-15",
+      "status": "recebido",
+      "veiculo": "Jeep Compass 2024 - XYZ - 9876",
+      "observacao": "Aguardando triagem inicial.",
       "documentos": [
-        { "arquivo": "rg.pdf", "tipo": "PDF Document", "status": "validado" },
-        { "arquivo": "cpf.pdf", "tipo": "PDF Document", "status": "validado" },
-        { "arquivo": "crlv.jpg", "tipo": "JPEG Image", "status": "aguardando_revisao" }
-      ],
-      "tipo_servico": "Transferência"
+        { "arquivo": "comprovante_pagamento.pdf", "tipo": "PDF Document", "status": "aguardando_revisao" }
+      ]
     },
     {
       "id": "005",
-      "cliente": "Miguel Santos",
+      "cliente": "Ricardo Gomes",
       "servico": "Transferência",
-      "data": "2026-04-13",
+      "data": "2026-04-16",
       "status": "cancelado",
-      "veiculo": "Chevrolet Onix 2019 - MNO - 7890",
-      "observacao": "Solicitação cancelada pelo cliente.",
+      "veiculo": "Ford Ranger 2021 - KKK - 5544",
+      "observacao": "Venda do veículo desfeita.",
       "documentos": [
-        { "arquivo": "rg.pdf", "tipo": "PDF Document", "status": "validado" },
-        { "arquivo": "cpf.pdf", "tipo": "PDF Document", "status": "validado" }
-      ],
-      "tipo_servico": "Transferência"
+        { "arquivo": "recibo_venda.pdf", "tipo": "PDF Document", "status": "validado" }
+      ]
     },
     {
       "id": "006",
-      "cliente": "Vitor Gabriel",
-      "servico": "Transferência",
-      "data": "2026-04-14",
+      "cliente": "Beatriz Viana",
+      "servico": "Renovação",
+      "data": "2026-04-17",
       "status": "concluido",
-      "veiculo": "Hyundai HB20 2022 - PQR - 1122",
-      "observacao": "Transferência concluída com sucesso.",
+      "veiculo": "Nissan Kicks 2023 - LLL - 2233",
+      "observacao": "CNH renovada e emitida.",
       "documentos": [
-        { "arquivo": "rg.pdf", "tipo": "PDF Document", "status": "validado" },
-        { "arquivo": "cpf.pdf", "tipo": "PDF Document", "status": "validado" },
-        { "arquivo": "comprovante_residencia.pdf", "tipo": "PDF Document", "status": "validado" },
-        { "arquivo": "documento_veiculo.pdf", "tipo": "PDF Document", "status": "validado" }
-      ],
-      "tipo_servico": "Transferência"
+        { "arquivo": "cnh_nova.pdf", "tipo": "PDF Document", "status": "validado" },
+        { "arquivo": "protocolo_emissao.pdf", "tipo": "PDF Document", "status": "validado" }
+      ]
     }
   ]
 }

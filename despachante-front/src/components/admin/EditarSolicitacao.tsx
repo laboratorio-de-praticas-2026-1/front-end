@@ -23,6 +23,7 @@ import {
 } from '@/components/ui/table';
 import mockData from '@/mocks/mockAdminSolicitacoes.json';
 import { DatePicker } from '../ui/DatePicker';
+import ModalAlterarStatusDocumento from './solicitacoes/ModalAlterarStatusDocumento'
 
 type DocumentoStatus = 'validado' | 'aguardando_revisao' | 'negado';
 
@@ -43,7 +44,7 @@ type Solicitacao = {
   documentos?: Documento[];
 };
 
-const status_labels : Record<string, string> = {
+const status_labels: Record<string, string> = {
   recebido: 'Recebido',
   em_andamento: 'Em andamento',
   aguardando_pagamento: 'Aguardando pagamento',
@@ -69,7 +70,7 @@ const doc_status_config: Record<DocumentoStatus, { label: string; className: str
   negado: { label: 'Negado', className: 'bg-red-100 text-red-700' },
 };
 
-const tipos_servico = [
+const servicos = [
   'Transferência',
   'Licenciamento',
   'Renovação',
@@ -96,6 +97,13 @@ const EditarSolicitacao = () => {
   const [status, setStatus] = useState(solicitação.status);
   const [date, setDate] = useState(new Date(solicitação.data));
   const [observacao, setObservacao] = useState(solicitação.observacao ?? '');
+  const [modalDocumento, setModalDocumento] = useState<{
+    aberto: boolean;
+    index: number | null;
+  }>({ aberto: false, index: null });
+  const [documentosState, setDocumentosState] = useState<Documento[]>(
+    solicitação.documentos ?? []
+  );
 
   // salvar
   const handleSalvar = () => {
@@ -113,6 +121,16 @@ const EditarSolicitacao = () => {
   };
 
   const handleCancelar = () => navigate('/admin/solicitacoes');
+
+  const handleSalvarStatusDocumento = (novoStatus: DocumentoStatus) => {
+    if (modalDocumento.index === null) return;
+    setDocumentosState(prev =>
+      prev.map((doc, i) =>
+        i === modalDocumento.index ? { ...doc, status: novoStatus } : doc
+      )
+    );
+    // colocar o endpoint de atualização do status do documento aqui
+  };
 
   const documentos: Documento[] = solicitação.documentos ?? [];
 
@@ -156,7 +174,7 @@ const EditarSolicitacao = () => {
                   <SelectValue placeholder="Selecione o serviço" />
                 </SelectTrigger>
                 <SelectContent className="bg-white border-0">
-                  {tipos_servico.map(t => (
+                  {servicos.map(t => (
                     <SelectItem key={t} value={t}>{t}</SelectItem>
                   ))}
                 </SelectContent>
@@ -278,11 +296,11 @@ const EditarSolicitacao = () => {
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">
                             {/* aqui é pra chamar o endpoint de download */}
-                            <button className="text-slate-400 hover:text-slate-600 transition-colors">
+                            <button className="text-slate-400 hover:text-slate-600 transition-colors cursor-pointer">
                               <Download className="size-4" />
                             </button>
                             {/* adicionar botao pra abrir o modal de edicao */}
-                            <button className="text-slate-400 hover:text-slate-600 transition-colors">
+                            <button className="text-slate-400 hover:text-slate-600 transition-colors cursor-pointer" onClick={() => setModalDocumento({ aberto: true, index: i })}>
                               <Pencil className="size-4" />
                             </button>
                           </div>
@@ -307,6 +325,17 @@ const EditarSolicitacao = () => {
           Salvar solicitação
         </Button>
       </div>
+
+      {modalDocumento.aberto && modalDocumento.index !== null && (
+        <ModalAlterarStatusDocumento
+          open={modalDocumento.aberto}
+          onOpenChange={aberto => setModalDocumento(prev => ({ ...prev, aberto }))}
+          nomeArquivo={documentosState[modalDocumento.index].arquivo}
+          statusAtual={documentosState[modalDocumento.index].status}
+          onSalvar={handleSalvarStatusDocumento}
+        />
+      )}
+      
     </div>
   );
 };
