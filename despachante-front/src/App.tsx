@@ -16,6 +16,7 @@ import { CreateCarouselBanner } from "@/components/sections/admin/carrossel/Crea
 import { EditCarouselBanner } from "@/components/sections/admin/carrossel/EditCarouselBanner";
 import EditPostCMS from "@/components/sections/admin/blog/EditPostCMS";
 import CreatePostCMS from "@/components/sections/admin/blog/CreatePostCMS";
+import { Contato } from "@/pages/Contato";
 
 function App() {
   return (
@@ -26,10 +27,10 @@ function App() {
         <Route path="/servicos" element={<Servicos />} /> 
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:id" element={<Artigo />} />
+        <Route path="/contato" element={<Contato />} />
         
-        {/* ========================================= */}
-        {/* === ROTAS DO PORTAL DO CLIENTE (NOVO) === */}
-        {/* ========================================= */}
+
+        {/* === ROTAS DO PORTAL DO CLIENTE === */}
         <Route path="/cliente" element={<ClienteLayout />}>
           {/* Se a pessoa digitar só /cliente, ela é jogada para as solicitações */}
           <Route index element={<Navigate to="/cliente/solicitacoes" replace />} />
@@ -43,9 +44,8 @@ function App() {
           } />
         </Route>
 
-        {/* ========================================= */}
-        {/* === ROTAS DO ADMIN                    === */}
-        {/* ========================================= */}
+
+        {/* === ROTAS DO ADMIN === */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="/admin/posts" replace />} />
           
