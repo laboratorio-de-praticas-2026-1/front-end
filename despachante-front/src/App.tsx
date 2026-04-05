@@ -5,16 +5,12 @@ import { Servicos } from "@/pages/Servicos";
 import { Blog } from "@/pages/Blog";
 import { Artigo } from "@/pages/Artigo";
 
-
-import Solicitacoes from "@/pages/cliente/Solicitacoes";
+import SolicitacoesAdmin from "./components/admin/solicitacoes/SolicitacoesAdmin";
 import SolicitacaoSucesso from "@/pages/cliente/SolicitacaoSucesso";
 import HistoricoSolicitacoes from "@/pages/cliente/HistoricoSolicitacoes";
 import DetalhesSolicitacao from "@/pages/cliente/DetalhesSolicitacao";
 
 
-import DetalhesSolicitacao from "@/pages/cliente/DetalhesSolicitacao";
-
-// 1. IMPORT DO NOVO LAYOUT DO CLIENTE
 import { ClienteLayout } from "@/components/layout/ClienteLayout";
 
 
@@ -26,7 +22,9 @@ import { EditCarouselBanner } from "@/components/sections/admin/carrossel/EditCa
 import EditPostCMS from "@/components/sections/admin/blog/EditPostCMS";
 import CreatePostCMS from "@/components/sections/admin/blog/CreatePostCMS";
 import { Contato } from "@/pages/Contato";
-import Solicitacoes from "@/components/admin/Solicitacoes";
+
+import Solicitacoes from "@/pages/cliente/SolicitacoesAdmin";
+
 import EditarSolicitacao from "@/components/admin/EditarSolicitacao";
 
 function App() {
@@ -68,7 +66,7 @@ function App() {
         {/* === ROTAS DO ADMIN === */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="/admin/posts" replace />} />
-          <Route path="solicitacoes" element={<Solicitacoes />} />
+          <Route path="solicitacoes" element={<SolicitacoesAdmin />} />
           <Route path="solicitacoes/:id/editar" element={<EditarSolicitacao />} />
           
           {/* Rota da tabela de posts */}

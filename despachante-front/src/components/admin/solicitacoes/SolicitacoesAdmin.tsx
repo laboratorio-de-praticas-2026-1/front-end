@@ -6,10 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import mockData from '@/mocks/mockAdminSolicitacoes.json';
 import { DatePicker } from '@/components/ui/DatePicker';
-import { Button } from '../ui/button';
+import { Button } from '../../ui/button';
 import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors, useDroppable, useDraggable, type DragEndEvent, type DragStartEvent } from '@dnd-kit/core';
-import ModalCancelarSolicitacao from './solicitacoes/ModalCancelarSolicitacao';
-import ModalRecuperarSolicitacao from './solicitacoes/ModalRecuperarSolicitacao';
+import ModalCancelarSolicitacao from './ModalCancelarSolicitacao';
+import ModalRecuperarSolicitacao from './ModalRecuperarSolicitacao';
 
 const COLUMNS = [
   { id: 'recebido', label: 'Recebido', headerColor: 'bg-[#E5E7EA]', borderColor: 'border-[#E5E7EA]' },
@@ -117,7 +117,7 @@ const KanbanColumn = ({ col, items, onCardClick }: KanbanColumnProps) => {
 };
 
 
-const Solicitacoes = () => {
+const SolicitacoesAdmin = () => {
   const navigate = useNavigate();
 
   const stats = mockData?.stats?.length ? mockData.stats : defaultStats;
@@ -369,4 +369,4 @@ const Solicitacoes = () => {
   );
 };
 
-export default Solicitacoes;
+export default SolicitacoesAdmin;
