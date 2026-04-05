@@ -1,4 +1,3 @@
-// src/pages/cliente/HistoricoSolicitacoes.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Search, Calendar } from "lucide-react";

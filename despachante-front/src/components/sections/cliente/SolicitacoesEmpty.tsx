@@ -1,4 +1,3 @@
-// src/components/sections/cliente/SolicitacoesEmpty.tsx
 import { Button } from "@/components/ui/button";
 import emptyStateImage from "@/assets/vector-empty-state.png";
 

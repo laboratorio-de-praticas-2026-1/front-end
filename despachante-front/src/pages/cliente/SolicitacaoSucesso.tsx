@@ -1,4 +1,3 @@
-// src/pages/cliente/SolicitacaoSucesso.tsx
 import { useNavigate } from "react-router-dom";
 import { CheckCircle2, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";

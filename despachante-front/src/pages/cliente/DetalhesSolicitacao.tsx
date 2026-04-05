@@ -1,5 +1,3 @@
-// src/pages/cliente/DetalhesSolicitacao.tsx
-
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Upload, Download, Check, Notebook, Paperclip } from "lucide-react";
 
@@ -49,8 +47,6 @@ export default function DetalhesSolicitacao() {
 
   return (
     <div className="p-4 md:p-6 space-y-6">
-
-      {/* HEADER */}
       <div className="flex items-start gap-3">
         <Button
           variant="ghost"
