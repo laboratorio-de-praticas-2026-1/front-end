@@ -6,8 +6,17 @@ import { Blog } from "@/pages/Blog";
 import { Artigo } from "@/pages/Artigo";
 
 
+import Solicitacoes from "@/pages/cliente/Solicitacoes";
+import SolicitacaoSucesso from "@/pages/cliente/SolicitacaoSucesso";
+import HistoricoSolicitacoes from "@/pages/cliente/HistoricoSolicitacoes";
+import DetalhesSolicitacao from "@/pages/cliente/DetalhesSolicitacao";
+
+
+import DetalhesSolicitacao from "@/pages/cliente/DetalhesSolicitacao";
+
 // 1. IMPORT DO NOVO LAYOUT DO CLIENTE
 import { ClienteLayout } from "@/components/layout/ClienteLayout";
+
 
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { BlogAdmin } from "@/pages/admin/blog/BlogAdmin";
@@ -35,6 +44,16 @@ function App() {
         {/* === ROTAS DO PORTAL DO CLIENTE === */}
         <Route path="/cliente" element={<ClienteLayout />}>
           <Route index element={<Navigate to="/cliente/solicitacoes" replace />} />
+
+          <Route path="solicitacoes/:id" element={<DetalhesSolicitacao />} />
+
+
+          <Route path="solicitacoes" element={<Solicitacoes />} />
+          <Route path="solicitacoes/sucesso" element={<SolicitacaoSucesso />} />
+          <Route path="solicitacoes/historico" element={<HistoricoSolicitacoes />} />
+          <Route path="solicitacoes/:id" element={<DetalhesSolicitacao />} />
+
+
           
           {/* Tela temporária: Pega qualquer link dentro do /cliente e mostra a sidebar */}
           <Route path="*" element={
