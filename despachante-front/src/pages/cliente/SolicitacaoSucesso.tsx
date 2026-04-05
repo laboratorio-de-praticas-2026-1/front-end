@@ -36,7 +36,9 @@ export default function SolicitacaoSucesso() {
               Seu pedido foi registrado e está sendo processado.
             </p>
           </div>
+
           <CardContent className="p-6 space-y-4">
+
             <div className="flex items-center gap-3">
               <FileText className="h-8 w-8 text-gray-700" />
               <div>
@@ -46,6 +48,7 @@ export default function SolicitacaoSucesso() {
                 </p>
               </div>
             </div>
+
             <div className="space-y-3">
               <div className="flex justify-between items-baseline pb-2">
                 <span className="text-sm text-gray-500">Serviço solicitado</span>
@@ -55,6 +58,7 @@ export default function SolicitacaoSucesso() {
                 <span className="text-sm text-gray-500">Valor base</span>
                 <span className="font-medium text-gray-900">{mockSolicitacao.valor}</span>
               </div>
+
               <div className="flex justify-between items-baseline border-b-2 border-gray-300 pb-2">
                 <span className="text-sm text-gray-500">Veículo</span>
                 <span className="font-medium text-gray-900">{mockSolicitacao.veiculo}</span>
@@ -68,6 +72,7 @@ export default function SolicitacaoSucesso() {
                 <span className="font-medium text-gray-900">{mockSolicitacao.prazoEstimado}</span>
               </div>
             </div>
+
             <div className="flex flex-col sm:flex-row gap-3 pt-4">
               <Button
                 onClick={handleIrPainel}
