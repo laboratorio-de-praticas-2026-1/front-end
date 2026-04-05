@@ -33,7 +33,6 @@ function App() {
 
         {/* === ROTAS DO PORTAL DO CLIENTE === */}
         <Route path="/cliente" element={<ClienteLayout />}>
-          {/* Se a pessoa digitar só /cliente, ela é jogada para as solicitações */}
           <Route index element={<Navigate to="/cliente/solicitacoes" replace />} />
 
           <Route path="solicitacoes/:id" element={<DetalhesSolicitacao />} />
