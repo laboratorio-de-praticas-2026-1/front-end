@@ -5,6 +5,9 @@ import { Servicos } from "@/pages/Servicos";
 import { Blog } from "@/pages/Blog";
 import { Artigo } from "@/pages/Artigo";
 
+import Solicitacoes from "@/pages/cliente/Solicitacoes";
+import SolicitacaoSucesso from "@/pages/cliente/SolicitacaoSucesso";
+import HistoricoSolicitacoes from "@/pages/cliente/HistoricoSolicitacoes";
 import DetalhesSolicitacao from "@/pages/cliente/DetalhesSolicitacao";
 
 // 1. IMPORT DO NOVO LAYOUT DO CLIENTE
@@ -35,6 +38,9 @@ function App() {
           {/* Se a pessoa digitar só /cliente, ela é jogada para as solicitações */}
           <Route index element={<Navigate to="/cliente/solicitacoes" replace />} />
 
+          <Route path="solicitacoes" element={<Solicitacoes />} />
+          <Route path="solicitacoes/sucesso" element={<SolicitacaoSucesso />} />
+          <Route path="solicitacoes/historico" element={<HistoricoSolicitacoes />} />
           <Route path="solicitacoes/:id" element={<DetalhesSolicitacao />} />
           
           {/* Tela temporária: Pega qualquer link dentro do /cliente e mostra a sidebar */}
