@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 
 type Solicitacao = {
-  id: number;
+  id: string | number;
   cliente: string;
   servico: string;
   data: string;

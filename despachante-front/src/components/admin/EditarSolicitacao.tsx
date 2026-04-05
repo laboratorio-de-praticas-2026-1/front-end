@@ -95,7 +95,7 @@ const EditarSolicitacao = () => {
   const [cliente, setCliente] = useState(solicitação.cliente);
   const [veiculo, setVeiculo] = useState(solicitação.veiculo ?? '');
   const [status, setStatus] = useState(solicitação.status);
-  const [date, setDate] = useState(new Date(solicitação.data));
+ const [date, setDate] = useState<Date | undefined>(new Date(solicitação.data));
   const [observacao, setObservacao] = useState(solicitação.observacao ?? '');
   const [modalDocumento, setModalDocumento] = useState<{
     aberto: boolean;
@@ -114,7 +114,7 @@ const EditarSolicitacao = () => {
       cliente,
       veiculo,
       status,
-      data: date.toISOString(),
+      data: date ? date.toISOString() : "",
       observacao,
     });
     navigate('/admin/solicitacoes');

@@ -28,7 +28,7 @@ const defaultStats = [
 ];
 
 type Solicitacao = {
-  id: number;
+  id: string | number;
   cliente: string;
   servico: string;
   data: string;
@@ -51,7 +51,7 @@ type KanbanCardProps = {
 type KanbanColumnProps = {
   col: Column;
   items: Solicitacao[];
-  onCardClick: (id: number) => void;
+  onCardClick: (id: string | number) => void;
 };
 
 // card do kanban

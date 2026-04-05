@@ -16,6 +16,9 @@ import { CreateCarouselBanner } from "@/components/sections/admin/carrossel/Crea
 import { EditCarouselBanner } from "@/components/sections/admin/carrossel/EditCarouselBanner";
 import EditPostCMS from "@/components/sections/admin/blog/EditPostCMS";
 import CreatePostCMS from "@/components/sections/admin/blog/CreatePostCMS";
+import { Contato } from "@/pages/Contato";
+import Solicitacoes from "@/components/admin/Solicitacoes";
+import EditarSolicitacao from "@/components/admin/EditarSolicitacao";
 
 function App() {
   return (
@@ -32,8 +35,6 @@ function App() {
         {/* === ROTAS DO PORTAL DO CLIENTE === */}
         <Route path="/cliente" element={<ClienteLayout />}>
           <Route index element={<Navigate to="/cliente/solicitacoes" replace />} />
-
-          <Route path="solicitacoes/:id" element={<DetalhesSolicitacao />} />
           
           {/* Tela temporária: Pega qualquer link dentro do /cliente e mostra a sidebar */}
           <Route path="*" element={
