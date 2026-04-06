@@ -1,6 +1,5 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { List, MoreHorizontal, Ban, CheckCircle, Search } from 'lucide-react';
+import { List, MoreHorizontal, Ban, CheckCircle } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";

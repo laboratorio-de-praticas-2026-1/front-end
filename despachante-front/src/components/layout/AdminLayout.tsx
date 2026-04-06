@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
-import { FiMenu, FiX } from "react-icons/fi";
+import { FiX } from "react-icons/fi";
 
 export function AdminLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
