@@ -2,9 +2,12 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { FiMenu, FiX } from "react-icons/fi";
+import AdminChatModal from "../chat/AdminChatModal";
+import ChatFloatingButton from "../chat/ChatFloatingButton";
 
 export function AdminLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   return (
     <div className="flex h-screen w-full bg-zinc-50 font-sans overflow-hidden">
@@ -58,6 +61,16 @@ export function AdminLayout() {
         <div></div>
         
       </main>
+
+      <AdminChatModal
+        open={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+      />
+
+      <ChatFloatingButton
+        onClick={() => setIsChatOpen((prev) => !prev)}
+        unreadCount={1}
+        />
     </div>
   );
 }

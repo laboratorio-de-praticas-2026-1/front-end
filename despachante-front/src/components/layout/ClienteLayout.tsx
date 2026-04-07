@@ -2,9 +2,12 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { ClienteSidebar } from "@/components/layout/ClienteSidebar";
 import { FiMenu, FiX } from "react-icons/fi";
+import ClientChatModal from "../chat/ClientChatModal";
+import ChatFloatingButton from "../chat/ChatFloatingButton";
 
 export function ClienteLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   return (
     <div className="flex h-screen w-full bg-zinc-50 font-sans overflow-hidden">
@@ -70,6 +73,15 @@ export function ClienteLayout() {
         </div>
         
       </main>
+      <ClientChatModal
+        open={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+      />
+
+      <ChatFloatingButton
+              onClick={() => setIsChatOpen((prev) => !prev)}
+              unreadCount={1}
+              />
     </div>
   );
 }
