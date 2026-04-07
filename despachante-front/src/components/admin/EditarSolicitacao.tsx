@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Info, CalendarCheck, ClipboardList, Paperclip, Car, User, Download, Pencil, Printer } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -21,28 +21,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import mockData from '@/mocks/mockAdminSolicitacoes.json';
 import { DatePicker } from '../ui/DatePicker';
+import { solicitacoesService, type Documento, type DocumentoStatus, type Solicitacao } from '@/services/solicitacoesService';
 import ModalAlterarStatusDocumento from './solicitacoes/ModalAlterarStatusDocumento'
-
-type DocumentoStatus = 'validado' | 'aguardando_revisao' | 'negado';
-
-type Documento = {
-  arquivo: string;
-  tipo: string;
-  status: DocumentoStatus;
-};
-
-type Solicitacao = {
-  id: string;
-  cliente: string;
-  servico: string;
-  data: string;
-  status: string;
-  veiculo?: string;
-  observacao?: string;
-  documentos?: Documento[];
-};
 
 const status_labels: Record<string, string> = {
   recebido: 'Recebido',
@@ -79,11 +60,49 @@ const servicos = [
 const EditarSolicitacao = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+  const [solicitacao, setSolicitacao] = useState<Solicitacao | null>(null);
+  const [servico, setServico] = useState('');
+  const [cliente, setCliente] = useState('');
+  const [veiculo, setVeiculo] = useState('');
+  const [status, setStatus] = useState('');
+  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [observacao, setObservacao] = useState('');
+  const [documentosState, setDocumentosState] = useState<Documento[]>([]);
+  const [modalDocumento, setModalDocumento] = useState<{
+    aberto: boolean;
+    index: number | null;
+  }>({ aberto: false, index: null });
 
-  // colocar a busca da api aqui
-  const solicitação = (mockData.solicitacoes as Solicitacao[]).find(s => s.id === id);
+  useEffect(() => {
+    const carregar = async () => {
+      if (!id) return;
+      setIsLoading(true);
+      const dados = await solicitacoesService.buscarPorId(id);
+      if (dados) {
+        setSolicitacao(dados);
+        setServico(dados.servico);
+        setCliente(dados.cliente);
+        setVeiculo(dados.veiculo ?? '');
+        setStatus(dados.status);
+        setDate(dados.data ? new Date(dados.data) : undefined);
+        setObservacao(dados.observacao ?? '');
+        setDocumentosState(dados.documentos ?? []);
+      }
+      setIsLoading(false);
+    };
+    carregar();
+  }, [id]);
 
-  if (!solicitação) {
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64 text-slate-500">
+        Carregando solicitação...
+      </div>
+    );
+  }
+
+  if (!solicitacao) {
     return (
       <div className="flex items-center justify-center h-64 text-slate-500">
         Solicitação não encontrada.
@@ -91,48 +110,46 @@ const EditarSolicitacao = () => {
     );
   }
 
-  const [servico, setServico] = useState(solicitação.servico);
-  const [cliente, setCliente] = useState(solicitação.cliente);
-  const [veiculo, setVeiculo] = useState(solicitação.veiculo ?? '');
-  const [status, setStatus] = useState(solicitação.status);
- const [date, setDate] = useState<Date | undefined>(new Date(solicitação.data));
-  const [observacao, setObservacao] = useState(solicitação.observacao ?? '');
-  const [modalDocumento, setModalDocumento] = useState<{
-    aberto: boolean;
-    index: number | null;
-  }>({ aberto: false, index: null });
-  const [documentosState, setDocumentosState] = useState<Documento[]>(
-    solicitação.documentos ?? []
-  );
-
-  // salvar
-  const handleSalvar = () => {
-    // chamar api pra salvar
-    console.log({
-      id,
-      servico,
-      cliente,
-      veiculo,
-      status,
-      data: date ? date.toISOString() : "",
-      observacao,
-    });
-    navigate('/admin/solicitacoes');
+  const handleSalvar = async () => {
+    if (!id) return;
+    const sucesso = await solicitacoesService.atualizarStatus(id, status);
+    if (sucesso) {
+      navigate('/admin/solicitacoes');
+    } else {
+      alert('Erro ao salvar solicitação');
+    }
   };
 
   const handleCancelar = () => navigate('/admin/solicitacoes');
 
-  const handleSalvarStatusDocumento = (novoStatus: DocumentoStatus) => {
-    if (modalDocumento.index === null) return;
-    setDocumentosState(prev =>
-      prev.map((doc, i) =>
-        i === modalDocumento.index ? { ...doc, status: novoStatus } : doc
-      )
+  const handleSalvarStatusDocumento = async (novoStatus: DocumentoStatus) => {
+    if (modalDocumento.index === null || !id) return;
+    const doc = documentosState[modalDocumento.index];
+    const sucesso = await solicitacoesService.alterarStatusDocumento(
+      id,
+      doc.arquivo,
+      novoStatus
     );
-    // colocar o endpoint de atualização do status do documento aqui
+    if (sucesso) {
+      setDocumentosState(prev =>
+        prev.map((d, i) =>
+          i === modalDocumento.index ? { ...d, status: novoStatus } : d
+        )
+      );
+    }
   };
 
-  const documentos: Documento[] = solicitação.documentos ?? [];
+  const handleDownload = async (arquivo: string) => {
+    if (!id) return;
+    const url = await solicitacoesService.downloadDocumento(id, arquivo);
+    if (url) {
+      window.open(url, '_blank');
+    } else {
+      alert('Erro ao baixar documento');
+    }
+  };
+
+  const documentos: Documento[] = documentosState;
 
   return (
     <div className="bg-[#f8fafc] min-h-screen space-y-6 font-sans pb-10">
@@ -295,11 +312,9 @@ const EditarSolicitacao = () => {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">
-                            {/* aqui é pra chamar o endpoint de download */}
-                            <button className="text-slate-400 hover:text-slate-600 transition-colors cursor-pointer">
+                            <button className="text-slate-400 hover:text-slate-600 transition-colors cursor-pointer" onClick={() => handleDownload(doc.arquivo)}>
                               <Download className="size-4" />
                             </button>
-                            {/* adicionar botao pra abrir o modal de edicao */}
                             <button className="text-slate-400 hover:text-slate-600 transition-colors cursor-pointer" onClick={() => setModalDocumento({ aberto: true, index: i })}>
                               <Pencil className="size-4" />
                             </button>
