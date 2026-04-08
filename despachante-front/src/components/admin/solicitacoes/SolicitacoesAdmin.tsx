@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { List, CircleEllipsis, CircleSlash, CheckCircle } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
