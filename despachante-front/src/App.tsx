@@ -23,6 +23,10 @@ import EditPostCMS from "@/components/sections/admin/blog/EditPostCMS";
 import CreatePostCMS from "@/components/sections/admin/blog/CreatePostCMS";
 import { Contato } from "@/pages/Contato";
 
+import { PublicidadeAdmin } from "@/pages/admin/publicidade/PublicidadeAdmin";
+import CreatePublicidadeCMS from "@/components/sections/admin/publicidade/CreatePublicidadeCMS";
+import EditPublicidadeCMS from "@/components/sections/admin/publicidade/EditPublicidadeCMS";
+
 import Solicitacoes from "@/pages/cliente/SolicitacoesAdmin";
 
 import EditarSolicitacao from "@/components/admin/EditarSolicitacao";
@@ -80,12 +84,10 @@ function App() {
           <Route path="carrossel/novo" element={<CreateCarouselBanner />} />
           <Route path="carrossel/:id/editar" element={<EditCarouselBanner />} />
           
-          <Route path="*" element={
-            <div className="flex flex-col items-center justify-center h-[60vh] text-zinc-500 text-center">
-               <h2 className="text-2xl font-bold mb-2 text-zinc-700">Página em Construção 🚧</h2>
-               <p>Esta área será implementada futuramente.</p>
-            </div>
-          } />
+          {/* Rota de publicidade */}
+          <Route path="publicidade" element={<PublicidadeAdmin />} />
+          <Route path="publicidade/novo" element={<CreatePublicidadeCMS />} />
+          <Route path="publicidade/editar/:id" element={<EditPublicidadeCMS />} />
         </Route>
       </Routes>
     </BrowserRouter>
