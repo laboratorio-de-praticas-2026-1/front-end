@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { FiMenu, FiX, FiUser } from "react-icons/fi"; 
 import { Link } from "react-router-dom";
 
@@ -13,31 +13,12 @@ const navLinks = [
 
 export function Navbar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 100) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   return (
     <>
       {/* --- HEADER PRINCIPAL (DESKTOP E MOBILE) --- */}
       <header 
-        className={`fixed top-0 left-0 right-0 z-40 w-full bg-white/90 backdrop-blur-md shadow-sm border-b border-border transition-all duration-500 ease-in-out ${
-          isVisible 
-            ? "translate-y-0 opacity-100" 
-            : "-translate-y-full opacity-0 pointer-events-none"
-        }`}
+        className="fixed top-0 left-0 right-0 z-40 w-full bg-white/90 backdrop-blur-md shadow-sm border-b border-border"
       >
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 md:px-12">
           
