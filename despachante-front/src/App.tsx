@@ -43,9 +43,6 @@ function App() {
         <Route path="/cliente" element={<ClienteLayout />}>
           <Route index element={<Navigate to="/cliente/solicitacoes" replace />} />
 
-          <Route path="solicitacoes/:id" element={<DetalhesSolicitacao />} />
-
-
           <Route path="solicitacoes" element={<Solicitacoes />} />
           <Route path="solicitacoes/sucesso" element={<SolicitacaoSucesso />} />
           <Route path="solicitacoes/historico" element={<HistoricoSolicitacoes />} />
