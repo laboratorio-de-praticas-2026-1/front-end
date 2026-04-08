@@ -1,13 +1,13 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { List, CircleEllipsis, CircleSlash, CheckCircle } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import mockData from '@/mocks/mockAdminSolicitacoes.json';
 import { DatePicker } from '@/components/ui/DatePicker';
 import { Button } from '../../ui/button';
 import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors, useDroppable, useDraggable, type DragEndEvent, type DragStartEvent } from '@dnd-kit/core';
+import { solicitacoesService, type Solicitacao } from '@/services/solicitacoesService';
 import ModalCancelarSolicitacao from './ModalCancelarSolicitacao';
 import ModalRecuperarSolicitacao from './ModalRecuperarSolicitacao';
 
@@ -19,21 +19,6 @@ const COLUMNS = [
   { id: 'cancelado', label: 'Cancelado', headerColor: 'bg-[#F7A9A7]', borderColor: 'border-[#F7A9A7]' },
   { id: 'concluido', label: 'Concluído', headerColor: 'bg-[#A9DEB4]', borderColor: 'border-[#A9DEB4]' },
 ];
-
-const defaultStats = [
-  { label: "Total solicitações", value: "0", type: "total" },
-  { label: "Em progresso", value: "0", type: "progress" },
-  { label: "Cancelados", value: "0", type: "canceled" },
-  { label: "Concluídos", value: "0", type: "finished" },
-];
-
-type Solicitacao = {
-  id: string | number;
-  cliente: string;
-  servico: string;
-  data: string;
-  status: string;
-};
 
 type Column = {
   id: string;
@@ -120,10 +105,9 @@ const KanbanColumn = ({ col, items, onCardClick }: KanbanColumnProps) => {
 const SolicitacoesAdmin = () => {
   const navigate = useNavigate();
 
-  const stats = mockData?.stats?.length ? mockData.stats : defaultStats;
 
-  // Estado local das solicitações para refletir as mudanças de coluna sem chamar o backend ainda
-  const [solicitacoes, setSolicitacoes] = useState<Solicitacao[]>(mockData?.solicitacoes ?? []);
+  const [isLoading, setIsLoading] = useState(true);
+  const [solicitacoes, setSolicitacoes] = useState<Solicitacao[]>([]);
   const [activeItem, setActiveItem] = useState<Solicitacao | null>(null);
 
   const [search, setSearch] = useState("");
@@ -140,6 +124,16 @@ const SolicitacoesAdmin = () => {
     solicitacao: Solicitacao;
     novoStatus: string;
   } | null>(null);
+
+  useEffect(() => {
+    const carregarSolicitacoes = async () => {
+      setIsLoading(true);
+      const dados = await solicitacoesService.listarTodas();
+      setSolicitacoes(dados);
+      setIsLoading(false);
+    };
+    carregarSolicitacoes();
+  }, []);
 
   // pra saber quando é click ou drag and drop
   const sensors = useSensors(
@@ -182,7 +176,7 @@ const SolicitacoesAdmin = () => {
   };
 
   // quando o card é solto ele atualiza o status localmente
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
     setActiveItem(null);
 
@@ -212,38 +206,53 @@ const SolicitacoesAdmin = () => {
       return;
     }
 
-    // a APi vai ser chamada aqui para atualizar o status do banco
     setSolicitacoes(prev =>
       prev.map(s =>
         s.id === active.id ? { ...s, status: novoStatus } : s
       )
     );
+
+    await solicitacoesService.atualizarStatus(active.id, novoStatus);
   };
 
-  const confirmarCancelamento = () => {
+  const confirmarCancelamento = async () => {
     if (!cancelando) return;
 
-    setSolicitacoes(prev =>
-      prev.map(s =>
-        s.id === cancelando.solicitacao.id
-          ? { ...s, status: cancelando.novoStatus }
-          : s
-      )
+    const sucesso = await solicitacoesService.atualizarStatus(
+      cancelando.solicitacao.id,
+      cancelando.novoStatus
     );
+
+    if (sucesso) {
+      setSolicitacoes(prev =>
+        prev.map(s =>
+          s.id === cancelando.solicitacao.id
+            ? { ...s, status: cancelando.novoStatus }
+            : s
+        )
+      );
+    }
 
     setCancelando(null);
   };
 
-  const confirmarRecuperacao = () => {
+  const confirmarRecuperacao = async () => {
     if (!recuperando) return;
 
-    setSolicitacoes(prev =>
-      prev.map(s =>
-        s.id === recuperando.solicitacao.id
-          ? { ...s, status: recuperando.novoStatus }
-          : s
-      )
+    const sucesso = await solicitacoesService.atualizarStatus(
+      recuperando.solicitacao.id,
+      recuperando.novoStatus
     );
+
+    if (sucesso) {
+      setSolicitacoes(prev =>
+        prev.map(s =>
+          s.id === recuperando.solicitacao.id
+            ? { ...s, status: recuperando.novoStatus }
+            : s
+        )
+      );
+    }
 
     setRecuperando(null);
   };
@@ -257,6 +266,42 @@ const SolicitacoesAdmin = () => {
   const activeColumn = activeItem
     ? COLUMNS.find(column => column.id === activeItem.status)
     : null;
+
+  const stats = [
+    {
+      label: "Total solicitações",
+      value: String(solicitacoes.length),
+      type: "total",
+    },
+    {
+      label: "Em progresso",
+      value: String(
+        solicitacoes.filter(
+          (s) =>
+            ["em_andamento", "aguardando_pagamento", "aguardando_documento"].includes(s.status)
+        ).length
+      ),
+      type: "progress",
+    },
+    {
+      label: "Cancelados",
+      value: String(solicitacoes.filter((s) => s.status === "cancelado").length),
+      type: "canceled",
+    },
+    {
+      label: "Concluídos",
+      value: String(solicitacoes.filter((s) => s.status === "concluido").length),
+      type: "finished",
+    },
+  ];
+
+  if (isLoading) {
+    return (
+      <div className="bg-[#f8fafc] space-y-6 font-sans flex items-center justify-center min-h-screen">
+        <p className="text-slate-500">Carregando solicitações...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#f8fafc] space-y-6 font-sans">
