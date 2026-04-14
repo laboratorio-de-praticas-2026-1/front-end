@@ -4,6 +4,7 @@ import { Home } from "@/pages/Home";
 import { Servicos } from "@/pages/Servicos"; 
 import { Blog } from "@/pages/Blog";
 import { Artigo } from "@/pages/Artigo";
+import { Login } from "@/pages/Login"; // <-- NOVA IMPORTAÇÃO
 
 import SolicitacoesAdmin from "./components/admin/solicitacoes/SolicitacoesAdmin";
 import SolicitacaoSucesso from "@/pages/cliente/SolicitacaoSucesso";
@@ -41,6 +42,7 @@ function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:id" element={<Artigo />} />
         <Route path="/contato" element={<Contato />} />
+        <Route path="/login" element={<Login />} />  {/* <-- NOVA ROTA DE LOGIN */}
         
 
         {/* === ROTAS DO PORTAL DO CLIENTE === */}
