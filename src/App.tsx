@@ -4,7 +4,8 @@ import { Home } from "@/pages/Home";
 import { Servicos } from "@/pages/Servicos"; 
 import { Blog } from "@/pages/Blog";
 import { Artigo } from "@/pages/Artigo";
-import { Login } from "@/pages/Login"; // <-- NOVA IMPORTAÇÃO
+import { Login } from "@/pages/Login";
+import { Cadastro } from "@/pages/Cadastro"; // <-- NOVA IMPORTAÇÃO
 
 import SolicitacoesAdmin from "./components/admin/solicitacoes/SolicitacoesAdmin";
 import SolicitacaoSucesso from "@/pages/cliente/SolicitacaoSucesso";
@@ -42,7 +43,8 @@ function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:id" element={<Artigo />} />
         <Route path="/contato" element={<Contato />} />
-        <Route path="/login" element={<Login />} />  {/* <-- NOVA ROTA DE LOGIN */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/cadastro" element={<Cadastro />} />  {/* <-- NOVA ROTA DE CADASTRO */}
         
 
         {/* === ROTAS DO PORTAL DO CLIENTE === */}

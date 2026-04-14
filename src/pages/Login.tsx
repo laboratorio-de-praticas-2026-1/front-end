@@ -4,7 +4,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import vectorWhiteLogo from "@/assets/vector-white-logo.png";
-import vectorHuman from "@/assets/vector-human.svg";
+import vectorHuman from "@/assets/vector-human.png";
 
 export function Login() {
   const [email, setEmail] = useState("");
@@ -13,18 +13,15 @@ export function Login() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Futura integração com API
     console.log("Payload de login:", { email, password });
   };
 
   return (
     <div className="relative flex min-h-screen flex-col md:flex-row">
-      {/* Logo no canto superior esquerdo (sobre a parte azul) */}
       <div className="absolute left-6 top-6 z-10">
         <img src={vectorWhiteLogo} alt="Logo BRTN" className="h-16 w-auto" />
       </div>
 
-      {/* Lado esquerdo: fundo azul com card de login */}
       <div className="flex flex-1 items-center justify-center bg-[#326E98] px-4 py-12">
         <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
           <h1 className="mb-2 text-2xl font-bold text-gray-900">Login</h1>
@@ -34,7 +31,10 @@ export function Login() {
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label htmlFor="email" className="mb-1 block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="mb-1 block text-sm font-medium text-gray-700"
+              >
                 E-mail
               </label>
               <Input
@@ -48,7 +48,10 @@ export function Login() {
             </div>
 
             <div>
-              <label htmlFor="password" className="mb-1 block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="mb-1 block text-sm font-medium text-gray-700"
+              >
                 Senha
               </label>
               <div className="relative">
@@ -71,26 +74,33 @@ export function Login() {
               </div>
             </div>
 
-            <Button type="submit" className="w-full">
+            <Button
+              type="submit"
+              className="w-full bg-[#3979A5] hover:bg-[#2f678d] text-white"
+            >
               Entrar
             </Button>
           </form>
 
           <div className="mt-6 text-center">
-            <Link to="/cadastro" className="text-sm text-blue-600 hover:underline">
+            <Link
+              to="/cadastro"
+              className="text-sm text-blue-600 hover:underline"
+            >
               Ainda não tenho uma conta
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Lado direito: imagem do rapaz (oculta no mobile) */}
-      <div className="hidden md:block md:flex-1">
-        <img
-          src={vectorHuman}
-          alt="Homem com documento"
-          className="h-full w-full object-cover"
-        />
+      <div className="hidden md:block md:flex-1 bg-[#326E98]">
+        <div className="h-full w-full overflow-hidden rounded-3xl">
+          <img
+            src={vectorHuman}
+            alt="Homem com documento"
+            className="h-full w-full object-cover block"
+          />
+        </div>
       </div>
     </div>
   );
