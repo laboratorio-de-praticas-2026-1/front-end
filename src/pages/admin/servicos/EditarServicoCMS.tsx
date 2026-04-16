@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { Loader2 } from "lucide-react"
 import ServicoForm, { type ServicoFormData } from "@/components/sections/admin/servicos/ServicoForm"
 import { mockServicos, type Servico } from "@/mocks/mockServicos"
+import ModalConfirmacaoServico from "@/components/admin/servicos/ModalConfirmacaoServico"
 
 export default function EditarServicoCMS() {
   const { id } = useParams<{ id: string }>()
@@ -11,6 +12,8 @@ export default function EditarServicoCMS() {
   const [servico, setServico] = useState<Servico | null>(null)
   const [carregando, setCarregando] = useState(true)
   const [salvando, setSalvando] = useState(false)
+  const [excluindo, setExcluindo] = useState(false)
+  const [modalExcluirAberto, setModalExcluirAberto] = useState(false)
 
   // Simula busca dos dados pelo ID
   useEffect(() => {
@@ -37,8 +40,21 @@ export default function EditarServicoCMS() {
   }
 
   const handleExcluir = () => {
-    // Será integrado com o modal na próxima issue
-    console.log("Excluir serviço:", id)
+    setModalExcluirAberto(true)
+  }
+
+  const handleConfirmarExclusao = async () => {
+    setExcluindo(true)
+    try {
+      // TODO: integração com API
+      await new Promise((res) => setTimeout(res, 600))
+      navigate("/admin/servicos")
+    } catch (error) {
+      console.error("Erro ao excluir serviço:", error)
+    } finally {
+      setExcluindo(false)
+      setModalExcluirAberto(false)
+    }
   }
 
   if (carregando) {
@@ -67,6 +83,16 @@ export default function EditarServicoCMS() {
         onExcluir={handleExcluir}
         salvando={salvando}
       />
+
+      {modalExcluirAberto && (
+        <ModalConfirmacaoServico
+          tipo="excluir"
+          nomeServico={servico.nome}
+          carregando={excluindo}
+          onConfirmar={handleConfirmarExclusao}
+          onVoltar={() => setModalExcluirAberto(false)}
+        />
+      )}
     </div>
   )
 }

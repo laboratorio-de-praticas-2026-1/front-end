@@ -3,8 +3,15 @@ import { useNavigate } from "react-router-dom"
 import ToolbarServicos, { type StatusFiltro } from "@/components/sections/admin/servicos/ToolbarServicos"
 import ServicosTable from "@/components/tables/ServicosTable"
 import { mockServicos, type Servico } from "@/mocks/mockServicos"
+import ModalConfirmacaoServico, { type TipoModalServico } from "@/components/admin/servicos/ModalConfirmacaoServico.tsx"
 
 const ITEMS_PER_PAGE = 9
+
+type ModalState = {
+  isOpen: boolean
+  type: TipoModalServico | null
+  serviceId: number | null
+}
 
 export function ServicosAdmin() {
   const navigate = useNavigate()
@@ -12,6 +19,15 @@ export function ServicosAdmin() {
   const [statusFilter, setStatusFilter] = useState<StatusFiltro>("Todos")
   const [searchQuery, setSearchQuery] = useState("")
   const [servicos, setServicos] = useState<Servico[]>(mockServicos)
+  const [modalLoading, setModalLoading] = useState(false)
+
+  const [modalState, setModalState] = useState<ModalState>({
+    isOpen: false,
+    type: null,
+    serviceId: null,
+  })
+
+  const servicoAtual = servicos.find((s) => s.id === modalState.serviceId) ?? null
 
   const servicosFiltrados = useMemo(() => {
     return servicos.filter((s) => {
@@ -47,14 +63,51 @@ export function ServicosAdmin() {
   }
 
   const handleAlternarStatus = (servico: Servico) => {
-    // Back-end: chamar API de inativar/ativar e depois recarregar lista
-    setServicos((prev) =>
-      prev.map((s) =>
-        s.id === servico.id
-          ? { ...s, status: s.status === "Ativo" ? "Inativo" : "Ativo" }
-          : s
-      )
-    )
+    setModalState({
+      isOpen: true,
+      type: servico.status === "Ativo" ? "inativar" : "ativar",
+      serviceId: servico.id,
+    })
+  }
+
+  const handleExcluir = (servico: Servico) => {
+    setModalState({
+      isOpen: true,
+      type: "excluir",
+      serviceId: servico.id,
+    })
+  }
+
+  const handleFecharModal = () => {
+    setModalState({ isOpen: false, type: null, serviceId: null })
+  }
+
+  const handleConfirmarModal = async () => {
+    if (!modalState.type || !modalState.serviceId) return
+
+    setModalLoading(true)
+    try {
+      // TODO: integração com API
+      await new Promise((res) => setTimeout(res, 600))
+
+      if (modalState.type === "excluir") {
+        setServicos((prev) => prev.filter((s) => s.id !== modalState.serviceId))
+      } else {
+        setServicos((prev) =>
+          prev.map((s) =>
+            s.id === modalState.serviceId
+              ? { ...s, status: modalState.type === "ativar" ? "Ativo" : "Inativo" }
+              : s
+          )
+        )
+      }
+
+      handleFecharModal()
+    } catch (error) {
+      console.error("Erro ao executar ação:", error)
+    } finally {
+      setModalLoading(false)
+    }
   }
 
   return (
@@ -73,7 +126,18 @@ export function ServicosAdmin() {
         onPageChange={setCurrentPage}
         onEditar={handleEditar}
         onAlternarStatus={handleAlternarStatus}
+        onExcluir={handleExcluir}
       />
+
+      {modalState.isOpen && modalState.type && servicoAtual && (
+        <ModalConfirmacaoServico
+          tipo={modalState.type}
+          nomeServico={servicoAtual.nome}
+          carregando={modalLoading}
+          onConfirmar={handleConfirmarModal}
+          onVoltar={handleFecharModal}
+        />
+      )}
     </div>
   )
 }

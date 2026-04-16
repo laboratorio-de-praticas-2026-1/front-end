@@ -67,17 +67,17 @@ export default function ToolbarServicos({
               onChange={(e) => onSearchChange(e.target.value)}
             />
           </div>
+
+          <Button
+            className="h-12 sm:h-auto rounded-xl px-5 text-sm cursor-pointer flex gap-2 items-center justify-center shrink-0 shadow-sm transition-transform hover:scale-[1.02] active:scale-[0.98] bg-primary text-white"
+            type="button"
+            onClick={() => navigate("/admin/servicos/novo")}
+          >
+            <Plus className="h-4 w-4" />
+            Novo serviço
+          </Button>
         </div>
 
-        {/* Botão Novo serviço */}
-        <Button
-          className="h-12 sm:h-auto rounded-xl px-5 text-sm cursor-pointer flex gap-2 items-center justify-center shrink-0 shadow-sm transition-transform hover:scale-[1.02] active:scale-[0.98] bg-primary text-white"
-          type="button"
-          onClick={() => navigate("/admin/servicos/novo")}
-        >
-          <Plus className="h-4 w-4" />
-          Novo serviço
-        </Button>
       </div>
     </div>
   )
