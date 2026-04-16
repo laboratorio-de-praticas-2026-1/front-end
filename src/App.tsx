@@ -33,6 +33,8 @@ import Solicitacoes from "@/pages/cliente/SolicitacoesAdmin";
 
 import EditarSolicitacao from "@/components/admin/EditarSolicitacao"
 import { ServicosAdmin } from "@/pages/admin/servicos/ServicosAdmin.tsx";
+import NovoServicoCMS from "@/pages/admin/servicos/NovoServicoCMS";
+import EditarServicoCMS from "@/pages/admin/servicos/EditarServicoCMS";
 
 function App() {
   return (
@@ -73,6 +75,8 @@ function App() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="/admin/posts" replace />} />
           <Route path="servicos" element={<ServicosAdmin />} />
+          <Route path="servicos/novo" element={<NovoServicoCMS />} />
+          <Route path="servicos/editar/:id" element={<EditarServicoCMS />} />
           <Route path="solicitacoes" element={<SolicitacoesAdmin />} />
           <Route path="solicitacoes/:id/editar" element={<EditarSolicitacao />} />
           

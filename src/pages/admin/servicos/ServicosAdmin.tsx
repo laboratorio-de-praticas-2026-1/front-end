@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react"
+import { useNavigate } from "react-router-dom"
 import ToolbarServicos, { type StatusFiltro } from "@/components/sections/admin/servicos/ToolbarServicos"
 import ServicosTable from "@/components/tables/ServicosTable"
 import { mockServicos, type Servico } from "@/mocks/mockServicos"
@@ -6,12 +7,10 @@ import { mockServicos, type Servico } from "@/mocks/mockServicos"
 const ITEMS_PER_PAGE = 9
 
 export function ServicosAdmin() {
-
+  const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
   const [statusFilter, setStatusFilter] = useState<StatusFiltro>("Todos")
   const [searchQuery, setSearchQuery] = useState("")
-
-
   const [servicos, setServicos] = useState<Servico[]>(mockServicos)
 
   const servicosFiltrados = useMemo(() => {
@@ -33,7 +32,6 @@ export function ServicosAdmin() {
     return servicosFiltrados.slice(start, start + ITEMS_PER_PAGE)
   }, [servicosFiltrados, currentPage])
 
-
   const handleStatusChange = (value: StatusFiltro) => {
     setStatusFilter(value)
     setCurrentPage(1)
@@ -45,8 +43,7 @@ export function ServicosAdmin() {
   }
 
   const handleEditar = (servico: Servico) => {
-    // Back-end: navegar para /admin/servicos/:id/editar
-    console.log("Editar serviço:", servico.id)
+    navigate(`/admin/servicos/editar/${servico.id}`)
   }
 
   const handleAlternarStatus = (servico: Servico) => {
@@ -59,9 +56,6 @@ export function ServicosAdmin() {
       )
     )
   }
-
-
-
 
   return (
     <div className="flex flex-col gap-6">
@@ -80,8 +74,6 @@ export function ServicosAdmin() {
         onEditar={handleEditar}
         onAlternarStatus={handleAlternarStatus}
       />
-
-
     </div>
   )
 }
