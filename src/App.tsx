@@ -31,7 +31,8 @@ import EditPublicidadeCMS from "@/components/sections/admin/publicidade/EditPubl
 
 import Solicitacoes from "@/pages/cliente/SolicitacoesAdmin";
 
-import EditarSolicitacao from "@/components/admin/EditarSolicitacao";
+import EditarSolicitacao from "@/components/admin/EditarSolicitacao"
+import { ServicosAdmin } from "@/pages/admin/servicos/ServicosAdmin.tsx";
 
 function App() {
   return (
@@ -71,6 +72,7 @@ function App() {
         {/* === ROTAS DO ADMIN === */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="/admin/posts" replace />} />
+          <Route path="servicos" element={<ServicosAdmin />} />
           <Route path="solicitacoes" element={<SolicitacoesAdmin />} />
           <Route path="solicitacoes/:id/editar" element={<EditarSolicitacao />} />
           
