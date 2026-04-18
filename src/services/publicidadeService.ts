@@ -57,7 +57,24 @@ export const publicidadeService = {
     }
   },
 
-  // 3. POST /publicidade - Cria novo
+  // 3. GET /busca/publicidade/status?status={status} - Busca por status
+  buscarPorStatus: async (status: string): Promise<PublicidadePost[]> => {
+    try {
+      const resposta = await fetch(
+        `${API_URL}/busca/publicidade/status?status=${encodeURIComponent(status)}`
+      );
+      if (!resposta.ok) throw new Error("Erro ao buscar publicidades por status");
+
+      const dados: ApiPublicidadePost[] = await resposta.json();
+      return dados.map(normalizePost);
+    } catch (erro) {
+      console.error("Erro no buscarPorStatus:", erro);
+      return [];
+    }
+  },
+
+
+  // 4. POST /publicidade - Cria novo
   criar: async (dadosDoFormulario: FormData) => {
     try {
       const resposta = await fetch(`${API_URL}/publicidade`, {
@@ -79,7 +96,7 @@ export const publicidadeService = {
     }
   },
 
-  // 4. PUT /publicidade/{id} - Atualiza existente
+  // 5. PUT /publicidade/{id} - Atualiza existente
   atualizar: async (id: number, dadosDoFormulario: FormData) => {
     try {
       let resposta = await fetch(`${API_URL}/publicidade/${id}`, {
@@ -111,7 +128,7 @@ export const publicidadeService = {
     }
   },
 
-  // 5. DELETE /publicidade/{id} - Exclui
+  // 6. DELETE /publicidade/{id} - Exclui
   deletar: async (id: number) => {
     try {
       const resposta = await fetch(`${API_URL}/publicidade/${id}`, {
