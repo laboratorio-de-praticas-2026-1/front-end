@@ -1,19 +1,32 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import vectorWhiteLogo from "@/assets/vector-white-logo.png";
 import vectorHuman from "@/assets/vector-human.png";
+import { loginUsuario } from "@/services/authService";
 
 export function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [senha, setSenha] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Payload de login:", { email, password });
+    setIsLoading(true);
+    setError(null);
+    try {
+      await loginUsuario({ email, senha });
+      navigate("/cliente/inicio");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erro ao realizar login.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -59,8 +72,8 @@ export function Login() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Digite sua senha..."
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={senha}
+                  onChange={(e) => setSenha(e.target.value)}
                   required
                   className="pr-10"
                 />
@@ -74,11 +87,16 @@ export function Login() {
               </div>
             </div>
 
+            {error && (
+              <p className="text-sm text-red-600">{error}</p>
+            )}
+
             <Button
               type="submit"
-              className="w-full bg-[#3979A5] hover:bg-[#2f678d] text-white"
+              disabled={isLoading}
+              className="w-full bg-[#3979A5] hover:bg-[#2f678d] text-white disabled:opacity-60"
             >
-              Entrar
+              {isLoading ? "Entrando..." : "Entrar"}
             </Button>
           </form>
 

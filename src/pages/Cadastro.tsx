@@ -1,14 +1,18 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import vectorWhiteLogo from "@/assets/vector-white-logo.png";
 import vectorHuman from "@/assets/vector-human.png";
+import { cadastrarUsuario } from "@/services/authService";
 
 export function Cadastro() {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     nome: "",
@@ -58,14 +62,27 @@ export function Cadastro() {
     setCurrentStep(2);
   };
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { email, senha } = formData;
+    const { nome, email, senha, documento, celular } = formData;
     if (!email.trim() || !senha.trim()) {
       alert("Preencha e-mail e senha.");
       return;
     }
-    console.log("Dados completos do cadastro:", formData);
+
+    const cpfCnpj = documento.replace(/\D/g, "") || undefined;
+    const celularLimpo = celular.replace(/\D/g, "") || undefined;
+
+    setIsLoading(true);
+    setError(null);
+    try {
+      await cadastrarUsuario({ nome, email, senha, cpfCnpj, celular: celularLimpo });
+      navigate("/login");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erro ao realizar cadastro.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -173,11 +190,16 @@ export function Cadastro() {
                   </div>
                 </div>
 
+                {error && (
+                  <p className="text-sm text-red-600">{error}</p>
+                )}
+
                 <Button
                   type="submit"
-                  className="w-full bg-[#3979A5] hover:bg-[#2f678d] text-white"
+                  disabled={isLoading}
+                  className="w-full bg-[#3979A5] hover:bg-[#2f678d] text-white disabled:opacity-60"
                 >
-                  Cadastrar
+                  {isLoading ? "Cadastrando..." : "Cadastrar"}
                 </Button>
               </div>
             )}
