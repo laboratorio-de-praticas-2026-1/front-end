@@ -36,6 +36,15 @@ import { ServicosAdmin } from "@/pages/admin/servicos/ServicosAdmin.tsx";
 import NovoServicoCMS from "@/pages/admin/servicos/NovoServicoCMS";
 import EditarServicoCMS from "@/pages/admin/servicos/EditarServicoCMS";
 
+import { DashboardAdmin } from "@/pages/admin/dashboard/DashboardAdmin";  
+import GeralDashboard from "./components/admin/dashboard/GeralDashboard";
+import SolicitacoesDashboard from "./components/admin/dashboard/SolicitacoesDashboard";
+import VeiculosDashboard from "./components/admin/dashboard/VeiculosDashboard";
+import ServicosDashboard from "./components/admin/dashboard/ServicosDashboard";
+import DocumentosDashboard from "./components/admin/dashboard/DocumentosDashboard";
+import FinanceiroDashboard from "./components/admin/dashboard/FinanceiroDashboard";
+import ClientesDashboard from "./components/admin/dashboard/ClientesDashboard";
+
 function App() {
   return (
     <BrowserRouter>
@@ -98,6 +107,18 @@ function App() {
           <Route path="publicidade" element={<PublicidadeAdmin />} />
           <Route path="publicidade/novo" element={<CreatePublicidadeCMS />} />
           <Route path="publicidade/editar/:id" element={<EditPublicidadeCMS />} />
+
+          {/* Rota do dashboard*/}
+          <Route path="dashboard" element={<DashboardAdmin />}>
+            <Route index element={<Navigate to="/admin/dashboard/geral" replace />} />
+            <Route path="geral" element={<GeralDashboard />} />
+            <Route path="solicitacoes" element={<SolicitacoesDashboard />} />
+            <Route path="veiculos" element={<VeiculosDashboard />} />
+            <Route path="servicos" element={<ServicosDashboard />} />
+            <Route path="documentos" element={<DocumentosDashboard />} />
+            <Route path="financeiro" element={<FinanceiroDashboard />} />
+            <Route path="clientes" element={<ClientesDashboard />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

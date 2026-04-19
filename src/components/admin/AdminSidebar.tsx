@@ -25,7 +25,7 @@ const sidebarLinks: SidebarLink[] = [
   { name: "FAQ", href: "/admin/faq", icon: FiHelpCircle },
   { name: "Carrossel", href: "/admin/carrossel", icon: FiColumns },
   { name: "Publicidade", href: "/admin/publicidade", icon: FaBullhorn },
-  { name: "Dashboard", href: "/admin", icon: FiBarChart2 },
+  { name: "Dashboard", href: "/admin/dashboard", icon: FiBarChart2 },
   { name: "Clientes", href: "/admin/clientes", icon: FiUsers },
 ];
 
