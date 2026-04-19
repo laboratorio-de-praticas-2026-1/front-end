@@ -20,8 +20,8 @@ export function Login() {
     setIsLoading(true);
     setError(null);
     try {
-      await loginUsuario({ email, senha });
-      navigate("/cliente/inicio");
+      const { nivel } = await loginUsuario({ email, senha });
+      navigate(nivel === "admin" ? "/admin/inicio" : "/cliente/inicio");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro ao realizar login.");
     } finally {

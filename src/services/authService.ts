@@ -35,7 +35,11 @@ export async function cadastrarUsuario(payload: CadastroPayload): Promise<void> 
   await throwIfError(response, "Erro ao realizar cadastro.");
 }
 
-export async function loginUsuario(payload: LoginPayload): Promise<void> {
+export interface LoginResponse {
+  nivel: string;
+}
+
+export async function loginUsuario(payload: LoginPayload): Promise<LoginResponse> {
   const response = await fetch(`${API_URL}/usuario/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -45,5 +49,8 @@ export async function loginUsuario(payload: LoginPayload): Promise<void> {
   await throwIfError(response, "E-mail ou senha inválidos.");
 
   const data = await response.json();
-  localStorage.setItem("token", data.token);
+  localStorage.setItem("token", data.tokenJWT);
+  localStorage.setItem("nivel", data.usuario.nivel);
+
+  return { nivel: data.usuario.nivel };
 }
