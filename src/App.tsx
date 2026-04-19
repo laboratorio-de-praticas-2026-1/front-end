@@ -8,6 +8,7 @@ import { Login } from "@/pages/Login";
 import { Cadastro } from "@/pages/Cadastro"; // <-- NOVA IMPORTAÇÃO
 
 import SolicitacoesAdmin from "./components/admin/solicitacoes/SolicitacoesAdmin";
+import Relatorios from "./components/admin/relatorios/RelatoriosAdmin";
 import SolicitacaoSucesso from "@/pages/cliente/SolicitacaoSucesso";
 import HistoricoSolicitacoes from "@/pages/cliente/HistoricoSolicitacoes";
 import DetalhesSolicitacao from "@/pages/cliente/DetalhesSolicitacao";
@@ -73,6 +74,7 @@ function App() {
           <Route index element={<Navigate to="/admin/posts" replace />} />
           <Route path="solicitacoes" element={<SolicitacoesAdmin />} />
           <Route path="solicitacoes/:id/editar" element={<EditarSolicitacao />} />
+          <Route path="relatorios" element={<Relatorios />} />
           
           {/* Rota da tabela de posts */}
           <Route path="posts" element={<BlogAdmin />} />
@@ -92,6 +94,7 @@ function App() {
           <Route path="publicidade" element={<PublicidadeAdmin />} />
           <Route path="publicidade/novo" element={<CreatePublicidadeCMS />} />
           <Route path="publicidade/editar/:id" element={<EditPublicidadeCMS />} />
+
         </Route>
       </Routes>
     </BrowserRouter>
