@@ -21,7 +21,7 @@ export function Login() {
     setError(null);
     try {
       const { nivel } = await loginUsuario({ email, senha });
-      navigate(nivel === "admin" ? "/admin/inicio" : "/cliente/inicio");
+      navigate(nivel === "administrador" ? "/admin" : "/cliente/inicio");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erro ao realizar login.");
     } finally {
