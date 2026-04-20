@@ -5,13 +5,13 @@ import { Servicos } from "@/pages/Servicos";
 import { Blog } from "@/pages/Blog";
 import { Artigo } from "@/pages/Artigo";
 import { Login } from "@/pages/Login";
-import { Cadastro } from "@/pages/Cadastro"; // <-- NOVA IMPORTAÇÃO
+import { Cadastro } from "@/pages/Cadastro"; 
 
 import SolicitacoesAdmin from "./components/admin/solicitacoes/SolicitacoesAdmin";
 import Relatorios from "./components/admin/relatorios/RelatoriosAdmin";
-import SolicitacaoSucesso from "@/pages/cliente/SolicitacaoSucesso";
-import HistoricoSolicitacoes from "@/pages/cliente/HistoricoSolicitacoes";
-import DetalhesSolicitacao from "@/pages/cliente/DetalhesSolicitacao";
+import SolicitacaoSucesso from "@/pages/cliente/solicitacoes/SolicitacaoSucesso";
+import HistoricoSolicitacoes from "@/pages/cliente/solicitacoes/HistoricoSolicitacoes";
+import DetalhesSolicitacao from "@/pages/cliente/solicitacoes/DetalhesSolicitacao";
 
 
 import { ClienteLayout } from "@/components/layout/ClienteLayout";
@@ -31,7 +31,7 @@ import CreatePublicidadeCMS from "@/components/sections/admin/publicidade/Create
 import CreateRelatorioCMS from "./components/admin/relatorios/CreateRelatorioCMS";
 import EditPublicidadeCMS from "@/components/sections/admin/publicidade/EditPublicidadeCMS";
 
-import Solicitacoes from "@/pages/cliente/SolicitacoesAdmin";
+import Solicitacoes from "@/pages/cliente/solicitacoes/SolicitacoesAdmin";
 
 import EditarSolicitacao from "@/components/admin/EditarSolicitacao"
 import { ServicosAdmin } from "@/pages/admin/servicos/ServicosAdmin.tsx";
