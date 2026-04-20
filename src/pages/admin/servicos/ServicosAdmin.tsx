@@ -7,6 +7,10 @@ import ModalConfirmacaoServico, { type TipoModalServico } from "@/components/adm
 
 const ITEMS_PER_PAGE = 9
 
+// Valores iniciais extraídos como constante para reusar no reset
+const PRAZO_INICIAL: number[] = [0, 30]
+const VALOR_INICIAL: number[] = [0, 2000]
+
 type ModalState = {
   isOpen: boolean
   type: TipoModalServico | null
@@ -21,6 +25,10 @@ export function ServicosAdmin() {
   const [servicos, setServicos] = useState<Servico[]>(mockServicos)
   const [modalLoading, setModalLoading] = useState(false)
 
+  // Corrigido: iniciados com [min, max] para ativar os dois handles no Slider
+  const [prazoRange, setPrazoRange] = useState<number[]>(PRAZO_INICIAL)
+  const [valorRange, setValorRange] = useState<number[]>(VALOR_INICIAL)
+
   const [modalState, setModalState] = useState<ModalState>({
     isOpen: false,
     type: null,
@@ -33,13 +41,25 @@ export function ServicosAdmin() {
     return servicos.filter((s) => {
       const matchStatus =
         statusFilter === "Todos" || s.status === statusFilter
+
       const matchSearch =
         searchQuery.trim() === "" ||
         s.nome.toLowerCase().includes(searchQuery.toLowerCase()) ||
         s.descricao.toLowerCase().includes(searchQuery.toLowerCase())
-      return matchStatus && matchSearch
+
+      // Corrigido: filtra pelo range de prazo
+      const matchPrazo =
+        s.prazo == null ||
+        (s.prazo >= prazoRange[0] && s.prazo <= prazoRange[1])
+
+      // Corrigido: filtra pelo range de valor
+      const matchValor =
+        s.valor == null ||
+        (s.valor >= valorRange[0] && s.valor <= valorRange[1])
+
+      return matchStatus && matchSearch && matchPrazo && matchValor
     })
-  }, [servicos, statusFilter, searchQuery])
+  }, [servicos, statusFilter, searchQuery, prazoRange, valorRange])
 
   const totalResultados = servicosFiltrados.length
 
@@ -55,6 +75,25 @@ export function ServicosAdmin() {
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value)
+    setCurrentPage(1)
+  }
+
+  const handlePrazoChange = (value: number[]) => {
+    setPrazoRange(value)
+    setCurrentPage(1)
+  }
+
+  const handleValorChange = (value: number[]) => {
+    setValorRange(value)
+    setCurrentPage(1)
+  }
+
+  // Corrigido: reseta todos os filtros incluindo os ranges
+  const handleClearFilters = () => {
+    setStatusFilter("Todos")
+    setSearchQuery("")
+    setPrazoRange(PRAZO_INICIAL)
+    setValorRange(VALOR_INICIAL)
     setCurrentPage(1)
   }
 
@@ -87,7 +126,6 @@ export function ServicosAdmin() {
 
     setModalLoading(true)
     try {
-      // TODO: integração com API
       await new Promise((res) => setTimeout(res, 600))
 
       if (modalState.type === "excluir") {
@@ -112,11 +150,17 @@ export function ServicosAdmin() {
 
   return (
     <div className="flex flex-col gap-6">
+      {/* Corrigido: todas as props agora passadas corretamente */}
       <ToolbarServicos
         statusFilter={statusFilter}
         searchQuery={searchQuery}
+        prazoRange={prazoRange}
+        valorRange={valorRange}
         onStatusChange={handleStatusChange}
         onSearchChange={handleSearchChange}
+        onPrazoChange={handlePrazoChange}
+        onValorChange={handleValorChange}
+        onClearFilters={handleClearFilters}
       />
 
       <ServicosTable
@@ -140,4 +184,4 @@ export function ServicosAdmin() {
       )}
     </div>
   )
-}
+} 
