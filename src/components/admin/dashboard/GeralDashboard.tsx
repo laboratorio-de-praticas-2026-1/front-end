@@ -1,4 +1,4 @@
-import { geralMockData } from "./Geral/geralData";
+import { geralMockData } from "@/mocks/geralData";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,

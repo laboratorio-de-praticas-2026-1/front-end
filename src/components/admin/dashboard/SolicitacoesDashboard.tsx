@@ -1,4 +1,4 @@
-import { solicitacoesMockData } from "./Solicitacoes/solicitacoesData";
+import { solicitacoesMockData } from "@/mocks/solicitacoesData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   PieChart,
