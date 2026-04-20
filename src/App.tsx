@@ -33,8 +33,13 @@ import EditPublicidadeCMS from "@/components/sections/admin/publicidade/EditPubl
 
 import Solicitacoes from "@/pages/cliente/SolicitacoesAdmin";
 
-import EditarSolicitacao from "@/components/admin/EditarSolicitacao";
+import EditarSolicitacao from "@/components/admin/EditarSolicitacao"
+import { ServicosAdmin } from "@/pages/admin/servicos/ServicosAdmin.tsx";
+import NovoServicoCMS from "@/pages/admin/servicos/NovoServicoCMS";
+import EditarServicoCMS from "@/pages/admin/servicos/EditarServicoCMS";
+
 import NovoRelatorio from "./components/admin/relatorios/CreateRelatorioCMS";
+
 
 function App() {
   return (
