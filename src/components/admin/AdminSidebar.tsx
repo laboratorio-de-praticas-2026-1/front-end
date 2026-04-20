@@ -5,7 +5,8 @@ import {
   FiBarChart2, 
   FiUsers, 
   FiFileText,
-  FiLogOut
+  FiLogOut,
+  FiFile
 } from "react-icons/fi";
 import { FaRegHandshake, FaBullhorn } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
@@ -27,6 +28,7 @@ const sidebarLinks: SidebarLink[] = [
   { name: "Publicidade", href: "/admin/publicidade", icon: FaBullhorn },
   { name: "Dashboard", href: "/admin", icon: FiBarChart2 },
   { name: "Clientes", href: "/admin/clientes", icon: FiUsers },
+  { name: "Relatorios", href: "/admin/relatorios", icon: FiFile },
 ];
 
 
