@@ -17,9 +17,9 @@ type SidebarLink = {
 const dashboardSidebarLinks: SidebarLink[] = [
     { name: "Geral", href: "/admin/dashboard/geral", icon: CgMenuLeft },
     { name: "Solicitações", href: "/admin/dashboard/solicitacoes", icon: BiGitPullRequest },
-    { name: "Veículos", href: "/admin/dashboard/veiculos", icon: RiCarFill }, // Versão preenchida
+    { name: "Veículos", href: "/admin/dashboard/veiculos", icon: RiCarFill },
     { name: "Serviços", href: "/admin/dashboard/servicos", icon: FaCogs },
-    { name: "Documentos", href: "/admin/dashboard/documentos", icon: BsFileEarmarkTextFill }, // Versão preenchida
+    { name: "Documentos", href: "/admin/dashboard/documentos", icon: BsFileEarmarkTextFill },
     { name: "Financeiro", href: "/admin/dashboard/financeiro", icon: FaWallet },
     { name: "Clientes", href: "/admin/dashboard/clientes", icon: BiSupport },
 ];

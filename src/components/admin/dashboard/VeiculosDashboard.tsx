@@ -1,4 +1,4 @@
-export default function GeralDashboard() {
+export default function VeiculosDashboard() {
     return (
         <>
             <span className="text-2xl font-bold text-secondary mb-4">Veículos</span>
