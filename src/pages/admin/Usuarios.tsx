@@ -25,6 +25,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { DatePicker } from '@/components/ui/DatePicker';
+import { ConfirmDeleteModal } from '@/components/ui/ConfirmDeleteModal';
 
 type User = {
   id: string;
@@ -74,11 +75,15 @@ const ITEMS_PER_PAGE = 7;
 
 export default function Usuarios() {
   const navigate = useNavigate();
-  const allUsers = useMemo(() => generateMockUsers(), []);
+  const [users, setUsers] = useState<User[]>(() => generateMockUsers());
 
   const [nivelFilter, setNivelFilter] = useState<string>('');
   const [dataFilter, setDataFilter] = useState<Date | undefined>(undefined);
   const [searchText, setSearchText] = useState<string>('');
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   type SortKey = 'nivel' | 'dataCadastro';
   const [sortKey, setSortKey] = useState<SortKey>('dataCadastro');
@@ -96,7 +101,7 @@ export default function Usuarios() {
   };
 
   const filteredUsers = useMemo(() => {
-    let filtered = [...allUsers];
+    let filtered = [...users];
     if (nivelFilter !== '' && nivelFilter !== 'all') {
       filtered = filtered.filter(user => user.nivel === nivelFilter);
     }
@@ -119,7 +124,7 @@ export default function Usuarios() {
       );
     }
     return filtered;
-  }, [allUsers, nivelFilter, dataFilter, searchText]);
+  }, [users, nivelFilter, dataFilter, searchText]);
 
   const sortedUsers = useMemo(() => {
     const sorted = [...filteredUsers];
@@ -147,6 +152,41 @@ export default function Usuarios() {
     setDataFilter(undefined);
     setSearchText('');
     setCurrentPage(1);
+  };
+
+  const handleDeleteClick = (user: User) => {
+    setSelectedUser(user);
+    setDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!selectedUser) return;
+    
+    setDeleteLoading(true);
+    
+    try {
+      await new Promise(resolve => setTimeout(resolve, 800));
+      // Remove o usuário da lista
+      setUsers(prevUsers => prevUsers.filter(user => user.id !== selectedUser.id));
+      setDeleteModalOpen(false);
+      
+      // Se a página atual ficar vazia, volta uma página
+      const newTotalItems = users.length - 1;
+      const newTotalPages = Math.ceil(newTotalItems / ITEMS_PER_PAGE);
+      if (currentPage > newTotalPages && newTotalPages > 0) {
+        setCurrentPage(newTotalPages);
+      }
+    } catch (error) {
+      console.error('Erro ao excluir usuário:', error);
+    } finally {
+      setDeleteLoading(false);
+      setSelectedUser(null);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setDeleteModalOpen(false);
+    setSelectedUser(null);
   };
 
   const DualSortIcon = ({ column }: { column: SortKey }) => {
@@ -293,13 +333,13 @@ export default function Usuarios() {
                     <div className="flex items-center justify-center gap-2">
                       <button
                         className="text-[#3b82f6] hover:text-[#2563eb] transition-colors"
-                        onClick={() => console.log(`Editar ${user.id}`)}
+                        onClick={() => navigate(`/admin/usuarios/editar/${user.id}`)}
                       >
                         <SquarePen className="h-5 w-5" />
                       </button>
                       <button
                         className="text-[#ef4444] hover:text-[#dc2626] transition-colors"
-                        onClick={() => console.log(`Excluir ${user.id}`)}
+                        onClick={() => handleDeleteClick(user)}
                       >
                         <Trash2 className="h-5 w-5" />
                       </button>
@@ -341,6 +381,16 @@ export default function Usuarios() {
             {totalItems} resultado{totalItems !== 1 ? 's' : ''}
           </div>
         </div>
+      )}
+
+      {selectedUser && (
+        <ConfirmDeleteModal
+          open={deleteModalOpen}
+          onClose={handleCloseModal}
+          onConfirm={handleConfirmDelete}
+          userName={selectedUser.nome}
+          loading={deleteLoading}
+        />
       )}
     </div>
   );

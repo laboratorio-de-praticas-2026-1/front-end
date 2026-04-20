@@ -90,7 +90,6 @@ export function UserForm({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 relative">
 
-      {/* CARD 1 */}
       <Card className="border border-gray-200 rounded-lg shadow-sm bg-white">
         <CardHeader className="bg-[#F9FAFB] border-b border-gray-200">
           <CardTitle className="flex items-center gap-2 text-[#002749]">
@@ -161,11 +160,9 @@ export function UserForm({
         </CardContent>
       </Card>
 
-      {/* CARD 2 */}
       <Card className="border border-gray-200 rounded-lg shadow-sm bg-white">
         <CardHeader className="bg-[#F9FAFB] border-b border-gray-200">
           <CardTitle className="flex items-center gap-2 text-[#1E84CF]">
-            {/* 🔥 ÍCONE CORRETO AQUI */}
             <LockKeyhole className="h-5 w-5 text-[#1E84CF]" />
             Acesso
           </CardTitle>
@@ -233,7 +230,6 @@ export function UserForm({
         </CardContent>
       </Card>
 
-      {/* BOTÕES */}
       <div className="flex justify-end gap-4">
         <Button
           type="button"
