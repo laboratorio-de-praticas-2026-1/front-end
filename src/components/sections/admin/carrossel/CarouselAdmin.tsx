@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell, TableCaption } from "@/components/ui/table";
-import { SquarePen, Trash2, ChevronRight } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { SquarePen, Trash2, ChevronRight, Plus, Search } from "lucide-react";
 
 export function CarouselAdmin() {
   type Banner = {
@@ -11,13 +12,14 @@ export function CarouselAdmin() {
     image: string;
     description: string;
     status: "Ativo" | "Inativo";
+    servico: string;
   };
 
   const [statusFilter, setStatusFilter] = useState("Todos");
+  const [servicoFilter, setServicoFilter] = useState("Todos");
   const [searchTerm, setSearchTerm] = useState("");
   const [bannerToDelete, setBannerToDelete] = useState<string | null>(null);
   
-  // Estados para controlar a paginação (Igual ao Blog)
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
@@ -27,40 +29,50 @@ export function CarouselAdmin() {
       image: "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=400&q=70",
       description: "O licenciamento SP 2026 já pode ser feito de maneira simples",
       status: "Ativo",
+      servico: "Licenciamento",
     },
     {
       id: "#002",
       image: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=70",
       description: "Carros 2026: 5 modelos que vão ganhar as ruas",
       status: "Inativo",
+      servico: "Outros",
     },
     {
       id: "#003",
       image: "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=400&q=70",
       description: "Como parcelar o IPVA 2026 atrasado",
       status: "Ativo",
+      servico: "Licenciamento",
     },
     {
       id: "#004",
       image: "https://images.unsplash.com/photo-1558980664-4bd4e7d17a0f?auto=format&fit=crop&w=400&q=70",
       description: "Como funcionará o pedágio free flow na anchieta",
       status: "Ativo",
+      servico: "Outros",
     },
     {
       id: "#005",
       image: "https://images.unsplash.com/photo-1470312881728-2952259723d0?auto=format&fit=crop&w=400&q=70",
       description: "Licenciamento RJ 2026: Taxa do detran, prazo e consulta",
       status: "Inativo",
+      servico: "Licenciamento",
     },
     {
       id: "#006",
       image: "https://images.unsplash.com/photo-1554136898-4eed26652beb?auto=format&fit=crop&w=400&q=70",
       description: "Estacionamento Allianz Parque: preço, reserva e…",
       status: "Ativo",
+      servico: "Outros",
     },
   ]);
 
-  // Filtra os resultados
+  const servicosDisponiveis = useMemo(() => {
+    const servicos = new Set(banners.map(b => b.servico));
+    return Array.from(servicos);
+  }, [banners]);
+
   const filteredBanners = useMemo(() => {
     return banners.filter((banner) => {
       const term = searchTerm.toLowerCase();
@@ -69,16 +81,17 @@ export function CarouselAdmin() {
         banner.description.toLowerCase().includes(term);
       const matchesStatus =
         statusFilter === "Todos" ? true : banner.status === statusFilter;
-      return matchesTerm && matchesStatus;
+      const matchesServico = 
+        servicoFilter === "Todos" ? true : banner.servico === servicoFilter;
+        
+      return matchesTerm && matchesStatus && matchesServico;
     });
-  }, [banners, searchTerm, statusFilter]);
+  }, [banners, searchTerm, statusFilter, servicoFilter]);
 
-  // Se o usuário pesquisar algo, volta para a página 1
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, statusFilter]);
+  }, [searchTerm, statusFilter, servicoFilter]);
 
-  // Lógica matemática da paginação (Igual ao Blog)
   const totalPages = Math.ceil(filteredBanners.length / itemsPerPage) || 1;
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -106,51 +119,80 @@ export function CarouselAdmin() {
 
   const confirmDelete = () => {
     if (!bannerToDelete) return;
-    alert(`Banner ${bannerToDelete} excluído com sucesso`);
     setBannerToDelete(null);
   };
 
   const cancelDelete = () => setBannerToDelete(null);
 
+  const handleClearFilters = () => {
+    setStatusFilter("Todos");
+    setServicoFilter("Todos");
+    setSearchTerm("");
+  };
+
   return (
-    <div className=" rounded-[28px]  p-7">
+    <div className="rounded-[28px] p-7">
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-[34px] leading-none font-bold text-secondary">Carrossel</h1>
           <p className="text-sm text-zinc-500 mt-2">Visualize, crie, organize e gerencie todos os banners do seu carrossel de serviços.</p>
         </div>
+        <Button 
+          onClick={handleAddNew} 
+          className="w-full lg:w-auto cursor-pointer bg-primary text-white font-medium shadow-sm transition-all hover:brightness-110 hover:scale-[1.02] active:scale-[0.98] h-10 px-6 rounded-md flex items-center gap-2"
+        >
+          <Plus className="h-4 w-4" />
+          Novo banner
+        </Button>
       </div>
 
-      <div className="mt-7 w-full rounded-xl border border-[#0a355e] bg-white p-1.5 flex flex-col lg:flex-row gap-2 items-stretch">
-        <div className="flex flex-col sm:flex-row gap-2 flex-1">
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-full sm:w-44 rounded-md border border-zinc-300 bg-zinc-50 px-3 py-2 text-sm text-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="Todos">Status</option>
-            <option>Ativo</option>
-            <option>Inativo</option>
-          </select>
+      <div className="mt-7 w-full border-2 border-secondary rounded-xl p-2 bg-white flex flex-col lg:flex-row gap-3 items-stretch lg:items-center">
+        
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <SelectTrigger className="w-full lg:w-40 border border-zinc-300 rounded-md bg-transparent focus:ring-0 text-muted-foreground h-10 shadow-none">
+            <SelectValue placeholder="Status" />
+          </SelectTrigger>
+          <SelectContent className="bg-white z-50">
+            <SelectItem value="Todos" className="cursor-pointer">Todos</SelectItem>
+            <SelectItem value="Ativo" className="cursor-pointer">Ativo</SelectItem>
+            <SelectItem value="Inativo" className="cursor-pointer">Inativo</SelectItem>
+          </SelectContent>
+        </Select>
 
+        <Select value={servicoFilter} onValueChange={setServicoFilter}>
+          <SelectTrigger className="w-full lg:w-48 border border-zinc-300 rounded-md bg-transparent focus:ring-0 text-muted-foreground h-10 shadow-none">
+            <SelectValue placeholder="Tipo de serviço" />
+          </SelectTrigger>
+          <SelectContent className="bg-white z-50">
+            <SelectItem value="Todos" className="cursor-pointer">Todos</SelectItem>
+            {servicosDisponiveis.map(servico => (
+              <SelectItem key={servico} value={servico} className="cursor-pointer">{servico}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <div className="relative flex-1 group flex items-center">
+          <Search className="absolute left-3 h-4 w-4 text-muted-foreground transition-colors group-focus-within:text-secondary" />
           <Input
             type="search"
             placeholder="Pesquisar banner..."
+            className="pl-9 border border-zinc-300 rounded-md bg-transparent focus-visible:ring-0 h-10 w-full text-sm shadow-none"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-zinc-50 focus:ring-2 focus:ring-[#1E84CF]"
           />
         </div>
 
         <Button 
-          onClick={handleAddNew} 
-          className="w-full lg:w-auto cursor-pointer bg-primary text-white font-bold shadow-sm transition-all hover:brightness-110 hover:scale-[1.02] active:scale-[0.98] h-10 px-6 rounded-lg"
+          variant="secondary"
+          onClick={handleClearFilters}
+          className="w-full lg:w-auto h-10 bg-zinc-200 text-zinc-700 hover:bg-zinc-300 rounded-md cursor-pointer"
         >
-            + Novo banner
+          Limpar filtros
         </Button>
+
+        
       </div>
 
-      {/* Tabela englobando a paginação no mesmo container (Igual ao Blog) */}
       <div className="mt-4 w-full bg-white rounded-xl shadow-sm border border-zinc-200 overflow-hidden">
         <div className="w-full overflow-x-auto">
           <Table className="w-full">
@@ -165,7 +207,6 @@ export function CarouselAdmin() {
             </TableHeader>
 
             <TableBody className="border-b border-zinc-200">
-              {/* Agora renderizamos currentBanners em vez de filteredBanners */}
               {currentBanners.map((banner) => (
                 <TableRow key={banner.id} className="hover:bg-zinc-50 bg-white">
                   <TableCell className="text-muted-foreground font-medium">{banner.id}</TableCell>
@@ -211,7 +252,6 @@ export function CarouselAdmin() {
           )}
         </div>
 
-        {/* Paginação Perfeita Idêntica à do Blog */}
         {filteredBanners.length > 0 && (
           <div className="py-4 grid grid-cols-1 sm:grid-cols-3 items-center px-6 bg-white gap-4 sm:gap-0">
             <div className="hidden sm:block"></div>
@@ -259,7 +299,6 @@ export function CarouselAdmin() {
         )}
       </div>
 
-      {/* Modal de Exclusão */}
       {bannerToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-md rounded-xl bg-white shadow-2xl border border-zinc-200 overflow-hidden">
