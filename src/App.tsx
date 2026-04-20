@@ -33,6 +33,8 @@ import Solicitacoes from "@/pages/cliente/SolicitacoesAdmin";
 
 import EditarSolicitacao from "@/components/admin/EditarSolicitacao";
 
+import Usuarios from "@/pages/admin/Usuarios";
+
 function App() {
   return (
     <BrowserRouter>
@@ -92,6 +94,8 @@ function App() {
           <Route path="publicidade" element={<PublicidadeAdmin />} />
           <Route path="publicidade/novo" element={<CreatePublicidadeCMS />} />
           <Route path="publicidade/editar/:id" element={<EditPublicidadeCMS />} />
+
+          <Route path="usuarios" element={<Usuarios />} />
         </Route>
       </Routes>
     </BrowserRouter>
