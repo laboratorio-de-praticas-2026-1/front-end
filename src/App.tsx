@@ -41,6 +41,10 @@ import EditarServicoCMS from "@/pages/admin/servicos/EditarServicoCMS";
 import NovoRelatorio from "./components/admin/relatorios/CreateRelatorioCMS";
 
 
+import Usuarios from "@/pages/admin/Usuarios";
+import NovoUsuario from "@/pages/admin/usuarios/NovoUsuario";
+import EditarUsuario from "@/pages/admin/usuarios/EditarUsuario";
+
 function App() {
   return (
     <BrowserRouter>
@@ -106,6 +110,9 @@ function App() {
           <Route path="publicidade/novo" element={<CreatePublicidadeCMS />} />
           <Route path="publicidade/editar/:id" element={<EditPublicidadeCMS />} />
 
+          <Route path="usuarios" element={<Usuarios />} />
+          <Route path="usuarios/novo" element={<NovoUsuario />} />
+          <Route path="usuarios/editar/:id" element={<EditarUsuario />} />
         </Route>
       </Routes>
     </BrowserRouter>
