@@ -34,6 +34,8 @@ import Solicitacoes from "@/pages/cliente/SolicitacoesAdmin";
 import EditarSolicitacao from "@/components/admin/EditarSolicitacao";
 
 import Usuarios from "@/pages/admin/Usuarios";
+import NovoUsuario from "@/pages/admin/usuarios/NovoUsuario";
+import EditarUsuario from "@/pages/admin/usuarios/EditarUsuario";
 
 function App() {
   return (
@@ -96,6 +98,8 @@ function App() {
           <Route path="publicidade/editar/:id" element={<EditPublicidadeCMS />} />
 
           <Route path="usuarios" element={<Usuarios />} />
+          <Route path="usuarios/novo" element={<NovoUsuario />} />
+          <Route path="usuarios/editar/:id" element={<EditarUsuario />} />
         </Route>
       </Routes>
     </BrowserRouter>
