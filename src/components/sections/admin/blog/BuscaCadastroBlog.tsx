@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Plus, CalendarDays, Search } from "lucide-react";
 
+
 interface BuscaBlogProps {
   onSearch?: (filtros: { de: string; ate: string; busca: string }) => void;
   onNovaPostagem?: () => void;
