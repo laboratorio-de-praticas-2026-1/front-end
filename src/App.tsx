@@ -28,11 +28,13 @@ import { Contato } from "@/pages/Contato";
 
 import { PublicidadeAdmin } from "@/pages/admin/publicidade/PublicidadeAdmin";
 import CreatePublicidadeCMS from "@/components/sections/admin/publicidade/CreatePublicidadeCMS";
+import CreateRelatorioCMS from "./components/admin/relatorios/CreateRelatorioCMS";
 import EditPublicidadeCMS from "@/components/sections/admin/publicidade/EditPublicidadeCMS";
 
 import Solicitacoes from "@/pages/cliente/SolicitacoesAdmin";
 
 import EditarSolicitacao from "@/components/admin/EditarSolicitacao";
+import NovoRelatorio from "./components/admin/relatorios/CreateRelatorioCMS";
 
 function App() {
   return (
@@ -75,6 +77,7 @@ function App() {
           <Route path="solicitacoes" element={<SolicitacoesAdmin />} />
           <Route path="solicitacoes/:id/editar" element={<EditarSolicitacao />} />
           <Route path="relatorios" element={<Relatorios />} />
+          <Route path="relatorios/novo" element={<NovoRelatorio />} />
           
           {/* Rota da tabela de posts */}
           <Route path="posts" element={<BlogAdmin />} />
