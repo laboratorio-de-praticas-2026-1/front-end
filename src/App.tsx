@@ -8,6 +8,7 @@ import { Login } from "@/pages/Login";
 import { Cadastro } from "@/pages/Cadastro"; // <-- NOVA IMPORTAÇÃO
 
 import SolicitacoesAdmin from "./components/admin/solicitacoes/SolicitacoesAdmin";
+import Relatorios from "./components/admin/relatorios/RelatoriosAdmin";
 import SolicitacaoSucesso from "@/pages/cliente/SolicitacaoSucesso";
 import HistoricoSolicitacoes from "@/pages/cliente/HistoricoSolicitacoes";
 import DetalhesSolicitacao from "@/pages/cliente/DetalhesSolicitacao";
@@ -27,14 +28,13 @@ import { Contato } from "@/pages/Contato";
 
 import { PublicidadeAdmin } from "@/pages/admin/publicidade/PublicidadeAdmin";
 import CreatePublicidadeCMS from "@/components/sections/admin/publicidade/CreatePublicidadeCMS";
+import CreateRelatorioCMS from "./components/admin/relatorios/CreateRelatorioCMS";
 import EditPublicidadeCMS from "@/components/sections/admin/publicidade/EditPublicidadeCMS";
 
 import Solicitacoes from "@/pages/cliente/SolicitacoesAdmin";
 
-import EditarSolicitacao from "@/components/admin/EditarSolicitacao"
-import { ServicosAdmin } from "@/pages/admin/servicos/ServicosAdmin.tsx";
-import NovoServicoCMS from "@/pages/admin/servicos/NovoServicoCMS";
-import EditarServicoCMS from "@/pages/admin/servicos/EditarServicoCMS";
+import EditarSolicitacao from "@/components/admin/EditarSolicitacao";
+import NovoRelatorio from "./components/admin/relatorios/CreateRelatorioCMS";
 
 function App() {
   return (
@@ -79,6 +79,8 @@ function App() {
           <Route path="servicos/editar/:id" element={<EditarServicoCMS />} />
           <Route path="solicitacoes" element={<SolicitacoesAdmin />} />
           <Route path="solicitacoes/:id/editar" element={<EditarSolicitacao />} />
+          <Route path="relatorios" element={<Relatorios />} />
+          <Route path="relatorios/novo" element={<NovoRelatorio />} />
           
           {/* Rota da tabela de posts */}
           <Route path="posts" element={<BlogAdmin />} />
@@ -98,6 +100,7 @@ function App() {
           <Route path="publicidade" element={<PublicidadeAdmin />} />
           <Route path="publicidade/novo" element={<CreatePublicidadeCMS />} />
           <Route path="publicidade/editar/:id" element={<EditPublicidadeCMS />} />
+
         </Route>
       </Routes>
     </BrowserRouter>
