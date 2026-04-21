@@ -5,14 +5,53 @@ export interface PublicidadePost {
   titulo: string;
   conteudo: string;
   imagem?: string; // caso venha sem foto
+  ativo?: boolean;
 }
 
 type ApiPublicidadePost = {
   id: number;
   titulo: string;
   conteudo: string;
+  title?: string;
+  content?: string;
   imagem?: string;
   urlImagem?: string;
+  ativo?: boolean;
+};
+
+type BuscaTermoResponse = {
+  itens: ApiPublicidadePost[];
+  mensagem?: string;
+};
+
+type ListaPublicidadeResponse = ApiPublicidadePost[] | BuscaTermoResponse;
+
+const normalizarTextoBusca = (valor: string): string =>
+  valor
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+
+const filtrarPublicidadePorTermo = (
+  publicidades: PublicidadePost[],
+  termo?: string,
+): PublicidadePost[] => {
+  const termoNormalizado = termo ? normalizarTextoBusca(termo.trim()) : "";
+  if (!termoNormalizado) return publicidades;
+
+  return publicidades.filter((item) => {
+    const titulo = normalizarTextoBusca(item.titulo || "");
+    const conteudo = normalizarTextoBusca(item.conteudo || "");
+    const imagem = normalizarTextoBusca(item.imagem || "");
+    const id = String(item.id);
+
+    return (
+      titulo.includes(termoNormalizado) ||
+      conteudo.includes(termoNormalizado) ||
+      imagem.includes(termoNormalizado) ||
+      id.includes(termoNormalizado)
+    );
+  });
 };
 
 const normalizeImageUrl = (url?: string): string | undefined => {
@@ -22,21 +61,57 @@ const normalizeImageUrl = (url?: string): string | undefined => {
 };
 
 const normalizePost = (post: ApiPublicidadePost): PublicidadePost => {
+  const tituloNormalizado = (post.titulo || post.title || "").trim();
+  const conteudoNormalizado = (post.conteudo || post.content || "").trim();
+
   return {
-    ...post,
+    id: post.id,
+    titulo: tituloNormalizado || "Sem titulo",
+    conteudo: conteudoNormalizado,
+    ativo: post.ativo,
     imagem: normalizeImageUrl(post.imagem || post.urlImagem),
   };
 };
 
+const extractItens = (dados: ListaPublicidadeResponse): ApiPublicidadePost[] => {
+  if (Array.isArray(dados)) {
+    return dados;
+  }
+
+  if (dados && Array.isArray(dados.itens)) {
+    return dados.itens;
+  }
+
+  return [];
+};
+
 export const publicidadeService = {
+  buscarPorTermo: async (termo?: string): Promise<PublicidadePost[]> => {
+    try {
+      const termoNormalizado = termo?.trim();
+      // A busca de publicidade do backend nem sempre considera titulo,
+      // então usamos a lista completa e filtramos localmente para garantir consistencia.
+      const todasPublicidades = await publicidadeService.listarTodos();
+      if (!termoNormalizado) {
+        return todasPublicidades;
+      }
+
+      return filtrarPublicidadePorTermo(todasPublicidades, termoNormalizado);
+    } catch (erro) {
+      console.error("Erro no buscarPorTermo:", erro);
+      return [];
+    }
+  },
+
   // 1. GET /publicidade - Lista todos
   listarTodos: async (): Promise<PublicidadePost[]> => {
     try {
       const resposta = await fetch(`${API_URL}/publicidade`);
       if (!resposta.ok) throw new Error("Erro ao buscar publicidades");
-      
-      const dados: ApiPublicidadePost[] = await resposta.json();
-      return dados.map(normalizePost);
+
+      const dados: ListaPublicidadeResponse = await resposta.json();
+      const itens = extractItens(dados);
+      return itens.map(normalizePost);
     } catch (erro) {
       console.error("Erro no listarTodos:", erro);
       return [];
@@ -48,7 +123,7 @@ export const publicidadeService = {
     try {
       const resposta = await fetch(`${API_URL}/publicidade/${id}`);
       if (!resposta.ok) throw new Error("Erro ao buscar a publicidade");
-      
+
       const dados: ApiPublicidadePost = await resposta.json();
       return normalizePost(dados);
     } catch (erro) {
@@ -62,7 +137,7 @@ export const publicidadeService = {
     try {
       const resposta = await fetch(`${API_URL}/publicidade`, {
         method: "POST",
-        body: dadosDoFormulario, 
+        body: dadosDoFormulario,
       });
 
       if (!resposta.ok) {
@@ -70,7 +145,7 @@ export const publicidadeService = {
         console.error(`O Servidor recusou (Status ${resposta.status}). Motivo:`, motivoDoErro);
         throw new Error("Erro ao criar publicidade");
       }
-      
+
       const dados: ApiPublicidadePost = await resposta.json();
       return normalizePost(dados);
     } catch (erro) {
@@ -119,7 +194,7 @@ export const publicidadeService = {
       });
 
       if (!resposta.ok) throw new Error("Erro ao excluir publicidade");
-      return true; 
+      return true;
     } catch (erro) {
       console.error("Erro no deletar:", erro);
       throw erro;
