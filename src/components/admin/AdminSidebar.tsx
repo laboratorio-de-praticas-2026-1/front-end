@@ -17,19 +17,30 @@ import logoDespachante from "@/assets/logo-despachante.png";
 export function AdminSidebar() {
   const location = useLocation();
 
-  // Mapeamento das rotas baseado no UX
-  const navItems = [
-    { icon: Handshake, label: "Solicitações", path: "/admin/solicitacoes" },
-    { icon: Settings, label: "Serviços", path: "/admin/servicos" },
-    { icon: Newspaper, label: "Blog", path: "/admin/posts" }, 
-    { icon: HelpCircle, label: "FAQ", path: "/admin/faq" },
-    { icon: GalleryHorizontal, label: "Carrossel", path: "/admin/carrossel" },
-    { icon: Megaphone, label: "Publicidade", path: "/admin/publicidade" },
-    { icon: LineChart, label: "Dashboard", path: "/admin/dashboard" },
-    { icon: FileText, label: "Relatórios", path: "/admin/relatorios" },
-    { icon: Building2, label: "Empresas", path: "/admin/empresas" },
-    { icon: Users, label: "Usuários", path: "/admin/usuarios" },
-  ];
+const sidebarLinks: SidebarLink[] = [
+  { name: "Solicitações", href: "/admin/solicitacoes", icon: FaRegHandshake },
+  { name: "Serviços", href: "/admin/servicos", icon: FiSettings },
+  { name: "Blog", href: "/admin/posts", icon: FiFileText },
+  { name: "FAQ", href: "/admin/faq", icon: FiHelpCircle },
+  { name: "Carrossel", href: "/admin/carrossel", icon: FiColumns },
+  { name: "Publicidade", href: "/admin/publicidade", icon: FaBullhorn },
+  { name: "Dashboard", href: "/admin/dashboard", icon: FiBarChart2 },
+  { name: "Clientes", href: "/admin/clientes", icon: FiUsers },
+];
+
+
+interface AdminSidebarProps {
+  onLinkClick?: () => void;
+}
+
+export function AdminSidebar({ onLinkClick }: AdminSidebarProps) {
+  const currentUser = {
+    name: "Amanda Oliveira C...",
+  };
+
+  const handleLogout = () => {
+    console.log("Back-end: Inserir lógica de limpar token");
+  };
 
   return (
     <aside className="w-[260px] min-h-screen bg-[#002845] flex flex-col text-white shadow-xl flex-shrink-0">
