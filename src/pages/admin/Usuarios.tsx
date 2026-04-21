@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowUpDown,
@@ -26,56 +26,21 @@ import {
 } from '@/components/ui/table';
 import { DatePicker } from '@/components/ui/DatePicker';
 import { ConfirmDeleteModal } from '@/components/ui/ConfirmDeleteModal';
+import { usuarioService } from '@/services/usuarioService';
 
 type User = {
-  id: string;
+  id: number;
   nome: string;
   email: string;
   nivel: 'Administrador' | 'Cliente' | 'Nível 3';
   dataCadastro: Date;
 };
 
-const generateMockUsers = (): User[] => {
-  const baseUsers = [
-    { id: '#001', nome: 'Amanda Costa', email: 'amanda.costa@gmail.com', nivel: 'Administrador' as const, dataCadastro: new Date(2026, 2, 8) },
-    { id: '#002', nome: 'Giovana Albanés', email: 'giovana.albanes@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 8) },
-    { id: '#003', nome: 'Igor Gomes', email: 'igor.gomes@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 8) },
-    { id: '#004', nome: 'Diego Baltazar', email: 'diego.baltazar@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 8) },
-    { id: '#005', nome: 'Arthur Fudali', email: 'arthur.fudali@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 8) },
-    { id: '#006', nome: 'Amanda Vithoria', email: 'amanda.vithoria@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 8) },
-    { id: '#007', nome: 'Ana Flávia', email: 'ana.flavia@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 8) },
-    { id: '#008', nome: 'Carlos Eduardo', email: 'carlos.eduardo@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 10) },
-    { id: '#009', nome: 'Fernanda Lima', email: 'fernanda.lima@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 11) },
-    { id: '#010', nome: 'Roberto Alves', email: 'roberto.alves@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 12) },
-    { id: '#011', nome: 'Patrícia Sousa', email: 'patricia.sousa@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 13) },
-    { id: '#012', nome: 'Marcelo Nunes', email: 'marcelo.nunes@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 14) },
-    { id: '#013', nome: 'Juliana Mendes', email: 'juliana.mendes@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 15) },
-    { id: '#014', nome: 'Thiago Rocha', email: 'thiago.rocha@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 16) },
-    { id: '#015', nome: 'Larissa Freitas', email: 'larissa.freitas@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 17) },
-    { id: '#016', nome: 'Ricardo Mendonça', email: 'ricardo.mendonca@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 18) },
-    { id: '#017', nome: 'Camila Rocha', email: 'camila.rocha@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 19) },
-    { id: '#018', nome: 'Vinícius Souza', email: 'vinicius.souza@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 20) },
-    { id: '#019', nome: 'Tatiane Oliveira', email: 'tatiane.oliveira@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 21) },
-    { id: '#020', nome: 'Fábio Santos', email: 'fabio.santos@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 22) },
-    { id: '#021', nome: 'Renata Almeida', email: 'renata.almeida@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 23) },
-    { id: '#022', nome: 'Gustavo Lima', email: 'gustavo.lima@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 24) },
-    { id: '#023', nome: 'Carla Nunes', email: 'carla.nunes@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 25) },
-    { id: '#024', nome: 'Paulo César', email: 'paulo.cesar@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 26) },
-    { id: '#025', nome: 'Mariana Dias', email: 'mariana.dias@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 27) },
-    { id: '#026', nome: 'Eduardo Campos', email: 'eduardo.campos@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 28) },
-    { id: '#027', nome: 'Aline Rocha', email: 'aline.rocha@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 28) },
-    { id: '#028', nome: 'Bruno Mendes', email: 'bruno.mendes@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 28) },
-    { id: '#029', nome: 'Vanessa Silva', email: 'vanessa.silva@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 28) },
-    { id: '#030', nome: 'Rafael Costa', email: 'rafael.costa@gmail.com', nivel: 'Cliente' as const, dataCadastro: new Date(2026, 2, 28) },
-  ];
-  return baseUsers;
-};
-
 const ITEMS_PER_PAGE = 7;
 
 export default function Usuarios() {
   const navigate = useNavigate();
-  const [users, setUsers] = useState<User[]>(() => generateMockUsers());
+  const [users, setUsers] = useState<User[]>([]);
 
   const [nivelFilter, setNivelFilter] = useState<string>('');
   const [dataFilter, setDataFilter] = useState<Date | undefined>(undefined);
@@ -90,6 +55,28 @@ export default function Usuarios() {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [currentPage, setCurrentPage] = useState(1);
 
+  useEffect(() => {
+    let ativo = true;
+
+    const carregarUsuarios = async () => {
+      const dados = await usuarioService.buscarPorFiltros({
+        nivel: nivelFilter,
+        dataCadastro: dataFilter,
+      });
+
+      if (ativo) {
+        setUsers(dados);
+        setCurrentPage(1);
+      }
+    };
+
+    carregarUsuarios();
+
+    return () => {
+      ativo = false;
+    };
+  }, [nivelFilter, dataFilter]);
+
   const toggleSort = (key: SortKey) => {
     if (sortKey === key) {
       setSortDirection(prev => (prev === 'asc' ? 'desc' : 'asc'));
@@ -102,19 +89,6 @@ export default function Usuarios() {
 
   const filteredUsers = useMemo(() => {
     let filtered = [...users];
-    if (nivelFilter !== '' && nivelFilter !== 'all') {
-      filtered = filtered.filter(user => user.nivel === nivelFilter);
-    }
-    if (dataFilter) {
-      filtered = filtered.filter(user => {
-        const userDate = new Date(user.dataCadastro);
-        return (
-          userDate.getDate() === dataFilter.getDate() &&
-          userDate.getMonth() === dataFilter.getMonth() &&
-          userDate.getFullYear() === dataFilter.getFullYear()
-        );
-      });
-    }
     if (searchText.trim() !== '') {
       const term = searchText.toLowerCase();
       filtered = filtered.filter(
@@ -324,7 +298,7 @@ export default function Usuarios() {
             ) : (
               paginatedUsers.map((user) => (
                 <TableRow key={user.id}>
-                  <TableCell className="font-mono text-sm text-gray-500">{user.id}</TableCell>
+                  <TableCell className="font-mono text-sm text-gray-500">#{String(user.id).padStart(3, '0')}</TableCell>
                   <TableCell className="font-medium">{user.nome}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.nivel}</TableCell>
