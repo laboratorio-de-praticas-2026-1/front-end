@@ -41,9 +41,9 @@ import GeralDashboard from "./components/admin/dashboard/GeralDashboard";
 import SolicitacoesDashboard from "./components/admin/dashboard/SolicitacoesDashboard";
 import VeiculosDashboard from "./components/admin/dashboard/VeiculosDashboard";
 import ServicosDashboard from "./components/admin/dashboard/ServicosDashboard";
-import DocumentosDashboard from "./components/admin/DocumentosAba";
-import FinanceiroDashboard from "./components/admin/dashboard/FinanceiroDashboard";
-import ClientesDashboard from "./components/admin/dashboard/ClientesDashboard";
+import DocumentosDashboard from "./components/admin/dashboard/DocumentosDashboard"; 
+import FinanceiroDashboard from "./components/admin/dashboard/FinanceiroDashboard"; 
+import ClientesDashboard from "./components/admin/dashboard/ClientesDashboard"; 
 
 function App() {
   return (
@@ -115,9 +115,9 @@ function App() {
             <Route path="solicitacoes" element={<SolicitacoesDashboard />} />
             <Route path="veiculos" element={<VeiculosDashboard />} />
             <Route path="servicos" element={<ServicosDashboard />} />
-            <Route path="documentos" element={<DocumentosDashboard />} />
-            <Route path="financeiro" element={<FinanceiroDashboard />} />
-            <Route path="clientes" element={<ClientesDashboard />} />
+            <Route path="documentos" element={<DocumentosDashboard />} /> 
+            <Route path="financeiro" element={<FinanceiroDashboard />} /> 
+            <Route path="clientes" element={<ClientesDashboard />} /> 
           </Route>
         </Route>
       </Routes>
