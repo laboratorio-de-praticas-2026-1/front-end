@@ -14,33 +14,26 @@ import {
 } from "lucide-react";
 import logoDespachante from "@/assets/logo-despachante.png";
 
-export function AdminSidebar() {
-  const location = useLocation();
-
-const sidebarLinks: SidebarLink[] = [
-  { name: "Solicitações", href: "/admin/solicitacoes", icon: FaRegHandshake },
-  { name: "Serviços", href: "/admin/servicos", icon: FiSettings },
-  { name: "Blog", href: "/admin/posts", icon: FiFileText },
-  { name: "FAQ", href: "/admin/faq", icon: FiHelpCircle },
-  { name: "Carrossel", href: "/admin/carrossel", icon: FiColumns },
-  { name: "Publicidade", href: "/admin/publicidade", icon: FaBullhorn },
-  { name: "Dashboard", href: "/admin/dashboard", icon: FiBarChart2 },
-  { name: "Clientes", href: "/admin/clientes", icon: FiUsers },
-];
-
-
 interface AdminSidebarProps {
   onLinkClick?: () => void;
 }
 
 export function AdminSidebar({ onLinkClick }: AdminSidebarProps) {
-  const currentUser = {
-    name: "Amanda Oliveira C...",
-  };
+  const location = useLocation();
 
-  const handleLogout = () => {
-    console.log("Back-end: Inserir lógica de limpar token");
-  };
+  // Mapeamento das rotas baseado no UX
+  const navItems = [
+    { icon: Handshake, label: "Solicitações", path: "/admin/solicitacoes" },
+    { icon: Settings, label: "Serviços", path: "/admin/servicos" },
+    { icon: Newspaper, label: "Blog", path: "/admin/posts" }, 
+    { icon: HelpCircle, label: "FAQ", path: "/admin/faq" },
+    { icon: GalleryHorizontal, label: "Carrossel", path: "/admin/carrossel" },
+    { icon: Megaphone, label: "Publicidade", path: "/admin/publicidade" },
+    { icon: LineChart, label: "Dashboard", path: "/admin/dashboard" },
+    { icon: FileText, label: "Relatórios", path: "/admin/relatorios" },
+    { icon: Building2, label: "Empresas", path: "/admin/empresas" },
+    { icon: Users, label: "Usuários", path: "/admin/usuarios" },
+  ];
 
   return (
     <aside className="w-[260px] min-h-screen bg-[#002845] flex flex-col text-white shadow-xl flex-shrink-0">
@@ -62,6 +55,7 @@ export function AdminSidebar({ onLinkClick }: AdminSidebarProps) {
             <Link
               key={item.path}
               to={item.path}
+              onClick={onLinkClick}
               className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-colors duration-200 ${
                 isActive 
                   ? "bg-white/10 font-semibold shadow-inner" 
@@ -79,6 +73,7 @@ export function AdminSidebar({ onLinkClick }: AdminSidebarProps) {
       <div className="p-4 border-t border-white/10 space-y-4">
         <Link
           to="/admin/configuracoes"
+          onClick={onLinkClick}
           className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-colors duration-200 ${
             location.pathname.startsWith("/admin/configuracoes")
               ? "bg-white/10 font-semibold"
