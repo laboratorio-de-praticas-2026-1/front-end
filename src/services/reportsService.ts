@@ -20,7 +20,6 @@ export const reportsService = {
         throw new Error("Erro ao buscar relatórios");
       }
       const data = await resposta.json();
-      console.log("Relatórios recebidos do servidor:", data);
       return data;
     } catch (error) {
       console.error("Erro no listarTodos:", error);
@@ -41,8 +40,7 @@ export const reportsService = {
         throw new Error("Erro ao buscar categorias de relatórios");
       }
 
-      const data = await resposta.json();
-      console.log("Categorias recebidas do servidor:", data);
+      const data = await resposta.json();      
 
       return data;
     } catch (error) {
@@ -76,7 +74,6 @@ export const reportsService = {
         throw new Error("Erro ao gerar relatório");
       }
       const data = await resposta.json();
-      console.log("Relatório gerado com sucesso:", data);
       return data;
     } catch (error) {
       console.error("Erro no gerarRelatorio:", error);
@@ -98,8 +95,6 @@ export const reportsService = {
         );
         throw new Error("Erro ao deletar relatório");
       }
-
-      console.log(`Relatório com ID ${id} deletado com sucesso.`);
     } catch (error) {
       console.error("Erro no deleteRelatorio:", error);
       throw error; // Propaga o erro para o componente lidar

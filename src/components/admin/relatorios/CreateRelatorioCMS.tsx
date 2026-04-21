@@ -56,9 +56,6 @@ export default function NovoRelatorio() {
         dataPeriodoFim: format(dataTermino, "yyyy-MM-dd"),
       };
 
-      // ✅ Exibindo o payload no console conforme solicitado
-      console.log("Payload enviado:", payload);
-
       // Simulação de envio
       await reportsService.gerarRelatorio(payload);
 

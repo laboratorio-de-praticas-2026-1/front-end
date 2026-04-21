@@ -159,7 +159,6 @@ export default function Relatorios() {
 
   const sortedReports = [...filteredReports].sort((a, b) => {
     if (sortType === "id") {
-      console.log(typeof a.id, typeof b.id); // Debug: Verificar tipos dos IDs = number
       const idA = Number(a.id);
       const idB = Number(b.id);
       return idA - idB;
