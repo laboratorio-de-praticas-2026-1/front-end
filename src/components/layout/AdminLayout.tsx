@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { FiX } from "react-icons/fi";
 import AdminChatModal from "../chat/AdminChatModal";
 import ChatFloatingButton from "../chat/ChatFloatingButton";
-import { useLocation } from "react-router-dom";
 
 export function AdminLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const location = useLocation();
 
+  // Rotas que não devem ter espaçamento padrão (ex: Dashboard)
   const noPaddingRoutes = [
     "/admin/dashboard",
     "/admin/dashboard/geral",
@@ -22,16 +22,16 @@ export function AdminLayout() {
     "/admin/dashboard/clientes"
   ];
 
-
   return (
-    <div className="flex h-screen w-full bg-secondary font-sans overflow-hidden">
+    // Fundo da tela toda: Azul escuro (Secondary) 
+    <div className="flex h-screen w-full bg-[#002845] font-sans overflow-hidden">
 
       {/* SIDEBAR DESKTOP  */}
       <div className="hidden md:block">
         <AdminSidebar />
       </div>
 
-      {/*  SIDEBAR MOBILE */}
+      {/* SIDEBAR MOBILE */}
       <div className="md:hidden">
 
         {/* Fundo preto com transparência (Overlay) */}
@@ -59,10 +59,8 @@ export function AdminLayout() {
         </div>
       </div>
 
-      {/* 3. ÁREA PRINCIPAL DA PÁGINA */}
-      <main className="flex-1 flex flex-col overflow-y-auto w-full m-2 rounded-4xl w-full h-197/200 bg-white">
-
-
+      {/* ÁREA PRINCIPAL DA PÁGINA (Com bordas arredondadas e fundo branco) */}
+      <main className="flex-1 flex flex-col overflow-y-auto m-2 rounded-[28px] bg-[#f8fafc]">
 
         {/* O conteúdo dinâmico (Tabelas, Formulários, etc) */}
         <div
@@ -73,8 +71,6 @@ export function AdminLayout() {
         >
           <Outlet />
         </div>
-
-        <div></div>
 
       </main>
 
