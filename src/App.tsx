@@ -5,12 +5,13 @@ import { Servicos } from "@/pages/Servicos";
 import { Blog } from "@/pages/Blog";
 import { Artigo } from "@/pages/Artigo";
 import { Login } from "@/pages/Login";
-import { Cadastro } from "@/pages/Cadastro"; // <-- NOVA IMPORTAÇÃO
+import { Cadastro } from "@/pages/Cadastro"; 
 
 import SolicitacoesAdmin from "./components/admin/solicitacoes/SolicitacoesAdmin";
-import SolicitacaoSucesso from "@/pages/cliente/SolicitacaoSucesso";
-import HistoricoSolicitacoes from "@/pages/cliente/HistoricoSolicitacoes";
-import DetalhesSolicitacao from "@/pages/cliente/DetalhesSolicitacao";
+import Relatorios from "./components/admin/relatorios/RelatoriosAdmin";
+import SolicitacaoSucesso from "@/pages/cliente/solicitacoes/SolicitacaoSucesso";
+import HistoricoSolicitacoes from "@/pages/cliente/solicitacoes/HistoricoSolicitacoes";
+import DetalhesSolicitacao from "@/pages/cliente/solicitacoes/DetalhesSolicitacao";
 
 
 import { ClienteLayout } from "@/components/layout/ClienteLayout";
@@ -27,9 +28,10 @@ import { Contato } from "@/pages/Contato";
 
 import { PublicidadeAdmin } from "@/pages/admin/publicidade/PublicidadeAdmin";
 import CreatePublicidadeCMS from "@/components/sections/admin/publicidade/CreatePublicidadeCMS";
+import CreateRelatorioCMS from "./components/admin/relatorios/CreateRelatorioCMS";
 import EditPublicidadeCMS from "@/components/sections/admin/publicidade/EditPublicidadeCMS";
 
-import Solicitacoes from "@/pages/cliente/SolicitacoesAdmin";
+import Solicitacoes from "@/pages/cliente/solicitacoes/SolicitacoesAdmin";
 
 import EditarSolicitacao from "@/components/admin/EditarSolicitacao"
 import { ServicosAdmin } from "@/pages/admin/servicos/ServicosAdmin.tsx";
@@ -44,6 +46,12 @@ import ServicosDashboard from "./components/admin/dashboard/ServicosDashboard";
 import DocumentosDashboard from "./components/admin/dashboard/DocumentosDashboard";
 import FinanceiroDashboard from "./components/admin/dashboard/FinanceiroDashboard";
 import ClientesDashboard from "./components/admin/dashboard/ClientesDashboard";
+import NovoRelatorio from "./components/admin/relatorios/CreateRelatorioCMS";
+
+
+import Usuarios from "@/pages/admin/Usuarios";
+import NovoUsuario from "@/pages/admin/usuarios/NovoUsuario";
+import EditarUsuario from "@/pages/admin/usuarios/EditarUsuario";
 
 function App() {
   return (
@@ -88,6 +96,8 @@ function App() {
           <Route path="servicos/editar/:id" element={<EditarServicoCMS />} />
           <Route path="solicitacoes" element={<SolicitacoesAdmin />} />
           <Route path="solicitacoes/:id/editar" element={<EditarSolicitacao />} />
+          <Route path="relatorios" element={<Relatorios />} />
+          <Route path="relatorios/novo" element={<NovoRelatorio />} />
           
           {/* Rota da tabela de posts */}
           <Route path="posts" element={<BlogAdmin />} />
@@ -119,6 +129,9 @@ function App() {
             <Route path="financeiro" element={<FinanceiroDashboard />} />
             <Route path="clientes" element={<ClientesDashboard />} />
           </Route>
+          <Route path="usuarios" element={<Usuarios />} />
+          <Route path="usuarios/novo" element={<NovoUsuario />} />
+          <Route path="usuarios/editar/:id" element={<EditarUsuario />} />
         </Route>
       </Routes>
     </BrowserRouter>
