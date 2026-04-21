@@ -7,8 +7,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DatePicker } from "@/components/ui/DatePicker";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { RELATORIOS_MOCK } from "@/mocks/relatorios.mock"
+import { ReportModal } from "./ModalRelatorio";
 
-type Status = "gerado" | "erro" | "andamento";
+type Status = "Gerado" | "Erro" | "Andamento";
 
 // Interface para integração
 export interface Report {
@@ -16,8 +17,11 @@ export interface Report {
   nome: string;
   descricao: string;
   categoria: string;
-  data: string;
+  data: string; // usado na tabela
+  dataInicio: string;
+  dataFim: string;
   status: Status;
+  pdfUrl?: string;
 }
 
 export default function Relatorios() {
@@ -27,9 +31,11 @@ export default function Relatorios() {
   // Estados para integração
   const [reports, setReports] = useState<Report[]>([]);
   const [catOptions, setCatOptions] = useState<{value: string, label: string}[]>([]);
+  const [sortType, setSortType] = useState<"data" | "id">("id") 
   const [loading, setLoading] = useState(false);
+  const [selectedReport, setSelectedReport] = useState<Report | null>(null)
+  const [openModal, setOpenModal] = useState(false)
 
-  // 🔹 Seus estados originais
   const [filterState, setFilterState] = useState({
     categoria: "",
     dataInicial: undefined as Date | undefined,
@@ -45,10 +51,8 @@ export default function Relatorios() {
   const loadData = async () => {
     setLoading(true);
     try {
-      // 🔹 Aqui entra o código seguindo sua lógica anterior:
       setReports(RELATORIOS_MOCK.report as any);
       
-      // Se você tiver um estado para as categorias, coloque aqui também:
       setCatOptions(RELATORIOS_MOCK.categorias as any);
       
     } catch (error) {
@@ -71,8 +75,11 @@ export default function Relatorios() {
       const [day, month, year] = s.data.split("/").map(Number);
       const dataRelatorio = new Date(year, month - 1, day);
 
-      const inicio = filterState.dataInicial ? new Date(filterState.dataInicial.setHours(0, 0, 0, 0)) : null;
-      const fim = filterState.dataFinal ? new Date(filterState.dataFinal.setHours(23, 59, 59, 999)) : null;
+      const inicio = filterState.dataInicial
+      ? new Date(new Date(filterState.dataInicial).setHours(0,0,0,0)) : null
+
+      const fim = filterState.dataFinal
+      ? new Date(new Date(filterState.dataFinal).setHours(23, 59, 59, 999)): null
 
       const matchesCategoria = !filterState.categoria || filterState.categoria === "todas" || s.categoria === filterState.categoria;
 
@@ -86,20 +93,31 @@ export default function Relatorios() {
   }, [reports, filterState]);
 
   const sortedReports = [...filteredReports].sort((a, b) => {
+    if (sortType === "id") {
+      const idA = Number(a.id.replace("#", ""))
+      const idB = Number(b.id.replace("#", ""))
+      return idA - idB
+    }
+
     const dateA = new Date(a.data.split('/').reverse().join('-')).getTime();
     const dateB = new Date(b.data.split('/').reverse().join('-')).getTime();
     return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
-  });
+  })
 
   const totalPages = Math.ceil(sortedReports.length / postsPerPage) || 1;
   const indexOfLastReport = currentPage * postsPerPage;
   const indexOfFirstReport = indexOfLastReport - postsPerPage;
   const currentReports = sortedReports.slice(indexOfFirstReport, indexOfLastReport);
 
-  const toggleSort = () => {
-    setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc');
-    setCurrentPage(1);
-  };
+  const toggleSort = (type: "data" | "id") => {
+    if (sortType === type) {
+      setSortOrder(prev => prev === "asc" ? "desc" : "asc")
+    } else {
+      setSortType(type)
+      setSortOrder("asc")
+    }
+    setCurrentPage(1)
+  }
 
   const getPaginationItems = () => {
     const items = [];
@@ -129,7 +147,7 @@ export default function Relatorios() {
           <p className="text-muted-foreground text-sm">Gere e baixe relatórios e recibos em PDF.</p>
         </div>
         <Button
-          className="bg-primary font-semibold h-10 text-white hover:scale-[1.02] transition-transform"
+          className="bg-primary font-semibold h-10 text-white hover:scale-[1.02] transition-transform cursor-pointer"
           onClick={() => navigate("/admin/relatorios/novo")}
         >
           <Plus className="h-4 w-4" />
@@ -197,7 +215,7 @@ export default function Relatorios() {
                 <TableHead className="text-white font-medium h-12 text-sm">Categoria</TableHead>
                 <TableHead 
                   className="text-white font-medium h-12 px-4 text-sm text-center cursor-pointer hover:bg-secondary/90 transition-colors w-48"
-                  onClick={toggleSort}
+                  onClick={() => {toggleSort("data")}}
                 >
                   <div className="flex items-center justify-center gap-1">
                     Data de geração
@@ -220,7 +238,15 @@ export default function Relatorios() {
                   <TableCell className="text-zinc-600 text-sm text-center">{report.data}</TableCell>
                   <TableCell className="text-center">
                     <div className="flex justify-end gap-1">
-                      <button className="p-2 text-muted-foreground hover:bg-primary/10 rounded-md transition-colors cursor-pointer"><Eye size={18} /></button>
+                      <button 
+                      className="p-2 text-muted-foreground hover:bg-primary/10 rounded-md transition-colors cursor-pointer"
+                      onClick={() => {
+                        setSelectedReport(report)
+                        setOpenModal(true)
+                      }}
+                      >
+                        <Eye size={18}/>
+                        </button>
                       <button className="p-2 text-primary hover:bg-zinc-100 rounded-md transition-colors cursor-pointer"><Download size={18} /></button>
                     </div>
                   </TableCell>
@@ -266,6 +292,11 @@ export default function Relatorios() {
       <div className="text-sm text-zinc-500 text-center sm:text-right">
         {filteredReports.length} resultados
       </div>
+      <ReportModal
+        report={selectedReport}
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+      />
     </div>
   );
 }
