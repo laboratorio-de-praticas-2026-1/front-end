@@ -1,6 +1,6 @@
 import type { Servico, StatusServico } from "@/mocks/mockServicos";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const API_URL = import.meta.env.VITE_API_URL || "https://despachante-bortone-release-production.up.railway.app";
 
 type ApiServico = {
   id: number;
