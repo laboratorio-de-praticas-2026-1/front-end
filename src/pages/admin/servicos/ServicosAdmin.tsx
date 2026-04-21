@@ -1,9 +1,10 @@
-import { useState, useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import ToolbarServicos, { type StatusFiltro } from "@/components/sections/admin/servicos/ToolbarServicos"
 import ServicosTable from "@/components/tables/ServicosTable"
-import { mockServicos, type Servico } from "@/mocks/mockServicos"
+import { type Servico } from "@/mocks/mockServicos"
 import ModalConfirmacaoServico, { type TipoModalServico } from "@/components/admin/servicos/ModalConfirmacaoServico.tsx"
+import { servicoService } from "@/services/servicoService"
 
 const ITEMS_PER_PAGE = 9
 
@@ -22,8 +23,9 @@ export function ServicosAdmin() {
   const [currentPage, setCurrentPage] = useState(1)
   const [statusFilter, setStatusFilter] = useState<StatusFiltro>("Todos")
   const [searchQuery, setSearchQuery] = useState("")
-  const [servicos, setServicos] = useState<Servico[]>(mockServicos)
+  const [servicos, setServicos] = useState<Servico[]>([])
   const [modalLoading, setModalLoading] = useState(false)
+  const [carregandoServicos, setCarregandoServicos] = useState(true)
 
   // Corrigido: iniciados com [min, max] para ativar os dois handles no Slider
   const [prazoRange, setPrazoRange] = useState<number[]>(PRAZO_INICIAL)
@@ -35,31 +37,46 @@ export function ServicosAdmin() {
     serviceId: null,
   })
 
+  useEffect(() => {
+    let ativo = true
+
+    const carregarServicosPorFiltros = async () => {
+      setCarregandoServicos(true)
+
+      const dados = await servicoService.buscarPorFiltros({
+        status: statusFilter,
+        valorDe: valorRange[0],
+        valorAte: valorRange[1],
+        prazoDe: prazoRange[0],
+        prazoAte: prazoRange[1],
+      })
+
+      if (ativo) {
+        setServicos(dados)
+        setCurrentPage(1)
+        setCarregandoServicos(false)
+      }
+    }
+
+    carregarServicosPorFiltros()
+
+    return () => {
+      ativo = false
+    }
+  }, [statusFilter, prazoRange, valorRange])
+
   const servicoAtual = servicos.find((s) => s.id === modalState.serviceId) ?? null
 
   const servicosFiltrados = useMemo(() => {
     return servicos.filter((s) => {
-      const matchStatus =
-        statusFilter === "Todos" || s.status === statusFilter
-
       const matchSearch =
         searchQuery.trim() === "" ||
         s.nome.toLowerCase().includes(searchQuery.toLowerCase()) ||
         s.descricao.toLowerCase().includes(searchQuery.toLowerCase())
 
-      // Corrigido: filtra pelo range de prazo
-      const matchPrazo =
-        s.prazo == null ||
-        (s.prazo >= prazoRange[0] && s.prazo <= prazoRange[1])
-
-      // Corrigido: filtra pelo range de valor
-      const matchValor =
-        s.valor == null ||
-        (s.valor >= valorRange[0] && s.valor <= valorRange[1])
-
-      return matchStatus && matchSearch && matchPrazo && matchValor
+      return matchSearch
     })
-  }, [servicos, statusFilter, searchQuery, prazoRange, valorRange])
+  }, [servicos, searchQuery])
 
   const totalResultados = servicosFiltrados.length
 
@@ -165,6 +182,7 @@ export function ServicosAdmin() {
 
       <ServicosTable
         servicos={servicosPaginados}
+        carregando={carregandoServicos}
         currentPage={currentPage}
         totalResultados={totalResultados}
         onPageChange={setCurrentPage}
