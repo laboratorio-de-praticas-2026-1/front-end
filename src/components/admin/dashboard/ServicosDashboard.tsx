@@ -83,7 +83,6 @@ export default function ServicosDashboard() {
           </CardContent>
         </Card>
 
-        {/* Gráfico de Barras Horizontais */}
         <Card className="rounded-2xl border border-gray-200 shadow-sm">
           <CardHeader className="text-center pb-2">
             <CardTitle className="text-sm font-bold text-[#1D3557]">Gráfico - Rota real por serviços</CardTitle>
@@ -149,7 +148,6 @@ export default function ServicosDashboard() {
           </CardContent>
         </Card>
 
-        {/* Gráfico de Barras Verticais - COM TEXTO EM NEGRITO NO EIXO X */}
         <Card className="rounded-2xl border border-gray-200 shadow-sm">
           <CardHeader className="text-center pb-2">
             <CardTitle className="text-sm font-bold text-[#1D3557]">Gráfico - Serviços mais solicitados no período</CardTitle>
@@ -158,7 +156,6 @@ export default function ServicosDashboard() {
           <CardContent className="h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={mockData.maisSolicitados} margin={{ top: 20 }}>
-                {/* fontWeight: 'bold' adicionado aqui para os nomes dos serviços */}
                 <XAxis 
                   dataKey="name" 
                   axisLine={false} 
@@ -180,7 +177,6 @@ export default function ServicosDashboard() {
           </CardContent>
         </Card>
 
-        {/* Tabela de Renda */}
         <Card className="rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
           <CardHeader className="text-center border-b border-gray-100">
             <CardTitle className="text-sm font-bold text-[#1D3557]">Serviços com mais renda</CardTitle>
@@ -197,7 +193,10 @@ export default function ServicosDashboard() {
                 {mockData.rotaReal.map((item, idx) => (
                   <TableRow key={idx} className="hover:bg-gray-50">
                     <TableCell className="py-3 flex items-center gap-3 text-gray-600 font-medium">
-                      <Star size={14} className={idx < 2 ? "fill-secondary text-secondary" : "text-gray-300"} />
+                      <Star 
+                        size={14} 
+                        className={idx < 2 ? "fill-[#324587] text-[#324587]" : "text-gray-300"} 
+                      />
                       {item.name}
                     </TableCell>
                     <TableCell className="py-3 text-right text-gray-500 font-semibold">

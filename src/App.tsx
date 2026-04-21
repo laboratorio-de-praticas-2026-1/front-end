@@ -41,7 +41,7 @@ import GeralDashboard from "./components/admin/dashboard/GeralDashboard";
 import SolicitacoesDashboard from "./components/admin/dashboard/SolicitacoesDashboard";
 import VeiculosDashboard from "./components/admin/dashboard/VeiculosDashboard";
 import ServicosDashboard from "./components/admin/dashboard/ServicosDashboard";
-import DocumentosDashboard from "./components/admin/dashboard/DocumentosDashboard";
+import DocumentosDashboard from "./components/admin/DocumentosAba";
 import FinanceiroDashboard from "./components/admin/dashboard/FinanceiroDashboard";
 import ClientesDashboard from "./components/admin/dashboard/ClientesDashboard";
 
@@ -73,8 +73,8 @@ function App() {
           {/* Tela temporária: Pega qualquer link dentro do /cliente e mostra a sidebar */}
           <Route path="*" element={
             <div className="flex flex-col items-center justify-center h-full text-zinc-500 text-center py-20">
-               <h2 className="text-2xl font-bold mb-2 text-[#032a4e]">Bem-vindo ao Portal do Cliente 🚗</h2>
-               <p>A sua sidebar já está funcionando! O Dev construirá as telas aqui no meio.</p>
+                <h2 className="text-2xl font-bold mb-2 text-[#032a4e]">Bem-vindo ao Portal do Cliente 🚗</h2>
+                <p>A sua sidebar já está funcionando! O Dev construirá as telas aqui no meio.</p>
             </div>
           } />
         </Route>
