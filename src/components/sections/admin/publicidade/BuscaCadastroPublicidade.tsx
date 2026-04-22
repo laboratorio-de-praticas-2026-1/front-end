@@ -4,16 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Plus, Search } from "lucide-react";
 
 interface BuscaPublicidadeProps {
-  onSearch?: (filtros: { busca: string }) => void;
+  onSearch?: (filtros: { busca: string; status: string }) => void;
   onNovaPublicidade?: () => void;
 }
 
 export default function BuscaCadastroPublicidade({ onSearch, onNovaPublicidade }: BuscaPublicidadeProps) {
   const [termoBusca, setTermoBusca] = useState("");
+  const [statusFiltro, setStatusFiltro] = useState("Todos");
 
   const handlePesquisa = () => {
     if (onSearch) {
-      onSearch({ busca: termoBusca });
+      onSearch({ busca: termoBusca, status: statusFiltro });
     }
   };
 
@@ -30,9 +31,24 @@ export default function BuscaCadastroPublicidade({ onSearch, onNovaPublicidade }
 
       <div className="w-full flex flex-col lg:flex-row mt-10 md:mt-12 gap-5 items-stretch lg:items-center">
         
-        {/* Container da borda azul com w-full para se igualar à tabela */}
         <div className="flex-1 flex flex-col sm:flex-row gap-3 sm:gap-2 border-2 border-secondary rounded-xl p-2 sm:p-1.5 bg-white w-full">
           
+          <select
+            value={statusFiltro}
+            onChange={(e) => {
+              const novoStatus = e.target.value;
+              setStatusFiltro(novoStatus);
+              if (onSearch) {
+                onSearch({ busca: termoBusca, status: novoStatus });
+              }
+            }}
+            className="w-full sm:w-44 rounded-md border border-zinc-300 bg-zinc-50 px-3 py-2 text-sm text-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="Todos">Status</option>
+            <option value="Ativo">Ativo</option>
+            <option value="Inativo">Inativo</option>
+          </select>
+
           <div className="relative flex-1 group">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-secondary transition-colors" />
             <Input 
