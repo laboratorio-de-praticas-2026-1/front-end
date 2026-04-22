@@ -31,7 +31,19 @@ import EditPublicidadeCMS from "@/components/sections/admin/publicidade/EditPubl
 
 import Solicitacoes from "@/pages/cliente/SolicitacoesAdmin";
 
-import EditarSolicitacao from "@/components/admin/EditarSolicitacao";
+import EditarSolicitacao from "@/components/admin/EditarSolicitacao"
+import { ServicosAdmin } from "@/pages/admin/servicos/ServicosAdmin.tsx";
+import NovoServicoCMS from "@/pages/admin/servicos/NovoServicoCMS";
+import EditarServicoCMS from "@/pages/admin/servicos/EditarServicoCMS";
+
+import { DashboardAdmin } from "@/pages/admin/dashboard/DashboardAdmin";  
+import GeralDashboard from "./components/admin/dashboard/GeralDashboard";
+import SolicitacoesDashboard from "./components/admin/dashboard/SolicitacoesDashboard";
+import VeiculosDashboard from "./components/admin/dashboard/VeiculosDashboard";
+import ServicosDashboard from "./components/admin/dashboard/ServicosDashboard";
+import DocumentosDashboard from "./components/admin/dashboard/DocumentosDashboard"; 
+import FinanceiroDashboard from "./components/admin/dashboard/FinanceiroDashboard"; 
+import ClientesDashboard from "./components/admin/dashboard/ClientesDashboard"; 
 
 function App() {
   return (
@@ -61,8 +73,8 @@ function App() {
           {/* Tela temporária: Pega qualquer link dentro do /cliente e mostra a sidebar */}
           <Route path="*" element={
             <div className="flex flex-col items-center justify-center h-full text-zinc-500 text-center py-20">
-               <h2 className="text-2xl font-bold mb-2 text-[#032a4e]">Bem-vindo ao Portal do Cliente 🚗</h2>
-               <p>A sua sidebar já está funcionando! O Dev construirá as telas aqui no meio.</p>
+                <h2 className="text-2xl font-bold mb-2 text-[#032a4e]">Bem-vindo ao Portal do Cliente 🚗</h2>
+                <p>A sua sidebar já está funcionando! O Dev construirá as telas aqui no meio.</p>
             </div>
           } />
         </Route>
@@ -71,6 +83,9 @@ function App() {
         {/* === ROTAS DO ADMIN === */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="/admin/posts" replace />} />
+          <Route path="servicos" element={<ServicosAdmin />} />
+          <Route path="servicos/novo" element={<NovoServicoCMS />} />
+          <Route path="servicos/editar/:id" element={<EditarServicoCMS />} />
           <Route path="solicitacoes" element={<SolicitacoesAdmin />} />
           <Route path="solicitacoes/:id/editar" element={<EditarSolicitacao />} />
           
@@ -92,6 +107,18 @@ function App() {
           <Route path="publicidade" element={<PublicidadeAdmin />} />
           <Route path="publicidade/novo" element={<CreatePublicidadeCMS />} />
           <Route path="publicidade/editar/:id" element={<EditPublicidadeCMS />} />
+
+          {/* Rota do dashboard*/}
+          <Route path="dashboard" element={<DashboardAdmin />}>
+            <Route index element={<Navigate to="/admin/dashboard/geral" replace />} />
+            <Route path="geral" element={<GeralDashboard />} />
+            <Route path="solicitacoes" element={<SolicitacoesDashboard />} />
+            <Route path="veiculos" element={<VeiculosDashboard />} />
+            <Route path="servicos" element={<ServicosDashboard />} />
+            <Route path="documentos" element={<DocumentosDashboard />} /> 
+            <Route path="financeiro" element={<FinanceiroDashboard />} /> 
+            <Route path="clientes" element={<ClientesDashboard />} /> 
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
