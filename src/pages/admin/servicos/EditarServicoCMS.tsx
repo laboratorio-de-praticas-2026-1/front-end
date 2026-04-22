@@ -2,8 +2,17 @@ import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { Loader2 } from "lucide-react"
 import ServicoForm, { type ServicoFormData } from "@/components/sections/admin/servicos/ServicoForm"
-import { mockServicos, type Servico } from "@/mocks/mockServicos"
 import ModalConfirmacaoServico from "@/components/admin/servicos/ModalConfirmacaoServico"
+import { servicosService } from "@/services/servicoService"
+
+    type Servico = {
+    id: number
+    nome: string
+    descricao: string
+    valorBase: number
+    prazoEstimado: number
+    status: "Ativo" | "Inativo"
+  }
 
 export default function EditarServicoCMS() {
   const { id } = useParams<{ id: string }>()
@@ -15,29 +24,74 @@ export default function EditarServicoCMS() {
   const [excluindo, setExcluindo] = useState(false)
   const [modalExcluirAberto, setModalExcluirAberto] = useState(false)
 
-  // Simula busca dos dados pelo ID
+  function parseMoeda(valor: string): number {
+  if (!valor) return 0
+
+  return Number(
+    valor
+      .replace(/\./g, "") // remove separador de milhar
+      .replace(",", ".")  // troca vírgula por ponto
+  )
+}
+
   useEffect(() => {
-    setCarregando(true)
-    setTimeout(() => {
-      const found = mockServicos.find((s) => s.id === Number(id))
-      setServico(found ?? null)
-      setCarregando(false)
-    }, 400)
+    async function load() {
+      try {
+        setCarregando(true)
+
+        if (!id) return
+
+        const data = await servicosService.buscarPorId(Number(id))
+
+        if (!data) {
+          setServico(null)
+          return
+        }
+
+        console.log("SERVIÇO API:", data)
+
+        const adaptado = {
+          id: data.id,
+          nome: data.nome,
+          descricao: data.descricao ?? "",
+          valorBase: Number(data.valorBase) ?? 0,
+          prazoEstimado: data.prazoEstimadoDias ?? 0,
+          status: (data.ativo ? "Ativo" : "Inativo") as "Ativo" | "Inativo",
+        }
+
+        setServico(adaptado)
+      } catch (error) {
+        console.error(error)
+        setServico(null)
+      } finally {
+        setCarregando(false)
+      }
+    }
+
+    load()
   }, [id])
 
   const handleSubmit = async (data: ServicoFormData) => {
-    setSalvando(true)
-    try {
-      // TODO: integração com API
-      console.log("Salvar serviço:", { id, ...data })
-      await new Promise((res) => setTimeout(res, 500))
-      navigate("/admin/servicos")
-    } catch (error) {
-      console.error("Erro ao salvar serviço:", error)
-    } finally {
-      setSalvando(false)
-    }
+  setSalvando(true)
+
+  try {
+    if (!id) return
+
+    await servicosService.atualizar(Number(id), {
+      nome: data.nome,
+      descricao: data.descricao,
+      valorBase: parseMoeda(data.valorBase),
+      prazoEstimadoDias: data.prazoEstimado,
+      ativo: data.status === "Ativo",
+    } as any)
+
+    navigate("/admin/servicos")
+  } catch (error) {
+    console.error("Erro ao salvar serviço:", error)
+  } finally {
+    setSalvando(false)
   }
+}
 
   const handleExcluir = () => {
     setModalExcluirAberto(true)
@@ -46,8 +100,10 @@ export default function EditarServicoCMS() {
   const handleConfirmarExclusao = async () => {
     setExcluindo(true)
     try {
-      // TODO: integração com API
-      await new Promise((res) => setTimeout(res, 600))
+      if (!id) return
+
+      await servicosService.deletar(Number(id))
+
       navigate("/admin/servicos")
     } catch (error) {
       console.error("Erro ao excluir serviço:", error)
@@ -56,6 +112,7 @@ export default function EditarServicoCMS() {
       setModalExcluirAberto(false)
     }
   }
+
 
   if (carregando) {
     return (
@@ -73,6 +130,8 @@ export default function EditarServicoCMS() {
       </div>
     )
   }
+
+
 
   return (
     <div className="p-1">

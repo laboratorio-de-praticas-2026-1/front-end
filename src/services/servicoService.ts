@@ -40,6 +40,7 @@ export const servicosService = {
   //GET
   listarTodos: async (): Promise<Servico[]> => {
     try {
+      console.log("URL LISTAR:", `${API_URL}/servicos`)
       const res = await fetch(`${API_URL}/servicos`);
       if (!res.ok) throw new Error("Erro ao buscar serviços");
 
@@ -68,52 +69,76 @@ export const servicosService = {
   //POST
   criar: async (dados: Omit<Servico, "id">) => {
     try {
+      const payload = {
+        nome: dados.nome,
+        descricao: dados.descricao,
+        valor_base: dados.valorBase,
+        prazo_estimado_dias: dados.prazoEstimadoDias,
+        ativo: dados.ativo,
+      }
+
+      console.log("PAYLOAD CRIAR:", payload)
+
       const res = await fetch(`${API_URL}/servicos`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(dados),
-      });
+        body: JSON.stringify(payload),
+      })
 
       if (!res.ok) {
-        const erro = await res.text();
-        console.error("Erro ao criar:", erro);
-        throw new Error("Erro ao criar serviço");
+        const erro = await res.text()
+        console.error("Erro ao criar:", erro)
+        throw new Error("Erro ao criar serviço")
       }
 
-      const data: ApiServico = await res.json();
-      return normalizeServico(data);
+      const data: ApiServico = await res.json()
+      return normalizeServico(data)
+
     } catch (err) {
-      console.error("Erro no criar:", err);
-      throw err;
+      console.error("Erro no criar:", err)
+      throw err
     }
   },
 
-  //PUT
-  atualizar: async (id: number, dados: Partial<Servico>) => {
-    try {
-      const res = await fetch(`${API_URL}/servicos/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dados),
-      });
-
-      if (!res.ok) {
-        const erro = await res.text();
-        console.error("Erro ao atualizar:", erro);
-        throw new Error("Erro ao atualizar serviço");
-      }
-
-      const data: ApiServico = await res.json();
-      return normalizeServico(data);
-    } catch (err) {
-      console.error("Erro no atualizar:", err);
-      throw err;
+  // PATCH
+atualizar: async (id: number, dados: Partial<Servico>) => {
+  try {
+    const payload = {
+      nome: dados.nome,
+      descricao: dados.descricao,
+      valor_base: dados.valorBase,
+      prazo_estimado_dias: dados.prazoEstimadoDias,
+      ativo: dados.ativo,
     }
-  },
+
+    console.log("PAYLOAD ENVIADO:", payload)
+    console.log("URL ATUALIZAR:", `${API_URL}/servicos/${id}`) 
+
+    const res = await fetch(`${API_URL}/servicos/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    })
+
+    if (!res.ok) {
+      const erro = await res.text()
+      console.error("Erro ao atualizar:", erro)
+      throw new Error("Erro ao atualizar serviço")
+    }
+
+    const data = await res.json()
+    console.log("RESPOSTA API:", data)
+
+    return data
+  } catch (err) {
+    console.error("Erro no atualizar:", err)
+    throw err
+  }
+},
 
   //DELETE
   deletar: async (id: number) => {
