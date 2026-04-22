@@ -19,24 +19,24 @@ export default function NovoServicoCMS() {
   }
 
   const handleSubmit = async (data: ServicoFormData) => {
-    setSalvando(true)
+    setSalvando(true);
 
     try {
       await servicosService.criar({
         nome: data.nome,
         descricao: data.descricao,
         valorBase: parseMoeda(data.valorBase),
-        prazoEstimadoDias: data.prazoEstimado,
+        prazoEstimadoDias: Number(data.prazoEstimado),
         ativo: data.status === "Ativo",
-      })
+      });
 
-      navigate("/admin/servicos")
+      navigate("/admin/servicos");
     } catch (error) {
-      console.error("Erro ao criar serviço:", error)
+      console.error("Erro ao criar serviço:", error);
     } finally {
-      setSalvando(false)
+      setSalvando(false);
     }
-  }
+  };
 
   return (
     <div className="p-1">

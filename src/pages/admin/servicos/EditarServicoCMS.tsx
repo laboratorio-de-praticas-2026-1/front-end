@@ -5,14 +5,14 @@ import ServicoForm, { type ServicoFormData } from "@/components/sections/admin/s
 import ModalConfirmacaoServico from "@/components/admin/servicos/ModalConfirmacaoServico"
 import { servicosService } from "@/services/servicoService"
 
-    type Servico = {
-    id: number
-    nome: string
-    descricao: string
-    valorBase: number
-    prazoEstimado: number
-    status: "Ativo" | "Inativo"
-  }
+  type Servico = {
+  id: number
+  nome: string
+  descricao: string
+  valorBase: number
+  prazoEstimadoDias: number
+  status: "Ativo" | "Inativo"
+}
 
 export default function EditarServicoCMS() {
   const { id } = useParams<{ id: string }>()
@@ -54,9 +54,9 @@ export default function EditarServicoCMS() {
           id: data.id,
           nome: data.nome,
           descricao: data.descricao ?? "",
-          valorBase: Number(data.valorBase) ?? 0,
+          valorBase: data.valorBase ? Number(data.valorBase) : 0,
           prazoEstimado: data.prazoEstimadoDias ?? 0,
-          status: (data.ativo ? "Ativo" : "Inativo") as "Ativo" | "Inativo",
+          status: data.ativo ? "Ativo" : "Inativo",
         }
 
         setServico(adaptado)
@@ -72,26 +72,28 @@ export default function EditarServicoCMS() {
   }, [id])
 
   const handleSubmit = async (data: ServicoFormData) => {
-  setSalvando(true)
+    setSalvando(true)
 
-  try {
-    if (!id) return
+    try {
+      if (!id) return
 
-    await servicosService.atualizar(Number(id), {
-      nome: data.nome,
-      descricao: data.descricao,
-      valorBase: parseMoeda(data.valorBase),
-      prazoEstimadoDias: data.prazoEstimado,
-      ativo: data.status === "Ativo",
-    } as any)
+      await servicosService.atualizar(Number(id), {
+        nome: data.nome,
+        descricao: data.descricao,
+        valorBase: parseMoeda(data.valorBase),
+        prazoEstimadoDias: data.prazoEstimado
+          ? Number(data.prazoEstimado)
+          : null,
+        ativo: data.status === "Ativo",
+      })
 
-    navigate("/admin/servicos")
-  } catch (error) {
-    console.error("Erro ao salvar serviço:", error)
-  } finally {
-    setSalvando(false)
+      navigate("/admin/servicos")
+    } catch (error) {
+      console.error("Erro ao salvar serviço:", error)
+    } finally {
+      setSalvando(false)
+    }
   }
-}
 
   const handleExcluir = () => {
     setModalExcluirAberto(true)

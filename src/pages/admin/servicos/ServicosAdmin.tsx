@@ -171,10 +171,9 @@ const handleExcluir = (servico: Servico) => {
       } else {
         const novoStatus = modalState.type === "ativar"
 
-        await servicosService.atualizarStatus(
-          modalState.serviceId,
-          novoStatus
-        )
+        await servicosService.atualizar(modalState.serviceId, {
+          ativo: novoStatus,
+        })
 
         setServicos((prev) =>
           prev.map((s) =>

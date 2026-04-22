@@ -2,7 +2,7 @@ const API_URL =
   import.meta.env.VITE_API_URL ||
   "https://despachante-bortone-release-production.up.railway.app";
 
-//FRONT
+// FRONT
 export interface Servico {
   id: number;
   nome: string;
@@ -12,7 +12,7 @@ export interface Servico {
   ativo: boolean | null;
 }
 
-//API
+// API
 type ApiServico = {
   id: number;
   nome: string;
@@ -37,122 +37,72 @@ const normalizeServico = (servico: ApiServico): Servico => {
 };
 
 export const servicosService = {
-  //GET
   listarTodos: async (): Promise<Servico[]> => {
-    try {
-      console.log("URL LISTAR:", `${API_URL}/servicos`)
-      const res = await fetch(`${API_URL}/servicos`);
-      if (!res.ok) throw new Error("Erro ao buscar serviços");
+    const res = await fetch(`${API_URL}/servicos`);
+    if (!res.ok) throw new Error("Erro ao buscar serviços");
 
-      const data: ApiServico[] = await res.json();
-      return data.map(normalizeServico);
-    } catch (err) {
-      console.error("Erro no listarTodos:", err);
-      return [];
-    }
+    const data: ApiServico[] = await res.json();
+    return data.map(normalizeServico);
   },
 
-  //GET BY ID
   buscarPorId: async (id: number): Promise<Servico | null> => {
-    try {
-      const res = await fetch(`${API_URL}/servicos/${id}`);
-      if (!res.ok) throw new Error("Erro ao buscar serviço");
+    const res = await fetch(`${API_URL}/servicos/${id}`);
+    if (!res.ok) throw new Error("Erro ao buscar serviço");
 
-      const data: ApiServico = await res.json();
-      return normalizeServico(data);
-    } catch (err) {
-      console.error("Erro no buscarPorId:", err);
-      return null;
-    }
+    const data: ApiServico = await res.json();
+    return normalizeServico(data);
   },
 
-  //POST
   criar: async (dados: Omit<Servico, "id">) => {
-    try {
-      const payload = {
-        nome: dados.nome,
-        descricao: dados.descricao,
-        valor_base: dados.valorBase,
-        prazo_estimado_dias: dados.prazoEstimadoDias,
-        ativo: dados.ativo,
-      }
-
-      console.log("PAYLOAD CRIAR:", payload)
-
-      const res = await fetch(`${API_URL}/servicos`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      })
-
-      if (!res.ok) {
-        const erro = await res.text()
-        console.error("Erro ao criar:", erro)
-        throw new Error("Erro ao criar serviço")
-      }
-
-      const data: ApiServico = await res.json()
-      return normalizeServico(data)
-
-    } catch (err) {
-      console.error("Erro no criar:", err)
-      throw err
-    }
-  },
-
-  // PATCH
-atualizar: async (id: number, dados: Partial<Servico>) => {
-  try {
     const payload = {
       nome: dados.nome,
       descricao: dados.descricao,
       valor_base: dados.valorBase,
       prazo_estimado_dias: dados.prazoEstimadoDias,
       ativo: dados.ativo,
-    }
+    };
 
-    console.log("PAYLOAD ENVIADO:", payload)
-    console.log("URL ATUALIZAR:", `${API_URL}/servicos/${id}`) 
+    const res = await fetch(`${API_URL}/servicos`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) throw new Error("Erro ao criar serviço");
+
+    const data: ApiServico = await res.json();
+    return normalizeServico(data);
+  },
+
+  atualizar: async (id: number, dados: Partial<Servico>) => {
+    const payload: any = {};
+
+    if (dados.nome !== undefined) payload.nome = dados.nome;
+    if (dados.descricao !== undefined) payload.descricao = dados.descricao;
+    if (dados.valorBase !== undefined) payload.valor_base = dados.valorBase;
+    if (dados.prazoEstimadoDias !== undefined)
+      payload.prazo_estimado_dias = dados.prazoEstimadoDias;
+    if (dados.ativo !== undefined) payload.ativo = dados.ativo;
 
     const res = await fetch(`${API_URL}/servicos/${id}`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
-    })
+    });
 
-    if (!res.ok) {
-      const erro = await res.text()
-      console.error("Erro ao atualizar:", erro)
-      throw new Error("Erro ao atualizar serviço")
-    }
+    if (!res.ok) throw new Error("Erro ao atualizar serviço");
 
-    const data = await res.json()
-    console.log("RESPOSTA API:", data)
+    const data: ApiServico = await res.json();
+    return normalizeServico(data);
+  },
 
-    return data
-  } catch (err) {
-    console.error("Erro no atualizar:", err)
-    throw err
-  }
-},
-
-  //DELETE
   deletar: async (id: number) => {
-    try {
-      const res = await fetch(`${API_URL}/servicos/${id}`, {
-        method: "DELETE",
-      });
+    const res = await fetch(`${API_URL}/servicos/${id}`, {
+      method: "DELETE",
+    });
 
-      if (!res.ok) throw new Error("Erro ao deletar serviço");
+    if (!res.ok) throw new Error("Erro ao deletar serviço");
 
-      return true;
-    } catch (err) {
-      console.error("Erro no deletar:", err);
-      throw err;
-    }
+    return true;
   },
 };
