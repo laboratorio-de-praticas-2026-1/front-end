@@ -29,8 +29,8 @@ export default function EditarServicoCMS() {
 
   return Number(
     valor
-      .replace(/\./g, "") // remove separador de milhar
-      .replace(",", ".")  // troca vírgula por ponto
+      .replace(/\./g, "") 
+      .replace(",", ".")  
   )
 }
 

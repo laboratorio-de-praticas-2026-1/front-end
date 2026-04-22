@@ -45,7 +45,6 @@ export function ServicosAdmin() {
   const servicoAtual =
     servicos.find((s) => s.id === modalState.serviceId) ?? null
 
-  // 🔥 BUSCA NA API
   useEffect(() => {
     async function load() {
       try {
@@ -64,7 +63,7 @@ export function ServicosAdmin() {
           status: (s.ativo ? "Ativo" : "Inativo") as "Ativo" | "Inativo",
         }))
 
-        console.log("ADAPTADOS:", adaptados) // (opcional, mas útil)
+        console.log("ADAPTADOS:", adaptados) 
 
         setServicos(adaptados)
       } catch (e) {
@@ -78,7 +77,6 @@ export function ServicosAdmin() {
     load()
   }, [])
 
-  // 🔍 FILTROS
   const servicosFiltrados = useMemo(() => {
     return servicos.filter((s) => {
       const matchStatus =
@@ -106,7 +104,6 @@ export function ServicosAdmin() {
     return servicosFiltrados.slice(start, start + ITEMS_PER_PAGE)
   }, [servicosFiltrados, currentPage])
 
-  // 🎛️ HANDLERS
   const handleStatusChange = (value: StatusFiltro) => {
     setStatusFilter(value)
     setCurrentPage(1)
@@ -159,7 +156,6 @@ const handleExcluir = (servico: Servico) => {
     setModalState({ isOpen: false, type: null, serviceId: null })
   }
 
-  // 🔥 INTEGRAÇÃO REAL (DELETE + STATUS)
   const handleConfirmarModal = async () => {
     if (!modalState.type || !modalState.serviceId) return
 
@@ -197,11 +193,9 @@ const handleExcluir = (servico: Servico) => {
     }
   }
 
-  // ⏳ STATES
   if (loading) return <p className="text-center py-10">Carregando...</p>
   if (error) return <p className="text-center py-10">{error}</p>
 
-  // 🎯 UI
   return (
     <div className="flex flex-col gap-6">
       <ToolbarServicos
