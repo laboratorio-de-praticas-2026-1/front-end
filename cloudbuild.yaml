@@ -8,37 +8,36 @@ steps:
       - '--build-arg'
       - 'VITE_SOCKET_URL=$_VITE_SOCKET_URL'
       - '-t'
-      - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/$_SERVICE_NAME:$COMMIT_SHA'
+      - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/frontend-$BRANCH_NAME:$COMMIT_SHA'
       - '-t'
-      - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/$_SERVICE_NAME:latest'
+      - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/frontend-$BRANCH_NAME:latest'
       - '.'
- 
+
   # Push para Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - push
       - '--all-tags'
-      - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/$_SERVICE_NAME'
- 
-  # Deploy no Cloud Run
+      - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/frontend-$BRANCH_NAME'
+
+  # Deploy no Cloud Run (serviço por branch)
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
       - run
       - deploy
-      - '$_SERVICE_NAME'
-      - '--image=$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/$_SERVICE_NAME:$COMMIT_SHA'
+      - 'frontend-$BRANCH_NAME'
+      - '--image=$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/frontend-$BRANCH_NAME:$COMMIT_SHA'
       - '--region=$_REGION'
       - '--platform=managed'
       - '--allow-unauthenticated'
       - '--port=8080'
- 
+
 substitutions:
   _REGION: southamerica-east1
   _REPO: frontend
-  _SERVICE_NAME: frontend
   _VITE_API_URL: ''
   _VITE_SOCKET_URL: ''
- 
+
 options:
   logging: CLOUD_LOGGING_ONLY
