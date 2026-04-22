@@ -17,22 +17,32 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const userSchema = z
-  .object({
-    nome: z.string().min(1, "Nome é obrigatório"),
-    email: z.string().email("E-mail inválido"),
-    documento: z.string().min(1, "CPF/CNPJ é obrigatório"),
-    telefone: z.string().min(1, "Telefone é obrigatório"),
-    tipo: z.enum(["Administrador", "Cliente"]),
-    senha: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
-    confirmarSenha: z.string().min(6, "Confirme sua senha"),
-  })
-  .refine((data) => data.senha === data.confirmarSenha, {
-    message: "As senhas não coincidem",
-    path: ["confirmarSenha"],
-  });
+const getSchema = (mode: "create" | "edit") =>
+  z
+    .object({
+      nome: z.string().min(1, "Nome é obrigatório"),
+      email: z.string().email("E-mail inválido"),
+      documento: z.string().min(1, "CPF/CNPJ é obrigatório"),
+      telefone: z.string().min(1, "Telefone é obrigatório"),
+      tipo: z.enum(["Administrador", "Cliente"]),
+      senha:
+        mode === "create"
+          ? z.string().min(6, "Senha deve ter pelo menos 6 caracteres")
+          : z
+              .string()
+              .refine(
+                (v) => v === "" || v.length >= 6,
+                "Senha deve ter pelo menos 6 caracteres"
+              ),
+      confirmarSenha:
+        mode === "create" ? z.string().min(1, "Confirme sua senha") : z.string(),
+    })
+    .refine((data) => !data.senha || data.senha === data.confirmarSenha, {
+      message: "As senhas não coincidem",
+      path: ["confirmarSenha"],
+    });
 
-type UserFormData = z.infer<typeof userSchema>;
+type UserFormData = z.infer<ReturnType<typeof getSchema>>;
 
 interface UserFormProps {
   mode: "create" | "edit";
@@ -40,6 +50,7 @@ interface UserFormProps {
   onSubmit: (data: UserFormData) => void;
   onCancel: () => void;
   onDelete?: () => void;
+  saving?: boolean;
 }
 
 export function UserForm({
@@ -48,6 +59,7 @@ export function UserForm({
   onSubmit,
   onCancel,
   onDelete,
+  saving = false,
 }: UserFormProps) {
   const [showSenha, setShowSenha] = useState(false);
   const [showConfirmar, setShowConfirmar] = useState(false);
@@ -61,7 +73,7 @@ export function UserForm({
     watch,
     formState: { errors },
   } = useForm<UserFormData>({
-    resolver: zodResolver(userSchema),
+    resolver: zodResolver(getSchema(mode)),
     defaultValues: {
       nome: initialData?.nome || "",
       email: initialData?.email || "",
@@ -240,9 +252,9 @@ export function UserForm({
           {isEdit ? "Cancelar alterações" : "Cancelar criação"}
         </Button>
 
-        <Button type="submit" className="bg-[#3b82f6] text-white hover:bg-[#2563eb]">
+        <Button type="submit" disabled={saving} className="bg-[#3b82f6] text-white hover:bg-[#2563eb]">
           <Save className="mr-2 h-4 w-4" />
-          {isEdit ? "Salvar usuário" : "Criar usuário"}
+          {saving ? "Salvando..." : isEdit ? "Salvar usuário" : "Criar usuário"}
         </Button>
       </div>
 
