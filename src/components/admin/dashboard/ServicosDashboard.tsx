@@ -1,6 +1,18 @@
-import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, LabelList, CartesianGrid } from 'recharts';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import mockDashboard from '@/mocks/mockDashboard.json';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
+  dashboardService,
+  type DashboardServicosResponse,
+} from '@/services/dashboardService';
+import { useEffect, useState } from 'react';
+import { Bar, BarChart, CartesianGrid, Cell, LabelList, Pie, PieChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 
 const formatter = new Intl.NumberFormat('pt-BR', {
   style: 'currency',
@@ -8,28 +20,51 @@ const formatter = new Intl.NumberFormat('pt-BR', {
 });
 
 export default function ServicosDashboard() {
-  const servicos = mockDashboard.servicos;
+  const [servicos, setServicos] = useState<DashboardServicosResponse>();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    dashboardService
+      .getServicos()
+      .then((data) => {
+        setServicos(data);
+      })
+      .catch((error) => {
+        console.error('Erro ao buscar dados do dashboard de serviços:', error);
+        setErrorMessage(
+          'Erro ao carregar dados do dashboard de serviços. Tente recarregar a página.',
+        );
+      });
+  }, []);
+
+  const servicosData = {
+    ativos: servicos?.ativos ?? 0,
+    pausados: servicos?.pausados ?? 0,
+    maisSolicitados: servicos?.maisSolicitados ?? [],
+    receitaPorServicoCompleto: servicos?.receitaPorServicoCompleto ?? [],
+  };
 
   const statusData = [
-    { name: 'Pausados', value: servicos.pausados, color: '#DEDEDE' },
-    { name: 'Ativos', value: servicos.ativos, color: '#002546' },
+    { name: 'Pausados', value: servicosData.pausados, color: '#DEDEDE' },
+    { name: 'Ativos', value: servicosData.ativos, color: '#002546' },
   ];
 
-  const totalServicos = servicos.ativos + servicos.pausados;
+  const totalServicos = servicosData.ativos + servicosData.pausados;
 
-  const maisSolicitados = servicos.maisSolicitados.map((s, index) => ({
+  const maisSolicitados = servicosData.maisSolicitados.map((s, index) => ({
     name: s.nome,
     qtd: s.totalSolicitacoes,
     color: index % 2 === 0 ? '#3498DB' : '#002546',
   }));
 
-  const receitaData = servicos.receitaPorServicoCompleto
-    .filter(s => s.receitaTotal > 0)
+  const receitaData = servicosData.receitaPorServicoCompleto
+    .filter(s => s.receitaTotal >= 0)
     .map((s, index) => ({
       name: s.nome,
       valor: s.receitaTotal,
       color: index % 2 === 0 ? '#002546' : '#3498DB',
-    }));
+    }))
+    .sort((a, b) => b.valor - a.valor);
 
   return (
     <div className="p-4 md:p-6 space-y-6 bg-white min-h-screen font-sans">
@@ -41,7 +76,7 @@ export default function ServicosDashboard() {
         <Card className="rounded-[32px] border border-gray-100 relative overflow-hidden z-10">
           <CardHeader className="text-center pb-0 space-y-1">
             <CardTitle className="text-sm font-bold text-gray-700">Gráfico - Serviços Ativos e Pausados</CardTitle>
-            <p className="text-[10px] text-gray-400">Janeiro - Abril 2026</p>
+            {/* <p className="text-[10px] text-gray-400">Janeiro - Abril 2026</p> */}
           </CardHeader>
           <CardContent className="h-[300px] flex items-center justify-center">
             <div className="w-[200px] h-[200px] relative">
@@ -97,36 +132,33 @@ export default function ServicosDashboard() {
         <Card className="rounded-[32px] border border-gray-100 relative overflow-hidden z-10">
           <CardHeader className="text-center pb-0 space-y-1">
             <CardTitle className="text-sm font-bold text-gray-700">Gráfico - Rota real por serviços</CardTitle>
-            <p className="text-[10px] text-gray-400">Janeiro - Abril 2026</p>
+            {/* <p className="text-[10px] text-gray-400">Janeiro - Abril 2026</p> */}
           </CardHeader>
-          <CardContent className="h-[300px]">
+          <CardContent className="h-[360px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart 
                 layout="vertical" 
                 data={receitaData} 
-                margin={{ right: 90, left: 20, top: 30, bottom: 10 }}
+                margin={{ right: 90, left: 20, top: 20, bottom: 10 }}
               >
                 <XAxis type="number" hide />
-                <YAxis dataKey="name" type="category" hide />
+                <YAxis
+                  dataKey="name"
+                  type="category"
+                  width={160}
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fontSize: 12, fill: '#1E293B', fontWeight: 600 }}
+                />
                 <Bar 
                   dataKey="valor" 
                   radius={[6, 6, 6, 6]} 
                   barSize={24}
+                  minPointSize={3}
                 >
                   {receitaData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
-                  <LabelList
-                    dataKey="name"
-                    content={(props: any) => {
-                      const { x, y, value } = props;
-                      return (
-                        <text x={x} y={y - 12} fill="#1E293B" fontSize={13} fontWeight={700} textAnchor="start">
-                          {value}
-                        </text>
-                      );
-                    }}
-                  />
                   <LabelList 
                     dataKey="valor" 
                     position="right" 
@@ -178,6 +210,30 @@ export default function ServicosDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      <Dialog
+        open={Boolean(errorMessage)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setErrorMessage(null);
+          }
+        }}
+      >
+        <DialogContent className="max-w-md bg-white">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-semibold text-red-600">
+              Erro ao carregar dados
+            </DialogTitle>
+            <DialogDescription className="text-sm text-gray-600">
+              {errorMessage}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex justify-end">
+            <Button onClick={() => setErrorMessage(null)}>Fechar</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

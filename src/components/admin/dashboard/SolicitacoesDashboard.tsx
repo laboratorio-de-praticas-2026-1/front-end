@@ -13,26 +13,42 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Clock, CalendarX, CalendarClock } from "lucide-react";
+import type { DashboardSolicitacoesResponse } from "@/services/dashboardService";
+import { useEffect, useState } from "react";
+import { dashboardService } from "@/services/dashboardService";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 export default function SolicitacoesDashboard() {
-  const s = mockDashboard.solicitacoes;
-  const g = mockDashboard.geral;
+  const [s, setS] = useState<DashboardSolicitacoesResponse>();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const porStatus = s?.porStatus;
+
+  const recebido = porStatus?.recebido ?? 0;
+  const emAndamento = porStatus?.emAndamento ?? 0;
+  const aguardandoPagamento = porStatus?.aguardandoPagamento ?? 0;
+  const aguardandoDocumento = porStatus?.aguardandoDocumento ?? 0;
+  const concluido = porStatus?.concluido ?? 0;
+  const cancelado = porStatus?.cancelado ?? 0;
 
   const totalSolicitacoes =
-    s.porStatus.recebido +
-    s.porStatus.emAndamento +
-    s.porStatus.aguardandoPagamento +
-    s.porStatus.aguardandoDocumento +
-    s.porStatus.concluido +
-    s.porStatus.cancelado;
+    recebido +
+    emAndamento +
+    aguardandoPagamento +
+    aguardandoDocumento +
+    concluido +
+    cancelado;
 
   const emAberto =
-    s.porStatus.recebido +
-    s.porStatus.emAndamento +
-    s.porStatus.aguardandoPagamento +
-    s.porStatus.aguardandoDocumento;
+    recebido + emAndamento + aguardandoPagamento + aguardandoDocumento;
 
-  const concluido = s.porStatus.concluido;
   const docPendentes = mockDashboard.documentos.pendentes;
 
   const calcPct = (v: number) =>
@@ -44,18 +60,9 @@ export default function SolicitacoesDashboard() {
     { name: "Doc. pendentes", value: calcPct(docPendentes), fill: "#3AADE4" },
   ];
 
-  // Bar chart: status breakdown
-  const statusData = [
-    { label: "Recebido", valor: s.porStatus.recebido },
-    { label: "Em Andamento", valor: s.porStatus.emAndamento },
-    { label: "Ag. Pagamento", valor: s.porStatus.aguardandoPagamento },
-    { label: "Ag. Documento", valor: s.porStatus.aguardandoDocumento },
-    { label: "Concluído", valor: s.porStatus.concluido },
-    { label: "Cancelado", valor: s.porStatus.cancelado },
-  ].filter((d) => d.valor > 0 || true); // show all statuses
-
   // Tempo medio por servico
-  const tempoMedio = s.tempoConclusaoPorServico.map((t) => ({
+  const tempoMedio = (s?.tempoConclusaoPorServico ?? []).map((t) => ({
+    id: t.servicoId,
     servico: t.servicoNome,
     dias: t.mediaRealDias,
     prazo: t.prazoEstimadoDias,
@@ -63,24 +70,40 @@ export default function SolicitacoesDashboard() {
 
   const tempoMedioGeral =
     tempoMedio.length > 0
-      ? (tempoMedio.reduce((acc, t) => acc + t.dias, 0) / tempoMedio.length).toFixed(1)
-      : "—";
+      ? (
+          tempoMedio.reduce((acc, t) => acc + t.dias, 0) / tempoMedio.length
+        ).toFixed(1)
+      : "—";  
 
   const maxDias =
-    tempoMedio.length > 0 ? Math.max(...tempoMedio.map((t) => Math.max(t.dias, t.prazo))) + 2 : 15;
+    tempoMedio.length > 0
+      ? Math.max(...tempoMedio.map((t) => Math.max(t.dias, t.prazo))) + 2
+      : 15;
 
-  const STATUS_CORES: Record<string, string> = {
-    Recebido: "#3AADE4",
-    "Em Andamento": "#1B2A4A",
-    "Ag. Pagamento": "#F5A623",
-    "Ag. Documento": "#9E9E9E",
-    Concluído: "#27AE60",
-    Cancelado: "#E74C3C",
-  };
+  const taxaCancelamentoPct = calcPct(cancelado ?? 0);
+
+  useEffect(() => {
+    dashboardService
+      .getSolicitacoes()
+      .then((data) => {
+        setS(data);
+      })
+      .catch((err) => {
+        console.error(
+          "Erro ao buscar dados do dashboard de solicitações:",
+          err,
+        );
+        setErrorMessage(
+          "Erro ao carregar dados do dashboard de solicitações. Por favor, tente novamente mais tarde.",
+        );
+      });
+  }, []);
 
   return (
     <>
-      <span className="text-2xl font-bold text-secondary mb-6 block">Solicitações</span>
+      <span className="text-2xl font-bold text-secondary mb-6 block">
+        Solicitações
+      </span>
 
       {/* Top row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
@@ -90,7 +113,9 @@ export default function SolicitacoesDashboard() {
             <CardTitle className="text-sm font-semibold text-center">
               Gráfico — Solicitações
             </CardTitle>
-            <p className="text-xs text-muted-foreground text-center">Janeiro – Abril 2026</p>
+            {/* <p className="text-xs text-muted-foreground text-center">
+              Janeiro – Abril 2026
+            </p> */}
           </CardHeader>
           <CardContent className="flex flex-col items-center">
             <div className="flex items-center gap-6">
@@ -112,18 +137,34 @@ export default function SolicitacoesDashboard() {
                         <Cell key={index} fill={entry.fill} />
                       ))}
                     </Pie>
-                    <Tooltip formatter={(v: number) => `${v}%`} />
+                    <Tooltip
+                      formatter={(value) => {
+                        const numericValue =
+                          typeof value === "number"
+                            ? value
+                            : Number(value ?? 0);
+
+                        return `${Number.isFinite(numericValue) ? numericValue : 0}%`;
+                      }}
+                    />
                   </PieChart>
                 </ResponsiveContainer>
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-1">
-                  <span className="text-2xl font-bold">{totalSolicitacoes}</span>
-                  <span className="text-xs text-muted-foreground">Solicitações</span>
+                  <span className="text-2xl font-bold">
+                    {totalSolicitacoes}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    Solicitações
+                  </span>
                 </div>
               </div>
               <div className="flex flex-col gap-2">
                 {grafico.map((s, i) => (
                   <div key={i} className="flex items-center gap-2 text-sm">
-                    <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: s.fill }} />
+                    <span
+                      className="w-3 h-3 rounded-full shrink-0"
+                      style={{ backgroundColor: s.fill }}
+                    />
                     {s.name} {s.value}%
                   </div>
                 ))}
@@ -132,12 +173,14 @@ export default function SolicitacoesDashboard() {
             <div className="mt-4 w-full pt-3 text-xs text-muted-foreground text-center space-y-1">
               <div className="font-medium text-[#333333]">
                 Taxa de cancelamento:{" "}
-                <span className="font-semibold">{g.taxaCancelamentoPct}%</span>
+                <span className="font-semibold">{taxaCancelamentoPct}%</span>
               </div>
-              <div>
+              {/* <div>
                 Débitos em aberto: R${" "}
-                {g.debitosEmAberto.valorTotal.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
-              </div>
+                {debitosEmAbertoValorTotal.toLocaleString("pt-BR", {
+                  minimumFractionDigits: 2,
+                })}
+              </div> */}
             </div>
           </CardContent>
         </Card>
@@ -151,9 +194,11 @@ export default function SolicitacoesDashboard() {
               </div>
               <div>
                 <div className="text-2xl font-bold text-muted-foreground">
-                  {s.proximasDeVencer.quantidade}
+                  {s?.proximasDeVencer ? s.proximasDeVencer.quantidade : "0"}
                 </div>
-                <div className="text-sm text-muted-foreground">Próximas de vencer</div>
+                <div className="text-sm text-muted-foreground">
+                  Próximas de vencer
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -164,15 +209,16 @@ export default function SolicitacoesDashboard() {
               </div>
               <div>
                 <div className="text-2xl font-bold text-muted-foreground">
-                  {s.foraDoPrazo.quantidade}
+                  {s?.foraDoPrazo ? s.foraDoPrazo.quantidade : "0"}
                 </div>
-                <div className="text-sm text-muted-foreground">Fora do prazo</div>
+                <div className="text-sm text-muted-foreground">
+                  Fora do prazo
+                </div>
               </div>
             </CardContent>
           </Card>
         </div>
       </div>
-
 
       {/* Tempo médio por serviço */}
       <Card className="border-[#D2D5DB] shadow-none">
@@ -184,7 +230,10 @@ export default function SolicitacoesDashboard() {
         <CardContent>
           {tempoMedio.length > 0 ? (
             <div className="relative">
-              <ResponsiveContainer width="100%" height={Math.max(120, tempoMedio.length * 60)}>
+              <ResponsiveContainer
+                width="100%"
+                height={Math.max(120, tempoMedio.length * 60)}
+              >
                 <BarChart
                   layout="vertical"
                   data={tempoMedio}
@@ -209,10 +258,15 @@ export default function SolicitacoesDashboard() {
                     width={100}
                   />
                   <Tooltip
-                    formatter={(v: number, name: string) => [
-                      `${v} dias`,
-                      name === "dias" ? "Tempo real" : "Prazo estimado",
-                    ]}
+                    formatter={(value, name) => {
+                      const numericValue =
+                        typeof value === "number" ? value : Number(value ?? 0);
+
+                      return [
+                        `${Number.isFinite(numericValue) ? numericValue : 0} dias`,
+                        name === "dias" ? "Tempo real" : "Prazo estimado",
+                      ];
+                    }}
                     cursor={{ fill: "#F3F4F6" }}
                   />
                   <Bar
@@ -228,7 +282,7 @@ export default function SolicitacoesDashboard() {
                     name="dias"
                     label={{
                       position: "right",
-                      formatter: (v: number) => `${v} dias`,
+                      formatter: (value) => `${Number(value ?? 0)} dias`,
                       fontSize: 12,
                       fill: "#6C6C6C",
                     }}
@@ -239,8 +293,12 @@ export default function SolicitacoesDashboard() {
               <div className="absolute bottom-2 right-0 flex items-center gap-3 border border-[#E9E9E9] rounded-xl px-4 py-3 bg-white shadow-sm">
                 <Clock className="w-6 h-6 text-muted-foreground" />
                 <div>
-                  <div className="text-xs font-bold text-secondary">Tempo médio geral</div>
-                  <div className="text-xs text-muted-foreground">{tempoMedioGeral} Dias</div>
+                  <div className="text-xs font-bold text-secondary">
+                    Tempo médio geral
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {tempoMedioGeral} Dias
+                  </div>
                 </div>
               </div>
             </div>
@@ -251,6 +309,30 @@ export default function SolicitacoesDashboard() {
           )}
         </CardContent>
       </Card>
+
+      <Dialog
+        open={Boolean(errorMessage)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setErrorMessage(null);
+          }
+        }}
+      >
+        <DialogContent className="max-w-md bg-white">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-semibold text-red-600">
+              Erro ao carregar dados
+            </DialogTitle>
+            <DialogDescription className="text-sm text-gray-600">
+              {errorMessage}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex justify-end">
+            <Button onClick={() => setErrorMessage(null)}>Fechar</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
