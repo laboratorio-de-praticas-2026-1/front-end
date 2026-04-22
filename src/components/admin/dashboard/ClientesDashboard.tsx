@@ -1,12 +1,15 @@
-import React from 'react';
-import { 
-  BarChart, Bar, XAxis, YAxis, ResponsiveContainer, 
-  Tooltip, Cell, LabelList 
-} from 'recharts';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ChevronRight } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 import mockDashboard from '@/mocks/mockDashboard.json';
+import { ChevronRight } from 'lucide-react';
+import {
+  Bar,
+  BarChart,
+  Cell, LabelList,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis, YAxis
+} from 'recharts';
 
 const GRADIENTS_VOLUME = [
   'url(#colorTop1)', 
