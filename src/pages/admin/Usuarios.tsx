@@ -1,28 +1,23 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  ArrowUpDown,
-  SquarePen,
-  Trash2,
-  Search,
-} from 'lucide-react';
+import { ArrowUpDown, Search, SquarePen, Trash2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui/select';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from '@/components/ui/table';
 import { DatePicker } from '@/components/ui/DatePicker';
 import { ConfirmDeleteModal } from '@/components/ui/ConfirmDeleteModal';
@@ -202,89 +197,74 @@ export default function Usuarios() {
             {i}
           </Button>
         );
-      }
-      buttons.push(<span key="ellipsis" className="px-2 text-[#002749]">...</span>);
-    }
-    
-    return buttons;
-  };
+    };
 
-  return (
-    <div className="space-y-6 p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Usuários</h1>
-          <p className="text-muted-foreground text-sm">
-            Visualize, crie, organize e acompanhe todos os usuários do seu site.
-          </p>
-        </div>
-        <Button onClick={() => navigate('/admin/usuarios/novo')}>
-          + Novo usuário
-        </Button>
-      </div>
+    const renderPaginationButtons = () => {
+        const buttons = [];
 
-      <div className="flex flex-wrap items-end gap-4 rounded-lg border p-4 bg-white">
-        <div className="w-48">
-          <Select value={nivelFilter} onValueChange={setNivelFilter}>
-            <SelectTrigger className="bg-white text-black [&>span]:opacity-100">
-              <SelectValue placeholder="Nível do usuário" />
-            </SelectTrigger>
-            <SelectContent className="bg-white z-50">
-              <SelectItem value="all">Todos os níveis</SelectItem>
-              <SelectItem value="Administrador">Administrador</SelectItem>
-              <SelectItem value="Cliente">Cliente</SelectItem>
-              <SelectItem value="Nível 3">Nível 3</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        if (totalPages <= 3) {
+            for (let i = 1; i <= totalPages; i++) {
+                buttons.push(
+                    <Button
+                        key={i}
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setCurrentPage(i)}
+                        className={`text-[#002749] hover:bg-transparent ${currentPage === i ? 'bg-gray-100 rounded' : ''}`}
+                    >
+                        {i}
+                    </Button>,
+                );
+            }
+        } else {
+            for (let i = 1; i <= 3; i++) {
+                buttons.push(
+                    <Button
+                        key={i}
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setCurrentPage(i)}
+                        className={`text-[#002749] hover:bg-transparent ${currentPage === i ? 'bg-gray-100 rounded' : ''}`}
+                    >
+                        {i}
+                    </Button>,
+                );
+            }
+            buttons.push(
+                <span key="ellipsis" className="px-2 text-[#002749]">
+                    ...
+                </span>,
+            );
+        }
 
-        <div className="w-48">
-          <DatePicker
-            date={dataFilter}
-            setDate={setDataFilter}
-            placeholder="Data de cadastro"
-            className="text-muted-foreground" 
-          />
-        </div>
+        return buttons;
+    };
 
-        <div className="flex-1">
-          <div className="relative">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Pesquisar por nome ou e-mail..."
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              className="pl-8"
-            />
-          </div>
-        </div>
-
-        <Button
-          onClick={handleClearFilters}
-          variant="secondary"
-          className="bg-[#E5E7EA] text-black hover:bg-[#d1d5db]"
-        >
-          Limpar filtros
-        </Button>
-      </div>
-
-      <div className="rounded-md border-gray-300 border bg-white">
-        <Table>
-          <TableHeader className="bg-[#002749]">
-            <TableRow>
-              <TableHead className="w-20 text-white">ID</TableHead>
-              <TableHead className="text-white">Nome</TableHead>
-              <TableHead className="text-white">E-mail</TableHead>
-              <TableHead className="cursor-pointer text-white" onClick={() => toggleSort('nivel')}>
-                <div className="flex items-center">
-                  Nível
-                  <DualSortIcon column="nivel" />
+    return (
+        <div className="space-y-6 p-6">
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-2xl font-bold">Usuários</h1>
+                    <p className="text-muted-foreground text-sm">
+                        Visualize, crie, organize e acompanhe todos os usuários do seu site.
+                    </p>
                 </div>
-              </TableHead>
-              <TableHead className="cursor-pointer text-white" onClick={() => toggleSort('dataCadastro')}>
-                <div className="flex items-center">
-                  Data de cadastro
-                  <DualSortIcon column="dataCadastro" />
+                <Button onClick={() => navigate('/admin/usuarios/novo')}>+ Novo usuário</Button>
+            </div>
+
+            <div className="flex flex-wrap items-end gap-4 rounded-lg border p-4 bg-white">
+                <div className="w-48">
+                    <Select value={nivelFilter} onValueChange={setNivelFilter}>
+                        <SelectTrigger className="bg-white text-black [&>span]:opacity-100">
+                            <SelectValue placeholder="Nível do usuário" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white z-50">
+                            <SelectItem value="all">Todos os níveis</SelectItem>
+                            <SelectItem value="Administrador">Administrador</SelectItem>
+                            <SelectItem value="Cliente">Cliente</SelectItem>
+                            <SelectItem value="Nível 3">Nível 3</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
               </TableHead>
               <TableHead className="w-24 text-center text-white">Ações</TableHead>
@@ -318,54 +298,123 @@ export default function Usuarios() {
                         <Trash2 className="h-5 w-5" />
                       </button>
                     </div>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+                </div>
 
-      {totalPages > 0 && (
-        <div className="flex items-center justify-between">
-          <div className="flex-1 flex justify-center">
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
-                disabled={currentPage === 1}
-                className="text-[#002749] hover:bg-transparent disabled:opacity-50"
-              >
-                Previous
-              </Button>
-              {renderPaginationButtons()}
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
-                disabled={currentPage === totalPages}
-                className="text-[#002749] hover:bg-transparent disabled:opacity-50"
-              >
-                Next &gt;
-              </Button>
+                <Button
+                    onClick={handleClearFilters}
+                    variant="secondary"
+                    className="bg-[#E5E7EA] text-black hover:bg-[#d1d5db]"
+                >
+                    Limpar filtros
+                </Button>
             </div>
-          </div>
-          <div className="text-sm text-muted-foreground">
-            {totalItems} resultado{totalItems !== 1 ? 's' : ''}
-          </div>
-        </div>
-      )}
 
-      {selectedUser && (
-        <ConfirmDeleteModal
-          open={deleteModalOpen}
-          onClose={handleCloseModal}
-          onConfirm={handleConfirmDelete}
-          userName={selectedUser.nome}
-          loading={deleteLoading}
-        />
-      )}
-    </div>
-  );
+            <div className="rounded-md border-gray-300 border bg-white">
+                <Table>
+                    <TableHeader className="bg-[#002749]">
+                        <TableRow>
+                            <TableHead className="w-20 text-white">ID</TableHead>
+                            <TableHead className="text-white">Nome</TableHead>
+                            <TableHead className="text-white">E-mail</TableHead>
+                            <TableHead className="cursor-pointer text-white" onClick={() => toggleSort('nivel')}>
+                                <div className="flex items-center">
+                                    Nível
+                                    <DualSortIcon column="nivel" />
+                                </div>
+                            </TableHead>
+                            <TableHead className="cursor-pointer text-white" onClick={() => toggleSort('dataCadastro')}>
+                                <div className="flex items-center">
+                                    Data de cadastro
+                                    <DualSortIcon column="dataCadastro" />
+                                </div>
+                            </TableHead>
+                            <TableHead className="w-24 text-center text-white">Ações</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {carregandoBusca ? (
+                            <TableRow>
+                                <TableCell colSpan={6} className="h-24 text-center">
+                                    Buscando usuários...
+                                </TableCell>
+                            </TableRow>
+                        ) : paginatedUsers.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={6} className="h-24 text-center">
+                                    Nenhum usuário encontrado.
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            paginatedUsers.map((user) => (
+                                <TableRow key={user.id}>
+                                    <TableCell className="font-mono text-sm text-gray-500">#{String(user.id).padStart(3, '0')}</TableCell>
+                                    <TableCell className="font-medium">{user.nome}</TableCell>
+                                    <TableCell>{user.email}</TableCell>
+                                    <TableCell>{user.nivel}</TableCell>
+                                    <TableCell>{user.dataCadastro.toLocaleDateString('pt-BR')}</TableCell>
+                                    <TableCell>
+                                        <div className="flex items-center justify-center gap-2">
+                                            <button
+                                                className="text-[#3b82f6] hover:text-[#2563eb] transition-colors"
+                                                onClick={() => navigate(`/admin/usuarios/editar/${user.id}`)}
+                                            >
+                                                <SquarePen className="h-5 w-5" />
+                                            </button>
+                                            <button
+                                                className="text-[#ef4444] hover:text-[#dc2626] transition-colors"
+                                                onClick={() => handleDeleteClick(user)}
+                                            >
+                                                <Trash2 className="h-5 w-5" />
+                                            </button>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+
+            {totalPages > 0 && (
+                <div className="flex items-center justify-between">
+                    <div className="flex-1 flex justify-center">
+                        <div className="flex items-center gap-2">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                                disabled={currentPage === 1}
+                                className="text-[#002749] hover:bg-transparent disabled:opacity-50"
+                            >
+                                Previous
+                            </Button>
+                            {renderPaginationButtons()}
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                                disabled={currentPage === totalPages}
+                                className="text-[#002749] hover:bg-transparent disabled:opacity-50"
+                            >
+                                Next &gt;
+                            </Button>
+                        </div>
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                        {totalItems} resultado{totalItems !== 1 ? 's' : ''}
+                    </div>
+                </div>
+            )}
+
+            {selectedUser && (
+                <ConfirmDeleteModal
+                    open={deleteModalOpen}
+                    onClose={handleCloseModal}
+                    onConfirm={handleConfirmDelete}
+                    userName={selectedUser.nome}
+                    loading={deleteLoading}
+                />
+            )}
+        </div>
+    );
 }
