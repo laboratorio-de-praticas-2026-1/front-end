@@ -273,6 +273,35 @@ const parseStoredUsuarioId = (value: string | null) => {
   return Number.isFinite(parsed) ? parsed : undefined;
 };
 
+const getNetworkErrorMessage = (fallbackMessage: string) => {
+  const baseUrl = API_URL.replace(/\/$/, "");
+
+  return `${fallbackMessage} Verifique se a API está disponível em ${baseUrl}.`;
+};
+
+const toFriendlyError = (error: unknown, fallbackMessage: string) => {
+  if (error instanceof Error) {
+    const normalizedMessage = normalizeText(error.message);
+
+    if (
+      normalizedMessage.includes("failed to fetch") ||
+      normalizedMessage.includes("load failed") ||
+      normalizedMessage.includes("networkerror") ||
+      normalizedMessage.includes("network request failed")
+    ) {
+      return new Error(getNetworkErrorMessage(fallbackMessage));
+    }
+
+    if (normalizedMessage.includes("fetch")) {
+      return new Error(getNetworkErrorMessage(fallbackMessage));
+    }
+
+    return error;
+  }
+
+  return new Error(fallbackMessage);
+};
+
 export const formatSolicitacaoDate = (value: string | null) => {
   if (!value) return "--";
 
@@ -326,23 +355,31 @@ export const solicitacaoService = {
   async listarSolicitacoes(
     filters: SolicitacoesFilters = {},
   ): Promise<ClienteSolicitacao[]> {
-    const response = await fetch(`${API_URL}/solicitacoes`);
+    try {
+      const response = await fetch(`${API_URL}/solicitacoes`);
 
-    if (!response.ok) {
-      throw new Error("Nao foi possivel carregar as solicitacoes.");
-    }
+      if (!response.ok) {
+        throw new Error("Nao foi possivel carregar as solicitacoes.");
+      }
 
-    const data = (await response.json()) as ApiListSolicitacoesResponse;
+      const data = (await response.json()) as ApiListSolicitacoesResponse;
 
-    const solicitacoes = data.solicitacoes
-      .map(normalizeSolicitacao)
-      .sort(
-        (a, b) =>
-          new Date(b.dataSolicitacao).getTime() -
-          new Date(a.dataSolicitacao).getTime(),
+      const solicitacoes = data.solicitacoes
+        .map(normalizeSolicitacao)
+        .sort(
+          (a, b) =>
+            new Date(b.dataSolicitacao).getTime() -
+            new Date(a.dataSolicitacao).getTime(),
+        );
+
+      return paginate(
+        applyFilters(solicitacoes, filters),
+        filters.page,
+        filters.limit,
       );
-
-    return paginate(applyFilters(solicitacoes, filters), filters.page, filters.limit);
+    } catch (error) {
+      throw toFriendlyError(error, "Nao foi possivel carregar as solicitacoes.");
+    }
   },
 
   async buscarSolicitacao(routeId: string) {
@@ -359,42 +396,50 @@ export const solicitacaoService = {
   },
 
   async listarServicosDisponiveis(): Promise<ServicoDisponivel[]> {
-    const solicitacoes = await this.listarSolicitacoes();
-    const servicesMap = new Map<number, ServicoDisponivel>();
+    try {
+      const solicitacoes = await this.listarSolicitacoes();
+      const servicesMap = new Map<number, ServicoDisponivel>();
 
-    for (const solicitacao of solicitacoes) {
-      if (!solicitacao.servicoId) {
-        continue;
+      for (const solicitacao of solicitacoes) {
+        if (!solicitacao.servicoId) {
+          continue;
+        }
+
+        if (!servicesMap.has(solicitacao.servicoId)) {
+          servicesMap.set(solicitacao.servicoId, {
+            id: solicitacao.servicoId,
+            nome: solicitacao.servico,
+            valorBase: solicitacao.valor,
+          });
+        }
       }
 
-      if (!servicesMap.has(solicitacao.servicoId)) {
-        servicesMap.set(solicitacao.servicoId, {
-          id: solicitacao.servicoId,
-          nome: solicitacao.servico,
-          valorBase: solicitacao.valor,
-        });
-      }
+      return Array.from(servicesMap.values()).sort((a, b) =>
+        a.nome.localeCompare(b.nome),
+      );
+    } catch (error) {
+      throw toFriendlyError(error, "Nao foi possivel carregar os servicos.");
     }
-
-    return Array.from(servicesMap.values()).sort((a, b) =>
-      a.nome.localeCompare(b.nome),
-    );
   },
 
   async criarSolicitacao(
     payload: CriarSolicitacaoPayload,
   ): Promise<CriarSolicitacaoResponse> {
-    const response = await fetch(`${API_URL}/solicitacoes`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+    try {
+      const response = await fetch(`${API_URL}/solicitacoes`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(errorMessage || "Nao foi possivel criar a solicitacao.");
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(errorMessage || "Nao foi possivel criar a solicitacao.");
+      }
+
+      return response.json() as Promise<CriarSolicitacaoResponse>;
+    } catch (error) {
+      throw toFriendlyError(error, "Nao foi possivel criar a solicitacao.");
     }
-
-    return response.json() as Promise<CriarSolicitacaoResponse>;
   },
 };
