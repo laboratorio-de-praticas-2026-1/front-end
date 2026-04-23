@@ -47,9 +47,22 @@ export function PublicidadeAdmin() {
     }
   };
 
-  const handleSearchPublicidade = (filtros: { busca: string; status: string }) => {
-    setTermoBusca(filtros.busca || "");
-    setStatusBusca(filtros.status || "Todos");
+  const handlePesquisa = async (filtros: { busca: string; status: string }) => {
+    setCarregando(true);
+    try {
+      if (!filtros.status || filtros.status === "Todos") {
+        const dados = await publicidadeService.listarTodos();
+        setPublicidades(dados);
+        return;
+      }
+
+      const dados = await publicidadeService.buscarPorStatus(filtros.status);
+      setPublicidades(dados);
+    } catch (error) {
+      console.error("Erro ao pesquisar publicidades:", error);
+    } finally {
+      setCarregando(false);
+    }
   };
 
   const irParaCriarPublicidade = () => {
@@ -85,8 +98,8 @@ export function PublicidadeAdmin() {
   return (
     <div className="flex flex-col gap-6">
 
-      <BuscaCadastroPublicidade onSearch={handleSearchPublicidade} onNovaPublicidade={irParaCriarPublicidade} />
-
+      <BuscaCadastroPublicidade onNovaPublicidade={irParaCriarPublicidade} onSearch={handlePesquisa} />
+      
       <PublicidadeTable publicidades={publicidades} carregando={carregando} excluindoId={excluindoId} onExcluirPublicidade={solicitarExclusaoPublicidade} />
 
       {publicidadeToDelete && (
