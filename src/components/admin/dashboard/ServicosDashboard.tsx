@@ -76,7 +76,6 @@ export default function ServicosDashboard() {
         <Card className="rounded-[32px] border border-gray-100 relative overflow-hidden z-10">
           <CardHeader className="text-center pb-0 space-y-1">
             <CardTitle className="text-sm font-bold text-gray-700">Gráfico - Serviços Ativos e Pausados</CardTitle>
-            {/* <p className="text-[10px] text-gray-400">Janeiro - Abril 2026</p> */}
           </CardHeader>
           <CardContent className="h-[300px] flex items-center justify-center">
             <div className="w-[200px] h-[200px] relative">
@@ -132,7 +131,6 @@ export default function ServicosDashboard() {
         <Card className="rounded-[32px] border border-gray-100 relative overflow-hidden z-10">
           <CardHeader className="text-center pb-0 space-y-1">
             <CardTitle className="text-sm font-bold text-gray-700">Gráfico - Rota real por serviços</CardTitle>
-            {/* <p className="text-[10px] text-gray-400">Janeiro - Abril 2026</p> */}
           </CardHeader>
           <CardContent className="h-[360px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -152,7 +150,7 @@ export default function ServicosDashboard() {
                 />
                 <Bar 
                   dataKey="valor" 
-                  radius={[6, 6, 6, 6]} 
+                  radius={6}
                   barSize={24}
                   minPointSize={3}
                 >
@@ -180,33 +178,38 @@ export default function ServicosDashboard() {
             <p className="text-[10px] text-gray-400">Últimos 30 dias</p>
           </CardHeader>
           <CardContent className="h-[320px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={maisSolicitados} margin={{ top: 20, bottom: 20 }}>
-                <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#F1F5F9" />
-                <XAxis 
-                  dataKey="name" 
-                  axisLine={false} 
-                  tickLine={false} 
-                  tick={{ fontSize: 11, fontWeight: 500, fill: '#94A3B8' }} 
-                />
-                <YAxis hide />
-                <Bar 
-                  dataKey="qtd" 
-                  radius={[20, 20, 20, 20]}
-                  barSize={80}
-                >
-                  {maisSolicitados.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                  <LabelList 
-                    dataKey="qtd" 
-                    position="top" 
-                    offset={10}
-                    style={{ fontSize: '12px', fill: '#64748B', fontWeight: '500' }} 
+            {/* A MÁGICA ACONTECE AQUI: 
+              Limitamos a largura máxima do container para as barras se aproximarem.
+            */}
+            <div className="w-full max-w-[700px] mx-auto h-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={maisSolicitados} margin={{ top: 20, bottom: 20 }}>
+                  <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="#F1F5F9" />
+                  <XAxis 
+                    dataKey="name" 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fontSize: 11, fontWeight: 500, fill: '#94A3B8' }} 
                   />
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+                  <YAxis hide />
+                  <Bar 
+                    dataKey="qtd" 
+                    radius={20}
+                    barSize={80} /* LARGURA TRAVADA AQUI */
+                  >
+                    {maisSolicitados.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                    <LabelList 
+                      dataKey="qtd" 
+                      position="top" 
+                      offset={10}
+                      style={{ fontSize: '12px', fill: '#64748B', fontWeight: '500' }} 
+                    />
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </CardContent>
         </Card>
       </div>

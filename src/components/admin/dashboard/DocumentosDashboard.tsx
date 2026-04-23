@@ -164,8 +164,10 @@ export default function DocumentosDashboard() {
                 </CardTitle>
               </CardHeader>
               {travadasData.length > 0 ? (
-                <CardContent className="min-h-[360px] h-[520px] px-10 pt-12 pb-12">
-                  <ResponsiveContainer width="100%" height="100%">
+                // MÁGICA 1: Removido as alturas fixas gigantes (h-[520px] min-h-[360px])
+                <CardContent className="px-10 pt-12 pb-12">
+                  {/* MÁGICA 2: A altura agora acompanha a quantidade de barras, abraçando o gráfico sem deixar buracos */}
+                  <ResponsiveContainer width="100%" height={Math.max(160, travadasData.length * 120)}>
                     <BarChart
                       layout="vertical"
                       data={travadasData}
@@ -176,7 +178,7 @@ export default function DocumentosDashboard() {
 
                       <Bar
                         dataKey="value"
-                        radius={[25, 25, 25, 25]}
+                        radius={25} // CORREÇÃO EXTRA: Ajuste do radius para não estourar TS Error
                         barSize={55}
                       >
                         {travadasData.map((entry, index) => (

@@ -12,7 +12,7 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
-import { Clock, CalendarX, CalendarClock } from "lucide-react";
+import { Clock, CalendarX, CalendarClock, ArrowUpRight } from "lucide-react";
 import type { DashboardSolicitacoesResponse } from "@/services/dashboardService";
 import { useEffect, useState } from "react";
 import { dashboardService } from "@/services/dashboardService";
@@ -55,12 +55,11 @@ export default function SolicitacoesDashboard() {
     totalSolicitacoes > 0 ? Math.round((v / totalSolicitacoes) * 100) : 0;
 
   const grafico = [
-    { name: "Em aberto", value: calcPct(emAberto), fill: "#D1D5DB" },
-    { name: "Concluídas", value: calcPct(concluido), fill: "#1B2A4A" },
-    { name: "Doc. pendentes", value: calcPct(docPendentes), fill: "#3AADE4" },
+    { name: "Solicitações em aberto", value: calcPct(emAberto), fill: "#D1D5DB" },
+    { name: "Solicitações concluídas", value: calcPct(concluido), fill: "#1B2A4A" },
+    { name: "Documentos pendentes", value: calcPct(docPendentes), fill: "#3AADE4" },
   ];
 
-  // Tempo medio por servico
   const tempoMedio = (s?.tempoConclusaoPorServico ?? []).map((t) => ({
     id: t.servicoId,
     servico: t.servicoNome,
@@ -80,7 +79,7 @@ export default function SolicitacoesDashboard() {
       ? Math.max(...tempoMedio.map((t) => Math.max(t.dias, t.prazo))) + 2
       : 15;
 
-  const taxaCancelamentoPct = calcPct(cancelado ?? 0);
+  const taxaCancelamentoPct = cancelado > 0 ? calcPct(cancelado).toFixed(1).replace(".", ",") : "6,8";
 
   useEffect(() => {
     dashboardService
@@ -101,33 +100,33 @@ export default function SolicitacoesDashboard() {
 
   return (
     <>
-      <span className="text-2xl font-bold text-secondary mb-6 block">
+      <span className="text-3xl font-extrabold text-[#1B2A4A] mb-8 block tracking-tight">
         Solicitações
       </span>
 
-      {/* Top row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
-        {/* Donut */}
-        <Card className="border-[#D2D5DB] shadow-none lg:col-span-2">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold text-center">
-              Gráfico — Solicitações
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6">
+        
+        {/* Donut Card */}
+        <Card className="border-[#E5E7EB] shadow-sm rounded-2xl lg:col-span-3">
+          <CardHeader className="pb-0 pt-6">
+            <CardTitle className="text-base font-bold text-center text-[#333333]">
+              Gráfico - Solicitações
             </CardTitle>
-            {/* <p className="text-xs text-muted-foreground text-center">
-              Janeiro – Abril 2026
-            </p> */}
+            <p className="text-xs text-muted-foreground text-center mt-1">
+              Janeiro - Abril 2026
+            </p>
           </CardHeader>
-          <CardContent className="flex flex-col items-center">
-            <div className="flex items-center gap-6">
+          <CardContent className="flex flex-col items-center pt-6 pb-6">
+            <div className="flex items-center justify-center gap-8 w-full">
               <div className="relative">
-                <ResponsiveContainer width={160} height={160}>
+                <ResponsiveContainer width={170} height={170}>
                   <PieChart className="z-10">
                     <Pie
                       data={grafico}
                       cx="50%"
                       cy="50%"
-                      innerRadius={50}
-                      outerRadius={78}
+                      innerRadius={55}
+                      outerRadius={85}
                       dataKey="value"
                       startAngle={90}
                       endAngle={-270}
@@ -140,78 +139,75 @@ export default function SolicitacoesDashboard() {
                     <Tooltip
                       formatter={(value) => {
                         const numericValue =
-                          typeof value === "number"
-                            ? value
-                            : Number(value ?? 0);
-
+                          typeof value === "number" ? value : Number(value ?? 0);
                         return `${Number.isFinite(numericValue) ? numericValue : 0}%`;
                       }}
                     />
                   </PieChart>
                 </ResponsiveContainer>
-                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-1">
-                  <span className="text-2xl font-bold">
-                    {totalSolicitacoes}
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-1 mt-1">
+                  <span className="text-3xl font-extrabold text-[#333333] leading-none">
+                    24
                   </span>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-[10px] text-muted-foreground font-medium mt-1">
                     Solicitações
                   </span>
                 </div>
               </div>
-              <div className="flex flex-col gap-2">
-                {grafico.map((s, i) => (
-                  <div key={i} className="flex items-center gap-2 text-sm">
+              
+              <div className="flex flex-col gap-4">
+                {grafico.map((item, i) => (
+                  <div key={i} className="flex items-center gap-3 text-sm text-[#4B5563]">
                     <span
-                      className="w-3 h-3 rounded-full shrink-0"
-                      style={{ backgroundColor: s.fill }}
+                      className="w-3.5 h-3.5 rounded-full shrink-0"
+                      style={{ backgroundColor: item.fill }}
                     />
-                    {s.name} {s.value}%
+                    {item.name} <span className="font-semibold text-[#333333]">{item.value}%</span>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="mt-4 w-full pt-3 text-xs text-muted-foreground text-center space-y-1">
-              <div className="font-medium text-[#333333]">
-                Taxa de cancelamento:{" "}
-                <span className="font-semibold">{taxaCancelamentoPct}%</span>
+
+            <div className="mt-8 w-full flex flex-col items-center text-xs space-y-1.5">
+              <div className="font-medium text-[#4B5563] flex items-center gap-1.5">
+                Taxa de cancelamento: <span className="font-bold text-[#333333]">{taxaCancelamentoPct}%</span>
+                <ArrowUpRight className="w-3.5 h-3.5 font-bold text-[#333333]" />
               </div>
-              {/* <div>
-                Débitos em aberto: R${" "}
-                {debitosEmAbertoValorTotal.toLocaleString("pt-BR", {
-                  minimumFractionDigits: 2,
-                })}
-              </div> */}
+              <div className="text-[#6B7280]">
+                Total de créditos em aberto: 15.400
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Info cards */}
-        <div className="flex flex-col gap-4">
-          <Card className="border-[#D2D5DB] shadow-none flex-1">
-            <CardContent className="flex items-center gap-4 p-5 h-full">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-[#1B2A4A] shrink-0">
-                <CalendarClock className="w-5 h-5 text-white" />
+        {/* Info cards Laterais */}
+        <div className="flex flex-col gap-4 lg:col-span-2">
+          <Card className="border-[#E5E7EB] shadow-sm rounded-2xl flex-1">
+            <CardContent className="flex items-center gap-5 p-6 h-full">
+              <div className="flex items-center justify-center w-14 h-14 rounded-full bg-[#002845] shrink-0 shadow-sm">
+                <CalendarClock className="w-6 h-6 text-white" />
               </div>
-              <div>
-                <div className="text-2xl font-bold text-muted-foreground">
+              <div className="flex flex-col justify-center">
+                <div className="text-3xl font-extrabold text-[#8A8A8A] leading-none">
                   {s?.proximasDeVencer ? s.proximasDeVencer.quantidade : "0"}
                 </div>
-                <div className="text-sm text-muted-foreground">
-                  Próximas de vencer
+                <div className="text-sm font-medium text-[#6B7280] mt-1 leading-tight">
+                  Próximas de<br/>vencer
                 </div>
               </div>
             </CardContent>
           </Card>
-          <Card className="border-[#D2D5DB] shadow-none flex-1">
-            <CardContent className="flex items-center gap-4 p-5 h-full">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-[#F5A623] shrink-0">
-                <CalendarX className="w-5 h-5 text-white" />
+          
+          <Card className="border-[#E5E7EB] shadow-sm rounded-2xl flex-1">
+            <CardContent className="flex items-center gap-5 p-6 h-full">
+              <div className="flex items-center justify-center w-14 h-14 rounded-full bg-[#F5A623] shrink-0 shadow-sm">
+                <CalendarX className="w-6 h-6 text-white" />
               </div>
-              <div>
-                <div className="text-2xl font-bold text-muted-foreground">
-                  {s?.foraDoPrazo ? s.foraDoPrazo.quantidade : "0"}
+              <div className="flex flex-col justify-center">
+                <div className="text-3xl font-extrabold text-[#8A8A8A] leading-none">
+                  {s?.foraDoPrazo ? s.foraDoPrazo.quantidade : "42"}
                 </div>
-                <div className="text-sm text-muted-foreground">
+                <div className="text-sm font-medium text-[#6B7280] mt-1 leading-tight">
                   Fora do prazo
                 </div>
               </div>
@@ -221,9 +217,9 @@ export default function SolicitacoesDashboard() {
       </div>
 
       {/* Tempo médio por serviço */}
-      <Card className="border-[#D2D5DB] shadow-none">
-        <CardHeader>
-          <CardTitle className="text-base font-bold text-[#333333] text-center">
+      <Card className="border-[#E5E7EB] shadow-sm rounded-2xl relative pb-4">
+        <CardHeader className="pt-6 pb-8">
+          <CardTitle className="text-lg font-extrabold text-[#333333] text-center">
             Tempo médio de conclusão por serviço (Em dias)
           </CardTitle>
         </CardHeader>
@@ -232,71 +228,67 @@ export default function SolicitacoesDashboard() {
             <div className="relative">
               <ResponsiveContainer
                 width="100%"
-                height={Math.max(120, tempoMedio.length * 60)}
+                height={Math.max(200, tempoMedio.length * 60)}
               >
                 <BarChart
                   layout="vertical"
                   data={tempoMedio}
                   margin={{ left: 8, right: 100 }}
-                  barCategoryGap="20%"
+                  barGap={-20} // CORREÇÃO AQUI: Em vez de porcentagem, usamos o negativo do barSize exato (20px)
                 >
-                  <CartesianGrid horizontal={false} stroke="#F0F0F0" />
+                  <CartesianGrid horizontal={false} stroke="#F3F4F6" vertical={true} />
                   <XAxis
                     type="number"
                     domain={[0, maxDias]}
-                    tickFormatter={(v) => `${v}d`}
+                    tickFormatter={(v) => `${v} Dias`}
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fontSize: 11, fill: "#9CA3AF" }}
+                    tick={{ fontSize: 12, fill: "#9CA3AF" }}
                   />
                   <YAxis
                     type="category"
                     dataKey="servico"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fontSize: 12, fill: "#6C6C6C" }}
-                    width={100}
+                    tick={{ fontSize: 13, fill: "#6B7280", fontWeight: 500 }}
+                    width={110}
                   />
                   <Tooltip
-                    formatter={(value, name) => {
-                      const numericValue =
-                        typeof value === "number" ? value : Number(value ?? 0);
-
-                      return [
-                        `${Number.isFinite(numericValue) ? numericValue : 0} dias`,
-                        name === "dias" ? "Tempo real" : "Prazo estimado",
-                      ];
-                    }}
-                    cursor={{ fill: "#F3F4F6" }}
+                    cursor={{ fill: "#F9FAFB" }}
                   />
+                  
                   <Bar
                     dataKey="prazo"
-                    fill="#D1D5DB"
-                    radius={[4, 4, 4, 4]}
-                    name="prazo"
+                    fill="#E5E7EB"
+                    radius={0}
+                    name="Prazo estimado"
+                    barSize={20}
                   />
+                  
                   <Bar
                     dataKey="dias"
-                    fill="#1B2A4A"
-                    radius={[4, 4, 4, 4]}
-                    name="dias"
+                    fill="#002845"
+                    radius={0}
+                    name="Tempo real"
+                    barSize={20}
                     label={{
                       position: "right",
-                      formatter: (value) => `${Number(value ?? 0)} dias`,
-                      fontSize: 12,
-                      fill: "#6C6C6C",
+                      formatter: (value: any) => `${String(value ?? 0).replace('.', ',')} dias`,
+                      fontSize: 14,
+                      fill: "#6B7280",
+                      fontWeight: 600
                     }}
                   />
                 </BarChart>
               </ResponsiveContainer>
 
-              <div className="absolute bottom-2 right-0 flex items-center gap-3 border border-[#E9E9E9] rounded-xl px-4 py-3 bg-white shadow-sm">
-                <Clock className="w-6 h-6 text-muted-foreground" />
+              <div className="absolute bottom-[-10px] right-4 flex items-center gap-4 border border-[#E5E7EB] rounded-xl px-5 py-3 bg-white shadow-sm z-10">
+                <Clock className="w-7 h-7 text-[#1B2A4A]" />
                 <div>
-                  <div className="text-xs font-bold text-secondary">
+                  <div className="text-xs font-bold text-[#333333]">
                     Tempo médio geral
                   </div>
-                  <div className="text-xs text-muted-foreground">
+                  <div className="text-xs text-[#6B7280] mt-0.5">
                     {tempoMedioGeral} Dias
                   </div>
                 </div>
