@@ -21,10 +21,10 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Clock, CheckCircle, XCircle, Lock } from "lucide-react";
 
 export default function DocumentosDashboard() {
-  const [documentos, setDocumentos] =
-    useState<DashboardDocumentosResponse>();
+  const [documentos, setDocumentos] = useState<DashboardDocumentosResponse>();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);  
 
   const fetchData = () => {
@@ -65,12 +65,29 @@ export default function DocumentosDashboard() {
   }, []);
 
   const summaryData = [
-    { label: "Pendentes de avaliação", value: documentos?.pendentes ?? 0 },
-    { label: "Aprovados (Período)", value: documentos?.aprovados ?? 0 },
-    { label: "Rejeitados (Período)", value: documentos?.rejeitados ?? 0 },
+    { 
+      label: "Pendentes de avaliação", 
+      value: documentos?.pendentes ?? 0,
+      icon: Clock,
+      bgColor: "bg-[#F5A623]" 
+    },
+    { 
+      label: "Aprovados (Período)", 
+      value: documentos?.aprovados ?? 0,
+      icon: CheckCircle,
+      bgColor: "bg-[#10B981]" 
+    },
+    { 
+      label: "Rejeitados (Período)", 
+      value: documentos?.rejeitados ?? 0,
+      icon: XCircle,
+      bgColor: "bg-[#EF4444]" 
+    },
     {
       label: "Solicitações travadas",
       value: documentos?.solicitacoesTravadas ?? 0,
+      icon: Lock,
+      bgColor: "bg-[#002845]"
     },
   ];
 
@@ -135,25 +152,30 @@ export default function DocumentosDashboard() {
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-7xl mx-auto">
-            {summaryData.map((card, idx) => (
-              <Card
-                key={idx}
-                className="rounded-3xl border border-gray-100 bg-white min-h-[160px] flex items-center"
-              >
-                <CardContent className="flex flex-row items-center p-8 space-x-8 w-full">
-                  <div className="w-24 h-24 rounded-full border border-gray-100 shadow-[inset_0_4px_8px_rgba(0,0,0,0.12)] bg-white flex-shrink-0" />
+            {summaryData.map((card, idx) => {
+              const Icon = card.icon;
+              return (
+                <Card
+                  key={idx}
+                  className="rounded-3xl border border-gray-100 bg-white min-h-[160px] flex items-center"
+                >
+                  <CardContent className="flex flex-row items-center p-8 space-x-8 w-full">
+                    <div className={`w-24 h-24 rounded-full shadow-[inset_0_4px_8px_rgba(0,0,0,0.12)] flex items-center justify-center flex-shrink-0 ${card.bgColor}`}>
+                      <Icon className="w-10 h-10 text-white" strokeWidth={2.5} />
+                    </div>
 
-                  <div className="flex flex-col justify-center">
-                    <p className="text-[12px] text-black font-bold uppercase tracking-wider mb-2">
-                      {card.label}
-                    </p>
-                    <span className="text-4xl font-black text-black">
-                      {card.value}
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                    <div className="flex flex-col justify-center">
+                      <p className="text-[12px] text-black font-bold uppercase tracking-wider mb-2">
+                        {card.label}
+                      </p>
+                      <span className="text-4xl font-black text-black">
+                        {card.value}
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
 
           <div className="max-w-7xl mx-auto">
@@ -164,9 +186,7 @@ export default function DocumentosDashboard() {
                 </CardTitle>
               </CardHeader>
               {travadasData.length > 0 ? (
-                // MÁGICA 1: Removido as alturas fixas gigantes (h-[520px] min-h-[360px])
                 <CardContent className="px-10 pt-12 pb-12">
-                  {/* MÁGICA 2: A altura agora acompanha a quantidade de barras, abraçando o gráfico sem deixar buracos */}
                   <ResponsiveContainer width="100%" height={Math.max(160, travadasData.length * 120)}>
                     <BarChart
                       layout="vertical"
@@ -178,7 +198,7 @@ export default function DocumentosDashboard() {
 
                       <Bar
                         dataKey="value"
-                        radius={25} // CORREÇÃO EXTRA: Ajuste do radius para não estourar TS Error
+                        radius={25}
                         barSize={55}
                       >
                         {travadasData.map((entry, index) => (
