@@ -37,10 +37,12 @@ const getSchema = (mode: "create" | "edit") =>
       confirmarSenha:
         mode === "create" ? z.string().min(1, "Confirme sua senha") : z.string(),
     })
-    .refine((data) => !data.senha || data.senha === data.confirmarSenha, {
-      message: "As senhas não coincidem",
-      path: ["confirmarSenha"],
-    });
+    .refine(
+      (data) =>
+        (!data.senha && !data.confirmarSenha) ||
+        (!!data.senha && data.senha === data.confirmarSenha),
+      { message: "As senhas não coincidem", path: ["confirmarSenha"] }
+    );
 
 type UserFormData = z.infer<ReturnType<typeof getSchema>>;
 
