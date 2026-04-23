@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; 
-import BuscaCadastroPublicidade from "@/components/sections/admin/publicidade/BuscaCadastroPublicidade"; 
+import { useNavigate } from "react-router-dom";
+import BuscaCadastroPublicidade from "@/components/sections/admin/publicidade/BuscaCadastroPublicidade";
 import PublicidadeTable from "@/components/tables/PublicidadeTable";
 import { publicidadeService } from "@/services/publicidadeService";
 import type { PublicidadePost } from "@/services/publicidadeService";
@@ -9,22 +9,57 @@ import { Button } from "@/components/ui/button";
 export function PublicidadeAdmin() {
   const [publicidades, setPublicidades] = useState<PublicidadePost[]>([]);
   const [carregando, setCarregando] = useState(true);
+  const [termoBusca, setTermoBusca] = useState("");
+  const [statusBusca, setStatusBusca] = useState("Todos");
   const [excluindoId, setExcluindoId] = useState<number | null>(null);
   const [publicidadeToDelete, setPublicidadeToDelete] = useState<PublicidadePost | null>(null);
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    carregarPublicidades();
-  }, []);
+    const delay = setTimeout(() => {
+      carregarPublicidades();
+    }, 350);
+
+    return () => clearTimeout(delay);
+  }, [termoBusca, statusBusca]);
 
   const carregarPublicidades = async () => {
     setCarregando(true);
     try {
-      const dados = await publicidadeService.listarTodos();
-      setPublicidades(dados);
+      const dados = await publicidadeService.buscarPorTermo(termoBusca);
+
+      const dadosFiltrados =
+        statusBusca === "Todos"
+          ? dados
+          : dados.filter((item) => {
+            if (typeof item.ativo !== "boolean") {
+              return true;
+            }
+            return statusBusca === "Ativo" ? item.ativo : !item.ativo;
+          });
+
+      setPublicidades(dadosFiltrados);
     } catch (error) {
       console.error("Erro ao buscar publicidades:", error);
+    } finally {
+      setCarregando(false);
+    }
+  };
+
+  const handlePesquisa = async (filtros: { busca: string; status: string }) => {
+    setCarregando(true);
+    try {
+      if (!filtros.status || filtros.status === "Todos") {
+        const dados = await publicidadeService.listarTodos();
+        setPublicidades(dados);
+        return;
+      }
+
+      const dados = await publicidadeService.buscarPorStatus(filtros.status);
+      setPublicidades(dados);
+    } catch (error) {
+      console.error("Erro ao pesquisar publicidades:", error);
     } finally {
       setCarregando(false);
     }
@@ -63,7 +98,7 @@ export function PublicidadeAdmin() {
   return (
     <div className="flex flex-col gap-6">
 
-      <BuscaCadastroPublicidade onNovaPublicidade={irParaCriarPublicidade} />
+      <BuscaCadastroPublicidade onNovaPublicidade={irParaCriarPublicidade} onSearch={handlePesquisa} />
       
       <PublicidadeTable publicidades={publicidades} carregando={carregando} excluindoId={excluindoId} onExcluirPublicidade={solicitarExclusaoPublicidade} />
 

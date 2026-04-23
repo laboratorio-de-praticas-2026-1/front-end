@@ -1,6 +1,6 @@
 "use client"
 import { useNavigate } from "react-router-dom"
-import { useState } from "react" 
+import { useState } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { SquarePen, Trash2, ChevronRight, Loader2 } from "lucide-react"
 
@@ -9,6 +9,8 @@ export interface Publicidade {
   imagem?: string
   titulo: string
   conteudo: string
+  title?: string
+  content?: string
 }
 
 interface PublicidadeTableProps {
@@ -73,28 +75,28 @@ export default function PublicidadeTable({ publicidades, carregando, excluindoId
               <TableHead className="text-white font-medium text-right px-6 w-32">Ações</TableHead>
             </TableRow>
           </TableHeader>
-          
+
           <TableBody className="border-b border-zinc-200">
             {currentItems.map((item) => (
               <TableRow key={item.id} className="hover:bg-zinc-50 bg-white">
                 <TableCell className="text-muted-foreground font-medium">{item.id}</TableCell>
                 <TableCell>
                   {item.imagem ? (
-                     <img src={item.imagem} alt="Thumb" className="w-20 h-14 object-cover rounded-md shadow-sm border border-zinc-200" />
+                    <img src={item.imagem} alt="Thumb" className="w-20 h-14 object-cover rounded-md shadow-sm border border-zinc-200" />
                   ) : (
-                     <div className="w-20 h-14 bg-zinc-100 rounded-md border border-zinc-200 flex items-center justify-center text-xs text-zinc-400 font-medium">Sem Foto</div>
+                    <div className="w-20 h-14 bg-zinc-100 rounded-md border border-zinc-200 flex items-center justify-center text-xs text-zinc-400 font-medium">Sem Foto</div>
                   )}
                 </TableCell>
-                <TableCell className="font-semibold text-zinc-800 truncate max-w-[200px]">{item.titulo}</TableCell>
-                <TableCell className="text-zinc-500 text-sm truncate max-w-[350px]">{item.conteudo}</TableCell>
+                <TableCell className="font-semibold text-zinc-800 truncate max-w-[200px]">{item.titulo || item.title || "Sem titulo"}</TableCell>
+                <TableCell className="text-zinc-500 text-sm truncate max-w-[350px]">{item.conteudo || item.content || "-"}</TableCell>
                 <TableCell className="text-right px-6">
                   <div className="flex justify-end gap-2">
-                    <button 
+                    <button
                       onClick={() => navigate(`/admin/publicidade/editar/${item.id}`)}
                       className="p-2 text-primary hover:bg-primary/10 rounded-md transition-colors cursor-pointer" title="Editar">
-                        <SquarePen size={18} />
+                      <SquarePen size={18} />
                     </button>
-                    <button 
+                    <button
                       onClick={() => onExcluirPublicidade(item.id)}
                       disabled={excluindoId === item.id}
                       className="p-2 text-red-500 hover:bg-red-50 rounded-md transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
@@ -109,29 +111,28 @@ export default function PublicidadeTable({ publicidades, carregando, excluindoId
           </TableBody>
         </Table>
       </div>
-      
+
       {/* Footer Paginação */}
       <div className="py-4 grid grid-cols-1 sm:grid-cols-3 items-center border-t border-zinc-100 px-6 bg-white gap-4 sm:gap-0">
         <div className="hidden sm:block"></div>
         <div className="flex items-center justify-center gap-2 text-sm text-secondary">
-          <button 
+          <button
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
             className="hover:text-primary font-medium disabled:opacity-30 cursor-pointer transition-all px-2"
           >
             Anterior
           </button>
-          
+
           <div className="flex items-center gap-1">
-             {getPaginationItems().map((page) => (
+            {getPaginationItems().map((page) => (
               <button
                 key={page}
                 onClick={() => setCurrentPage(page)}
-                className={`w-8 h-8 flex items-center justify-center rounded-md transition-all font-medium ${
-                  currentPage === page 
-                    ? "bg-primary text-white shadow-sm" 
+                className={`w-8 h-8 flex items-center justify-center rounded-md transition-all font-medium ${currentPage === page
+                    ? "bg-primary text-white shadow-sm"
                     : "hover:bg-zinc-100 text-zinc-600 cursor-pointer"
-                }`}
+                  }`}
               >
                 {page}
               </button>
@@ -141,7 +142,7 @@ export default function PublicidadeTable({ publicidades, carregando, excluindoId
             )}
           </div>
 
-          <button 
+          <button
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
             className="disabled:opacity-30 cursor-pointer transition-all flex items-center font-medium hover:text-primary px-2"
@@ -149,7 +150,7 @@ export default function PublicidadeTable({ publicidades, carregando, excluindoId
             Próxima <ChevronRight size={16} className="ml-1" />
           </button>
         </div>
-        
+
         <div className="text-sm text-zinc-500 text-center sm:text-right">
           {publicidades.length} {publicidades.length === 1 ? 'resultado' : 'resultados'}
         </div>
