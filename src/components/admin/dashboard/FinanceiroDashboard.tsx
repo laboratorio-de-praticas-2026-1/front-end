@@ -11,7 +11,7 @@ import {
   CartesianGrid,
   ReferenceLine,
 } from "recharts";
-import { AlertCircle, AlertTriangle } from "lucide-react";
+import { AlertCircle, AlertTriangle, TrendingUp, Clock, Landmark, BarChart2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   dashboardService,
@@ -46,23 +46,40 @@ const formatCurrency = (value: number) =>
 
 const getMonthName = (dateStr: string) => {
   const months = [
-    "Jan",
-    "Fev",
-    "Mar",
-    "Abr",
-    "Mai",
-    "Jun",
-    "Jul",
-    "Ago",
-    "Set",
-    "Out",
-    "Nov",
-    "Dez",
+    "Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
+    "Jul", "Ago", "Set", "Out", "Nov", "Dez",
   ];
   const parts = dateStr.split("-");
   const monthIndex = parseInt(parts[1]) - 1;
   return months[monthIndex];
 };
+
+const CARDS = [
+  {
+    label: "Receita total realizada no período",
+    key: "receitaRealizada" as const,
+    bg: "#002749",
+    icon: TrendingUp,
+  },
+  {
+    label: "Receita pendente",
+    key: "receitaPendente" as const,
+    bg: "#F5A623",
+    icon: Clock,
+  },
+  {
+    label: "Receita de taxa",
+    key: "receitaTaxa" as const,
+    bg: "#3498DB",
+    icon: Landmark,
+  },
+  {
+    label: "Receita média mensal geral",
+    key: "mediaMensalReceita" as const,
+    bg: "#27AE60",
+    icon: BarChart2,
+  },
+];
 
 export default function FinanceiroDashboard() {
   const [data, setData] = useState<DashboardFinanceiroResponse>();
@@ -113,35 +130,32 @@ export default function FinanceiroDashboard() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-          {[
-            {
-              label: "Receita total realizada no período",
-              value: data?.receitaRealizada ?? 0,
-            },
-            { label: "Receita pendente", value: data?.receitaPendente ?? 0 },
-            { label: "Receita de taxa", value: data?.receitaTaxa ?? 0 },
-            {
-              label: "Receita média mensal geral",
-              value: data?.mediaMensalReceita ?? 0,
-            },
-          ].map((card, i) => (
-            <Card
-              key={i}
-              className="rounded-2xl border border-gray-100 bg-white min-h-[150px] flex items-center"
-            >
-              <CardContent className="flex flex-row items-center p-6 space-x-5 w-full">
-                <div className="w-20 h-20 rounded-full border border-gray-100 shadow-[inset_0_4px_6px_rgba(0,0,0,0.05)] bg-gray-50 flex-shrink-0" />
-                <div>
-                  <p className="text-[11px] text-gray-500 font-bold uppercase tracking-widest mb-2 leading-tight">
-                    {card.label}
-                  </p>
-                  <span className="text-xl font-black text-[#4A4A4A]">
-                    {formatCurrency(card.value)}
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+          {CARDS.map((card, i) => {
+            const Icon = card.icon;
+            return (
+              <Card
+                key={i}
+                className="rounded-2xl border border-gray-100 bg-white min-h-[150px] flex items-center"
+              >
+                <CardContent className="flex flex-row items-center p-6 space-x-5 w-full">
+                  <div
+                    className="w-20 h-20 rounded-full flex-shrink-0 flex items-center justify-center"
+                    style={{ backgroundColor: card.bg }}
+                  >
+                    <Icon className="w-8 h-8 text-white" strokeWidth={1.8} />
+                  </div>
+                  <div>
+                    <p className="text-[11px] text-gray-500 font-bold uppercase tracking-widest mb-2 leading-tight">
+                      {card.label}
+                    </p>
+                    <span className="text-xl font-black text-[#4A4A4A]">
+                      {formatCurrency(data?.[card.key] ?? 0)}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-7xl mx-auto">
@@ -232,22 +246,16 @@ export default function FinanceiroDashboard() {
                 {porMetodoPagamento.map((item, index) => {
                   const percent =
                     totalMetodoPagamento > 0
-                      ? (
-                          (item.valorTotal / totalMetodoPagamento) *
-                          100
-                        ).toFixed(0)
+                      ? ((item.valorTotal / totalMetodoPagamento) * 100).toFixed(0)
                       : 0;
-
                   return (
                     <div key={index} className="flex items-center gap-2">
                       <div
                         className="w-4 h-4 rounded-full"
-                        style={{
-                          backgroundColor: COLORS[index % COLORS.length],
-                        }}
+                        style={{ backgroundColor: COLORS[index % COLORS.length] }}
                       />
                       <span className="text-[14px] font-bold text-black">
-                          {item.label} {percent}%
+                        {item.label} {percent}%
                       </span>
                     </div>
                   );
@@ -272,10 +280,7 @@ export default function FinanceiroDashboard() {
                   endAngle={-270}
                 >
                   {porTipoPagamento.map((_, index) => (
-                    <Cell
-                      key={index}
-                      fill={index === 0 ? COLORS[0] : COLORS[1]}
-                    />
+                    <Cell key={index} fill={index === 0 ? COLORS[0] : COLORS[1]} />
                   ))}
                 </Pie>
               </PieChart>
@@ -283,28 +288,21 @@ export default function FinanceiroDashboard() {
                 {porTipoPagamento.map((item, index) => {
                   const percent =
                     totalTipoPagamento > 0
-                      ? (
-                          (item.valorTotal / totalTipoPagamento) *
-                          100
-                        ).toFixed(0)
+                      ? ((item.valorTotal / totalTipoPagamento) * 100).toFixed(0)
                       : 0;
-
                   return (
                     <div key={index} className="flex items-center gap-2">
                       <div
                         className="w-4 h-4 rounded-full"
-                        style={{
-                          backgroundColor:
-                            index === 0 ? COLORS[0] : COLORS[1],
-                        }}
+                        style={{ backgroundColor: index === 0 ? COLORS[0] : COLORS[1] }}
                       />
                       <span className="text-[14px] font-bold text-black">
-                      {item.label} {percent}%
+                        {item.label} {percent}%
                       </span>
                     </div>
                   );
                 })}
-              </div>                
+              </div>
             </div>
           </Card>
         </div>
@@ -393,7 +391,6 @@ export default function FinanceiroDashboard() {
               {errorMessage}
             </DialogDescription>
           </DialogHeader>
-
           <div className="flex justify-end">
             <Button onClick={() => setErrorMessage(null)}>Fechar</Button>
           </div>
