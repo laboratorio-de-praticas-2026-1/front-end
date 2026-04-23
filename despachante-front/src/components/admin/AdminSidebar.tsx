@@ -1,89 +1,100 @@
-import { 
-  FiSettings, 
-  FiHelpCircle, 
-  FiColumns, 
-  FiBarChart2, 
-  FiUsers, 
-  FiFileText,
-  FiLogOut
-} from "react-icons/fi";
-import { FaRegHandshake, FaBullhorn } from "react-icons/fa";
-import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
-
-type SidebarLink = {
-  name: string;
-  href: string;
-  icon: React.ElementType;
-};
-
-const sidebarLinks: SidebarLink[] = [
-  { name: "Solicitações", href: "/admin/solicitacoes", icon: FaRegHandshake },
-  { name: "Serviços", href: "/admin/servicos", icon: FiSettings },
-  { name: "Blog", href: "/admin/posts", icon: FiFileText },
-  { name: "FAQ", href: "/admin/faq", icon: FiHelpCircle },
-  { name: "Carrossel", href: "/admin/carrossel", icon: FiColumns },
-  { name: "Publicidade", href: "/admin/publicidade", icon: FaBullhorn },
-  { name: "Dashboard", href: "/admin", icon: FiBarChart2 },
-  { name: "Clientes", href: "/admin/clientes", icon: FiUsers },
-];
-
+import { Link, useLocation } from "react-router-dom";
+import {
+  Handshake,
+  Settings,
+  Newspaper,
+  HelpCircle,
+  GalleryHorizontal,
+  Megaphone,
+  LineChart,
+  FileText,
+  Building2,
+  Users,
+  LogOut
+} from "lucide-react";
+import logoDespachante from "@/assets/logo-despachante.png";
 
 interface AdminSidebarProps {
   onLinkClick?: () => void;
 }
 
 export function AdminSidebar({ onLinkClick }: AdminSidebarProps) {
-  const currentUser = {
-    name: "Amanda Oliveira C...",
-  };
+  const location = useLocation();
 
-  const handleLogout = () => {
-    console.log("Back-end: Inserir lógica de limpar token");
-  };
+  // Mapeamento das rotas baseado no UX
+  const navItems = [
+    { icon: Handshake, label: "Solicitações", path: "/admin/solicitacoes" },
+    { icon: Settings, label: "Serviços", path: "/admin/servicos" },
+    { icon: Newspaper, label: "Blog", path: "/admin/posts" }, 
+    { icon: HelpCircle, label: "FAQ", path: "/admin/faq" },
+    { icon: GalleryHorizontal, label: "Carrossel", path: "/admin/carrossel" },
+    { icon: Megaphone, label: "Publicidade", path: "/admin/publicidade" },
+    { icon: LineChart, label: "Dashboard", path: "/admin/dashboard" },
+    { icon: FileText, label: "Relatórios", path: "/admin/relatorios" },
+    { icon: Building2, label: "Empresas", path: "/admin/empresas" },
+    { icon: Users, label: "Usuários", path: "/admin/usuarios" },
+  ];
 
   return (
-    <aside className="w-64 bg-secondary text-secondary-foreground flex flex-col h-full">
+    <aside className="w-[260px] min-h-screen bg-[#002845] flex flex-col text-white shadow-xl flex-shrink-0">
+      
+      {/* Logo Header (Restaurado do original) */}
       <div className="h-28 flex items-center justify-center px-6 border-b border-white/10 shrink-0">
         <img 
-          src="../src/assets/logo-despachante.png" 
+          src={logoDespachante}
           alt="Grupo Bortone" 
           className="h-16 w-auto object-contain"
         />
       </div>
 
-      <nav className="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto custom-scrollbar">
-        {sidebarLinks.map((link) => (
-          <NavLink
-            key={link.name}
-            to={link.href}
-            end
-            onClick={onLinkClick} 
-            className={({ isActive }) => `flex items-center gap-4 px-4 py-3.5 rounded-lg text-sm font-medium transition-all duration-200 
-              ${isActive 
-                ? "bg-black/20 text-white shadow-inner" 
-                : "text-white/80 hover:bg-white/10 hover:text-white"
-              }
-            `}
-          >
-            <link.icon className="h-5 w-5 shrink-0" />
-            {link.name}
-          </NavLink>
-        ))}
+      {/* Navegação Principal (Scrollable) */}
+      <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-1 custom-scrollbar">
+        {navItems.map((item) => {
+          const isActive = location.pathname.startsWith(item.path);
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              onClick={onLinkClick}
+              className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-colors duration-200 ${
+                isActive 
+                  ? "bg-white/10 font-semibold shadow-inner" 
+                  : "text-zinc-300 hover:bg-white/5 hover:text-white"
+              }`}
+            >
+              <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
+              <span className="text-[15px]">{item.label}</span>
+            </Link>
+          );
+        })}
       </nav>
 
-      <div className="p-6 border-t border-white/10 flex flex-col gap-4 shrink-0">
-        <span className="font-bold text-sm text-white truncate px-1">
-          {currentUser.name}
-        </span>
-        <Button 
-          onClick={handleLogout}
-          className="w-[120px] bg-primary hover:bg-primary/90 text-primary-foreground rounded-full flex items-center justify-between px-5 h-10 shadow-md transition-transform hover:scale-105"
+      {/* Footer (Configurações e Sair) */}
+      <div className="p-4 border-t border-white/10 space-y-4">
+        <Link
+          to="/admin/configuracoes"
+          onClick={onLinkClick}
+          className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-colors duration-200 ${
+            location.pathname.startsWith("/admin/configuracoes")
+              ? "bg-white/10 font-semibold"
+              : "text-zinc-300 hover:bg-white/5 hover:text-white"
+          }`}
         >
-          Sair
-          <FiLogOut className="h-4 w-4 stroke-[2.5]" />
-        </Button>
+          <Settings size={20} />
+          <span className="text-[15px]">Configurações</span>
+        </Link>
+
+        <div className="px-2">
+          <Link
+            to="/login"
+            className="flex items-center justify-center gap-2 w-[100px] py-2.5 bg-[#1E84CF] hover:bg-[#166db0] text-white rounded-full transition-colors text-sm font-semibold shadow-md"
+          >
+            Sair
+            <LogOut size={16} />
+          </Link>
+        </div>
       </div>
+      
     </aside>
   );
 }

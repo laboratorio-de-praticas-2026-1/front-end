@@ -1,0 +1,359 @@
+{
+  "geral": {
+    "solicitacoesEmAberto": 4,
+    "solicitacoesConcluidas": 1,
+    "documentosPendentesValidacao": 2,
+    "clientesNovosMesAtual": 8,
+    "taxaCancelamentoPct": 0,
+    "debitosEmAberto": {
+      "quantidade": 2,
+      "valorTotal": 430
+    },
+    "parcelasVencidasNaoPagas": {
+      "quantidade": 1,
+      "valorTotal": 125
+    }
+  },
+  "solicitacoes": {
+    "porStatus": {
+      "recebido": 1,
+      "emAndamento": 2,
+      "aguardandoPagamento": 0,
+      "aguardandoDocumento": 1,
+      "concluido": 1,
+      "cancelado": 0
+    },
+    "proximasDeVencer": {
+      "quantidade": 0
+    },
+    "tempoConclusaoPorServico": [
+      {
+        "servicoId": 4,
+        "servicoNome": "Renovação CNH",
+        "prazoEstimadoDias": 10,
+        "mediaRealDias": 2,
+        "totalConcluidas": 1
+      }
+    ],
+    "foraDoPrazo": {
+      "quantidade": 0,
+      "totalConcluidas": 1,
+      "percentual": 0
+    }
+  },
+  "servicos": {
+    "ativos": 10,
+    "pausados": 0,
+    "maisSolicitados": [
+      {
+        "servicoId": 1,
+        "nome": "Licenciamento Anual",
+        "totalSolicitacoes": 1
+      },
+      {
+        "servicoId": 2,
+        "nome": "Transferência de Propriedade",
+        "totalSolicitacoes": 1
+      },
+      {
+        "servicoId": 3,
+        "nome": "Primeiro Emplacamento",
+        "totalSolicitacoes": 1
+      },
+      {
+        "servicoId": 4,
+        "nome": "Renovação CNH",
+        "totalSolicitacoes": 1
+      },
+      {
+        "servicoId": 5,
+        "nome": "Baixa de Gravame",
+        "totalSolicitacoes": 1
+      }
+    ],
+    "receitaPorServicoCompleto": [
+      {
+        "servicoId": 1,
+        "nome": "Licenciamento Anual",
+        "totalSolicitacoes": 1,
+        "receitaTotal": 180
+      },
+      {
+        "servicoId": 2,
+        "nome": "Transferência de Propriedade",
+        "totalSolicitacoes": 0,
+        "receitaTotal": 0
+      },
+      {
+        "servicoId": 3,
+        "nome": "Primeiro Emplacamento",
+        "totalSolicitacoes": 0,
+        "receitaTotal": 0
+      },
+      {
+        "servicoId": 4,
+        "nome": "Renovação CNH",
+        "totalSolicitacoes": 0,
+        "receitaTotal": 0
+      },
+      {
+        "servicoId": 5,
+        "nome": "Baixa de Gravame",
+        "totalSolicitacoes": 0,
+        "receitaTotal": 0
+      },
+      {
+        "servicoId": 6,
+        "nome": "Recurso de Multa",
+        "totalSolicitacoes": 0,
+        "receitaTotal": 0
+      },
+      {
+        "servicoId": 7,
+        "nome": "2ª Via CRLV",
+        "totalSolicitacoes": 0,
+        "receitaTotal": 0
+      },
+      {
+        "servicoId": 8,
+        "nome": "Mudança de Categoria CNH",
+        "totalSolicitacoes": 0,
+        "receitaTotal": 0
+      },
+      {
+        "servicoId": 9,
+        "nome": "Comunicação de Venda",
+        "totalSolicitacoes": 0,
+        "receitaTotal": 0
+      },
+      {
+        "servicoId": 10,
+        "nome": "Parcelamento de Débitos",
+        "totalSolicitacoes": 0,
+        "receitaTotal": 0
+      }
+    ]
+  },
+  "financeiro": {
+    "receitaRealizada": 0,
+    "receitaPendente": 430,
+    "receitaTaxa": 15,
+    "ticketMedio": 215,
+    "mediaMensalReceita": 13.87,
+    "historicoMensal": [
+      {
+        "mes": "2023-12",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2024-01",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2024-02",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2024-03",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2024-04",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2024-05",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2024-06",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2024-07",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2024-08",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2024-09",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2024-10",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2024-11",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2024-12",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2025-01",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2025-02",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2025-03",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2025-04",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2025-05",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2025-06",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2025-07",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2025-08",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2025-09",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2025-10",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2025-11",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2025-12",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2026-01",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2026-02",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2026-03",
+        "receitaRealizada": 430
+      },
+      {
+        "mes": "2026-04",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2026-05",
+        "receitaRealizada": 0
+      },
+      {
+        "mes": "2026-06",
+        "receitaRealizada": 0
+      }
+    ],
+    "inadimplencia": {
+      "valorTotal": 125,
+      "quantidadePagamentos": 1,
+      "quantidadeParcelas": 1
+    },
+    "previsaoCaixa30Dias": {
+      "valorTotal": 125,
+      "quantidadeParcelas": 1
+    },
+    "porMetodoPagamento": [
+      {
+        "metodo": "pix",
+        "quantidade": 1,
+        "valorTotal": 180
+      },
+      {
+        "metodo": "cartao",
+        "quantidade": 1,
+        "valorTotal": 250
+      }
+    ],
+    "porTipoPagamento": [
+      {
+        "tipo": "avista",
+        "quantidade": 1,
+        "valorTotal": 180
+      },
+      {
+        "tipo": "parcelado",
+        "quantidade": 1,
+        "valorTotal": 250
+      }
+    ]
+  },
+  "veiculos": {
+    "totalCadastrados": 5,
+    "comSolicitacaoAtiva": 4,
+    "comDebitoPendente": 1,
+    "debitosPendentes": {
+      "valorTotal": 250,
+      "porVeiculo": [
+        {
+          "veiculoId": 1,
+          "placa": "ABC1A23",
+          "totalDebitos": 1,
+          "valorTotal": 250
+        }
+      ]
+    }
+  },
+  "documentos": {
+    "pendentes": 2,
+    "aprovados": 3,
+    "rejeitados": 0,
+    "solicitacoesTravadas": 1,
+    "rejeicoesPorTipo": []
+  },
+  "clientes": {
+    "topPorVolume": [
+      {
+        "usuarioId": 2,
+        "nome": "Bruno Costa",
+        "totalSolicitacoes": 2
+      },
+      {
+        "usuarioId": 3,
+        "nome": "Carla Souza",
+        "totalSolicitacoes": 1
+      },
+      {
+        "usuarioId": 4,
+        "nome": "Daniel Lima",
+        "totalSolicitacoes": 1
+      },
+      {
+        "usuarioId": 5,
+        "nome": "Eduardo Rocha",
+        "totalSolicitacoes": 1
+      }
+    ],
+    "topPorValorPago": [],
+    "comParcelasEmAtraso": [
+      {
+        "usuarioId": 2,
+        "nome": "Bruno Costa",
+        "quantidadeParcelasAtrasadas": 1,
+        "valorTotalAtrasado": 125
+      }
+    ]
+  }
+}

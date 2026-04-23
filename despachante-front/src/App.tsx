@@ -4,8 +4,12 @@ import { Home } from "@/pages/Home";
 import { Servicos } from "@/pages/Servicos"; 
 import { Blog } from "@/pages/Blog";
 import { Artigo } from "@/pages/Artigo";
+import { Login } from "@/pages/Login";
+import { Cadastro } from "@/pages/Cadastro";
 
 import SolicitacoesAdmin from "./components/admin/solicitacoes/SolicitacoesAdmin";
+import Relatorios from "./components/admin/relatorios/RelatoriosAdmin";
+import NovoRelatorio from "./components/admin/relatorios/CreateRelatorioCMS";
 import SolicitacaoSucesso from "@/pages/cliente/SolicitacaoSucesso";
 import HistoricoSolicitacoes from "@/pages/cliente/HistoricoSolicitacoes";
 import DetalhesSolicitacao from "@/pages/cliente/DetalhesSolicitacao";
@@ -21,6 +25,23 @@ import { CreateCarouselBanner } from "@/components/sections/admin/carrossel/Crea
 import { EditCarouselBanner } from "@/components/sections/admin/carrossel/EditCarouselBanner";
 import EditPostCMS from "@/components/sections/admin/blog/EditPostCMS";
 import CreatePostCMS from "@/components/sections/admin/blog/CreatePostCMS";
+import { PublicidadeAdmin } from "@/pages/admin/publicidade/PublicidadeAdmin";
+import CreatePublicidadeCMS from "@/components/sections/admin/publicidade/CreatePublicidadeCMS";
+import EditPublicidadeCMS from "@/components/sections/admin/publicidade/EditPublicidadeCMS";
+import { ServicosAdmin } from "@/pages/admin/servicos/ServicosAdmin";
+import NovoServicoCMS from "@/pages/admin/servicos/NovoServicoCMS";
+import EditarServicoCMS from "@/pages/admin/servicos/EditarServicoCMS";
+import { DashboardAdmin } from "@/pages/admin/dashboard/DashboardAdmin";
+import GeralDashboard from "@/components/admin/dashboard/GeralDashboard";
+import SolicitacoesDashboard from "@/components/admin/dashboard/SolicitacoesDashboard";
+import VeiculosDashboard from "@/components/admin/dashboard/VeiculosDashboard";
+import ServicosDashboard from "@/components/admin/dashboard/ServicosDashboard";
+import DocumentosDashboard from "@/components/admin/dashboard/DocumentosDashboard";
+import FinanceiroDashboard from "@/components/admin/dashboard/FinanceiroDashboard";
+import ClientesDashboard from "@/components/admin/dashboard/ClientesDashboard";
+import Usuarios from "@/pages/admin/Usuarios";
+import NovoUsuario from "@/pages/admin/usuarios/NovoUsuario";
+import EditarUsuario from "@/pages/admin/usuarios/EditarUsuario";
 import { Contato } from "@/pages/Contato";
 
 import Solicitacoes from "@/pages/cliente/SolicitacoesAdmin";
@@ -37,6 +58,8 @@ function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:id" element={<Artigo />} />
         <Route path="/contato" element={<Contato />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/cadastro" element={<Cadastro />} />
         
 
         {/* === ROTAS DO PORTAL DO CLIENTE === */}
@@ -65,9 +88,31 @@ function App() {
 
         {/* === ROTAS DO ADMIN === */}
         <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<Navigate to="/admin/posts" replace />} />
+          <Route index element={<Navigate to="/admin/dashboard" replace />} />
+          <Route path="dashboard" element={<DashboardAdmin />}>
+            <Route index element={<Navigate to="/admin/dashboard/geral" replace />} />
+            <Route path="geral" element={<GeralDashboard />} />
+            <Route path="solicitacoes" element={<SolicitacoesDashboard />} />
+            <Route path="veiculos" element={<VeiculosDashboard />} />
+            <Route path="servicos" element={<ServicosDashboard />} />
+            <Route path="documentos" element={<DocumentosDashboard />} />
+            <Route path="financeiro" element={<FinanceiroDashboard />} />
+            <Route path="clientes" element={<ClientesDashboard />} />
+          </Route>
+
           <Route path="solicitacoes" element={<SolicitacoesAdmin />} />
           <Route path="solicitacoes/:id/editar" element={<EditarSolicitacao />} />
+          <Route path="servicos" element={<ServicosAdmin />} />
+          <Route path="servicos/novo" element={<NovoServicoCMS />} />
+          <Route path="servicos/editar/:id" element={<EditarServicoCMS />} />
+          <Route path="relatorios" element={<Relatorios />} />
+          <Route path="relatorios/novo" element={<NovoRelatorio />} />
+          <Route path="publicidade" element={<PublicidadeAdmin />} />
+          <Route path="publicidade/novo" element={<CreatePublicidadeCMS />} />
+          <Route path="publicidade/editar/:id" element={<EditPublicidadeCMS />} />
+          <Route path="usuarios" element={<Usuarios />} />
+          <Route path="usuarios/novo" element={<NovoUsuario />} />
+          <Route path="usuarios/editar/:id" element={<EditarUsuario />} />
           
           {/* Rota da tabela de posts */}
           <Route path="posts" element={<BlogAdmin />} />
