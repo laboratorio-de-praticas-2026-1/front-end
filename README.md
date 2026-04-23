@@ -1,175 +1,304 @@
-# 🏢 Grupo Bortone - Despachante (Front-end)
+# Front-end
 
-Uma aplicação web moderna e responsiva desenvolvida para o Grupo Bortone. O projeto é dividido em duas partes principais: uma **Landing Page** focada em conversão de clientes e um **Painel Administrativo (CMS)** para gestão interna de processos.
+Este repositório corresponde ao front-end do projeto Laboratório de Práticas 2026-1.
 
-
-## 🛠 Tecnologias Utilizadas
-
-O projeto foi inicializado com [Vite](https://vitejs.dev/) e utiliza o seguinte ecossistema:
-
-* **Framework:** [React 18](https://react.dev/)
-* **Linguagem:** [TypeScript](https://www.typescriptlang.org/)
-* **Roteamento:** [React Router DOM](https://reactrouter.com/)
-* **Estilização:** [Tailwind CSS](https://tailwindcss.com/)
-* **Componentes UI:** [shadcn/ui](https://ui.shadcn.com/) (Radix UI)
-* **Ícones:** [React Icons](https://react-icons.github.io/react-icons/) e [Lucide React](https://lucide.dev/)
+Ele é responsável pela interface do usuário, incluindo a Landing Page pública, o Portal do Cliente e o Painel Administrativo (CMS), consumindo a API fornecida pelo back-end.
 
 ---
 
-## ⚙️ Como executar o projeto localmente
+## Links
 
-### Pré-requisitos
-Certifique-se de ter o **Node.js** (versão 18+ recomendada) e o **npm** instalados na sua máquina.
+### Aplicação (deploy)
 
-### Passo a Passo
+| Branch    | URL       |
+| --------- | --------- |
+| `main`    | (definir) |
+| `develop` | (definir) |
 
-1. Faça o clone do repositório:
-```bash
-git clone https://github.com/seu-usuario/despachante-front.git
+### API (Back-end)
+
+| Ambiente  | URL                                                                     |
+| --------- | ----------------------------------------------------------------------- |
+| `main`    | https://backend-main-412027788376.southamerica-east1.run.app/swagger    |
+| `develop` | https://backend-develop-412027788376.southamerica-east1.run.app/swagger |
+
+---
+
+# Guia de Contribuição
+
+Este documento descreve o fluxo de trabalho adotado neste repositório. Siga as etapas abaixo para contribuir de forma organizada.
+
+---
+
+## Estrutura de Branches
+
+```
+main
+└── develop
+      ├── chore/
+      └── release/entrega-DD-MM
+              └── {issue}-{descricao}
 ```
 
-2. Entre na pasta do projeto:
+---
+
+## Passo a Passo
+
+### 1. Encontre sua Issue
+
+Acesse a aba **Issues** do repositório e filtre por `assignee:@me`.
+
+---
+
+### 2. Leia e analise a tarefa
+
+Entenda completamente o escopo antes de iniciar o desenvolvimento.
+
+---
+
+### 3. Crie a branch pela própria Issue
+
+No painel lateral da issue, clique em **"Create a branch"**.
+
+---
+
+### 4. Faça checkout da branch
+
 ```bash
-cd despachante-front
+git fetch origin
+git checkout nome-da-branch
 ```
 
-3. Instale as dependências:
+---
+
+### 5. Desenvolva e commite
+
+```bash
+git add .
+git commit -m "feat: descrição do que foi feito"
+git push origin nome-da-branch
+```
+
+#### Padrão de commits
+
+| Prefixo     | Uso                 |
+| ----------- | ------------------- |
+| `feat:`     | Nova funcionalidade |
+| `fix:`      | Correção de bug     |
+| `chore:`    | Tarefa técnica      |
+| `docs:`     | Documentação        |
+| `refactor:` | Refatoração         |
+| `test:`     | Testes              |
+| `ui:`       | Ajustes visuais     |
+
+---
+
+### 6. Abra o Pull Request
+
+Configure:
+
+| Campo       | Valor                       |
+| ----------- | --------------------------- |
+| **base**    | `release/entrega-DD-MM` |
+| **compare** | sua branch                  |
+
+**No PR:**
+
+* Descreva o que foi feito
+* Use `closes #numero`
+
+**Review:**
+
+* Solicite ao PO/PM
+
+---
+
+## Fluxo de Merges
+
+```
+sua branch → release → develop → main
+```
+
+> O merge entre níveis é responsabilidade do PO/PM.
+
+---
+
+## Regras Gerais
+
+* Não fazer push direto em `main`, `develop`
+* Todo merge via Pull Request
+* Sempre trabalhar com issue vinculada
+* Atualizar a branch antes de abrir PR
+
+---
+
+# Setup Local
+
+## 1. Instale as dependências
+
 ```bash
 npm install
 ```
 
-4. Execute o servidor de desenvolvimento:
+---
+
+## 2. Configure as variáveis de ambiente
+
+Crie o arquivo .env a partir do .env.example.
+
+Linux/macOS:
+
 ```bash
-npm run dev
+cp .env.example .env
 ```
 
-5. O aplicativo estará disponível no seu navegador no endereço: `http://localhost:5173`.
+Windows PowerShell:
 
----
+```powershell
+Copy-Item .env.example .env
+```
 
-## 📁 Estrutura de Pastas
+Configure no .env:
 
-O projeto segue uma arquitetura modular para facilitar a manutenção e escalabilidade:
-
-```text
-Com base em tudo que construímos até agora — incluindo a estruturação das rotas, a integração com a API do back-end (Railway) e a finalização do fluxo completo de CRUD do Blog (Criação, Edição e Listagem) —, o seu README.md precisa refletir esse amadurecimento do projeto.
-
-Adicionei seções importantes como as Variáveis de Ambiente (já que agora temos o VITE_API_URL), atualizei a lista de rotas e detalhei a estrutura das pastas com as requisições de serviço.
-
-Aqui está a versão atualizada e profissional do seu README:
-Markdown
-
-# 🏢 Grupo Bortone - Despachante (Front-end)
-
-Uma aplicação web moderna e responsiva desenvolvida para o Grupo Bortone. O projeto é dividido em duas partes principais: uma **Landing Page** focada em conversão de clientes e um **Painel Administrativo (CMS)** para gestão interna de processos e conteúdo (Blog).
-
-## 🛠 Tecnologias Utilizadas
-
-O projeto foi inicializado com [Vite](https://vitejs.dev/) e utiliza o seguinte ecossistema:
-
-* **Framework:** [React 18](https://react.dev/)
-* **Linguagem:** [TypeScript](https://www.typescriptlang.org/)
-* **Roteamento:** [React Router DOM](https://reactrouter.com/)
-* **Estilização:** [Tailwind CSS](https://tailwindcss.com/)
-* **Componentes UI:** [shadcn/ui](https://ui.shadcn.com/) (Radix UI)
-* **Manipulação de Datas:** [date-fns](https://date-fns.org/)
-* **Ícones:** [React Icons](https://react-icons.github.io/react-icons/) e [Lucide React](https://lucide.dev/)
-* **Integração API:** Fetch API nativa (REST) com suporte a `FormData` para envio de imagens.
-
----
-
-## ⚙️ Como executar o projeto localmente
-
-### Pré-requisitos
-Certifique-se de ter o **Node.js** (versão 18+ recomendada) e o **npm** instalados na sua máquina.
-
-### Passo a Passo
-
-1. Faça o clone do repositório:
-```bash
-git clone [https://github.com/seu-usuario/despachante-front.git](https://github.com/seu-usuario/despachante-front.git)
-
-    Entre na pasta do projeto:
-
-Bash
-
-cd despachante-front
-
-    Instale as dependências:
-
-Bash
-
-npm install
-
-    Configuração de Ambiente:
-    Crie um arquivo .env na raiz do projeto e configure a URL da API do back-end. (Caso não seja criado, o sistema fará fallback automático para a URL de produção no Railway).
-
-Snippet de código
-
+```env
 VITE_API_URL=http://localhost:3000
-
-    Execute o servidor de desenvolvimento:
-
-Bash
-
-npm run dev
-
-    O aplicativo estará disponível no seu navegador no endereço: http://localhost:5173.
-
-📁 Estrutura de Pastas
-
-O projeto segue uma arquitetura modular para facilitar a manutenção e escalabilidade:
-Plaintext
-
-src/
-├── assets/         # Imagens estáticas, logotipos e SVGs
-├── components/     # Componentes reutilizáveis
-│   ├── admin/      # Componentes do painel CMS (ex: Sidebar, Forms do Blog)
-│   ├── layout/     # Molduras estruturais (Navbar, AdminLayout)
-│   ├── sections/   # Blocos da Landing Page (Header, OQueResolver)
-│   ├── tables/     # Tabelas de listagem de dados (BlogTable)
-│   └── ui/         # Componentes base do shadcn (Botões, Inputs, Calendário)
-├── lib/            # Funções utilitárias (ex: cn do tailwind-merge)
-├── pages/          # Páginas que representam rotas completas
-│   ├── admin/      # Telas de dentro do painel CMS (ex: BlogAdmin)
-│   ├── Home.tsx    # Página principal do site público
-│   └── Servicos.tsx# Página detalhada de serviços
-├── services/       # Arquivos de integração com o Back-end (ex: blogService.ts)
-├── App.tsx         # Arquivo principal de configuração de Rotas
-└── index.css       # Estilos globais e variáveis de tema do Tailwind
+VITE_SOCKET_URL=http://localhost:3000
 ```
 
 ---
 
-## 🔒 Rotas e Navegação
+## 3. Execute o projeto
 
-O gerenciamento de rotas é feito através do `react-router-dom`, permitindo uma navegação fluida entre a área pública e o painel administrativo.
+```bash
+npm run dev
+```
 
-### 🌐 Rotas Públicas (Landing Page)
-* `/` - Página principal (Home) com seções de serviços, sobre, mapa e contato.
-* `/servicos` - Catálogo completo de serviços oferecidos pelo despachante.
-* `/login` - Tela de autenticação para acesso ao sistema administrativo.
+A aplicação estará disponível em:
 
-### 🛠️ Rotas Administrativas (CMS)
-* `/admin` - Dashboard principal e visão geral.
-* `/admin/posts` - Listagem gerencial de todas as postagens do blog (Tabela).
-* `/admin/posts/novo` - Interface para criação de novos conteúdos com upload de imagens.
-* `/admin/posts/editar/:id` - Tela dinâmica para alteração de posts existentes, identificados por ID.
-
-> **Nota:** As rotas do `/admin` estão atualmente abertas para desenvolvimento do front-end. Elas deverão ser protegidas (Private Routes) após a integração do fluxo de autenticação (Login).
+http://localhost:5173
 
 ---
 
-## 🤝 Padrões e Contribuição
+## 4. Build e Preview
 
-Para manter a consistência do código em equipe, siga as diretrizes abaixo:
+Build de produção:
 
-1. **Commits Semânticos:** Utilize prefixos para identificar a natureza do commit:
-   * `feat:` Nova funcionalidade (ex: *feat: adiciona tabela de blog*)
-   * `fix:` Correção de bug (ex: *fix: resolve scroll do carrossel*)
-   * `chore:` Manutenção, merges ou atualização de pacotes
-   * `ui:` Ajustes puramente visuais e de design
-2. **Branches:** Crie branches descritivas baseadas no que está sendo desenvolvido.
-   * `feature/nome-da-feature`
-   * `bugfix/nome-do-bug`
-3. **Componentização:** Se um bloco de código se repetir em mais de uma tela, extraia-o para a pasta `src/components`.
+```bash
+npm run build
+```
+
+Preview local da build:
+
+```bash
+npm run preview
+```
+
+Observação: o preview depende da pasta dist gerada no build.
+
+---
+
+# Scripts
+
+* npm run dev: servidor de desenvolvimento
+* npm run build: TypeScript build + Vite build
+* npm run preview: servidor local da pasta dist
+* npm run lint: verificação de lint
+
+---
+
+# Tecnologias
+
+* React 19
+* TypeScript 5
+* Vite 7
+* React Router DOM 7
+* Tailwind CSS 4
+* Radix UI
+* React Hook Form + Zod
+* Leaflet + React Leaflet
+* Socket.IO Client
+
+---
+
+# Estrutura de Pastas
+
+```
+src/
+├── assets/         # Arquivos estáticos (imagens, ícones)
+├── components/     # Componentes reutilizáveis
+│   ├── admin/      # Componentes do CMS/admin
+│   ├── chat/       # Componentes de chat
+│   ├── layout/     # Layouts (Navbar, Sidebar, etc)
+│   ├── sections/   # Seções das páginas
+│   ├── tables/     # Tabelas de dados
+│   └── ui/         # Componentes base
+├── pages/          # Páginas (rotas)
+│   ├── admin/
+│   └── cliente/
+├── services/       # Integração com API e socket
+├── mocks/          # Dados de mock
+├── lib/            # Utilitários
+└── App.tsx         # Configuração de rotas
+```
+
+---
+
+# Rotas
+
+## Rotas Públicas
+
+| Rota       | Descrição                |
+| ---------- | ------------------------ |
+| `/`        | Página inicial           |
+| `/servicos`| Página de serviços       |
+| `/blog`    | Listagem de artigos      |
+| `/blog/:id`| Detalhe de artigo        |
+| `/contato` | Página de contato        |
+
+---
+
+## Rotas do Cliente
+
+| Rota                              | Descrição                          |
+| --------------------------------- | ---------------------------------- |
+| `/cliente`                        | Redireciona para solicitações      |
+| `/cliente/solicitacoes`           | Solicitações do cliente            |
+| `/cliente/solicitacoes/sucesso`   | Confirmação de solicitação         |
+| `/cliente/solicitacoes/historico` | Histórico de solicitações          |
+| `/cliente/solicitacoes/:id`       | Detalhes de uma solicitação        |
+
+---
+
+## Rotas Administrativas
+
+| Rota                           | Descrição                       |
+| ------------------------------ | ------------------------------- |
+| `/admin`                       | Redireciona para posts          |
+| `/admin/solicitacoes`          | Gestão de solicitações          |
+| `/admin/solicitacoes/:id/editar` | Edição de solicitação        |
+| `/admin/posts`                 | Listagem de posts               |
+| `/admin/posts/novo`            | Criação de post                 |
+| `/admin/posts/editar/:id`      | Edição de post                  |
+| `/admin/carrossel`             | Listagem de banners             |
+| `/admin/carrossel/novo`        | Criação de banner               |
+| `/admin/carrossel/:id/editar`  | Edição de banner                |
+| `/admin/publicidade`           | Listagem de publicidade         |
+| `/admin/publicidade/novo`      | Criação de publicidade          |
+| `/admin/publicidade/editar/:id`| Edição de publicidade           |
+
+---
+
+# Integração com Back-end
+
+* Toda comunicação principal é feita via REST API
+* As requisições estão centralizadas em src/services
+* Upload de arquivos é feito com FormData
+* Chat em tempo real usa Socket.IO
+
+---
+
+# Observações Gerais
+
+* Defina VITE_API_URL e VITE_SOCKET_URL para evitar comportamento de fallback entre ambientes
+* Algumas rotas ainda não possuem proteção de autenticação no front-end
+* O front-end depende diretamente do back-end para os fluxos completos
