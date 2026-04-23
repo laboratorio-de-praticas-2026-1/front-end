@@ -206,7 +206,7 @@ export const dashboardService = {
     );
   },
 
-  async getVeiculos() {        
+  async getVeiculos() {
     try {
       const response = await fetch(`${API_URL}/dashboard/veiculos`);
       if (!response.ok) {
@@ -232,7 +232,7 @@ export const dashboardService = {
     );
   },
 
-  async getFinanceiro(dataInicio?: Date, dataFim?: Date) {
+  async getFinanceiro(dataInicio?: Date, dataFim?: Date) {    
     return fetchDashboardData<DashboardFinanceiroResponse>(
       "/dashboard/financeiro",
       "Erro ao buscar dados financeiros",
@@ -242,7 +242,7 @@ export const dashboardService = {
     );
   },
 
-  async getDocumentos(dataInicio?: Date, dataFim?: Date) {    
+  async getDocumentos(dataInicio?: Date, dataFim?: Date) {
     return fetchDashboardData<DashboardDocumentosResponse>(
       "/dashboard/documentos",
       "Erro ao buscar dados de documentos",
@@ -252,7 +252,7 @@ export const dashboardService = {
     );
   },
 
-  async getClientes(dataInicio?: Date, dataFim?: Date) {
+  async getClientes(dataInicio?: Date, dataFim?: Date) {    
     return fetchDashboardData<DashboardClientesResponse>(
       "/dashboard/clientes",
       "Erro ao buscar dados de clientes",

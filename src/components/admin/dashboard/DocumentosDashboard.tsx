@@ -31,8 +31,23 @@ export default function DocumentosDashboard() {
     dashboardService
       .getDocumentos()
       .then((data) => {
-        console.log("Dados do dashboard de documentos:", data);
-        setDocumentos(data);
+        const normalizedData: DashboardDocumentosResponse = {
+          pendentes: Number((data as any)?.pendentes ?? (data as any)?.pendentesValidacao ?? 0),
+          aprovados: Number((data as any)?.aprovados ?? 0),
+          rejeitados: Number((data as any)?.rejeitados ?? 0),
+          solicitacoesTravadas: Number(
+            (data as any)?.solicitacoesTravadas ??
+              (data as any)?.solicitacoes_travadas ??
+              0,
+          ),
+          rejeicoesPorTipo: Array.isArray((data as any)?.rejeicoesPorTipo)
+            ? (data as any).rejeicoesPorTipo
+            : Array.isArray((data as any)?.rejeicoes_por_tipo)
+              ? (data as any).rejeicoes_por_tipo
+              : [],
+        };
+
+        setDocumentos(normalizedData);
       })
       .catch((error) => {
         console.error(
@@ -63,12 +78,24 @@ export default function DocumentosDashboard() {
     documentos && documentos.rejeicoesPorTipo.length > 0
       ? documentos.rejeicoesPorTipo.map((item, index: number) => {
           const colors = ["#002749", "#093B66", "#3498DB", "#D5D5D5"];
+
+          const tipoDocumento =
+            (item as any)?.tipoDocumento ??
+            (item as any)?.tipo_documento ??
+            "Documento não informado";
+          const totalRejeitados = Number(
+            (item as any)?.totalRejeitados ??
+              (item as any)?.total_rejeitados ??
+              (item as any)?.quantidade ??
+              0,
+          );
+
           return {
-            name: item.tipoDocumento,
-            value: item.totalRejeitados,
+            name: tipoDocumento,
+            value: totalRejeitados,
             color: colors[index % colors.length],
           };
-        })
+        }).filter((item) => item.value > 0)
       : [];
 
   return (
@@ -133,11 +160,11 @@ export default function DocumentosDashboard() {
             <Card className="rounded-[40px] border border-gray-100 bg-white overflow-hidden">
               <CardHeader className="pt-10 px-10 pb-0">
                 <CardTitle className="text-xl font-bold text-gray-800">
-                  Solicitações travadas por falta de documentos
+                  Solicitações travadas por falta de documentos                  
                 </CardTitle>
               </CardHeader>
               {travadasData.length > 0 ? (
-                <CardContent className="h-[600px] px-10 pt-12 pb-12">
+                <CardContent className="min-h-[360px] h-[520px] px-10 pt-12 pb-12">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                       layout="vertical"
@@ -192,10 +219,9 @@ export default function DocumentosDashboard() {
                   </ResponsiveContainer>
                 </CardContent>
               ) : (
-                <CardContent className="h-[600px] flex items-center justify-center">
-                  <p className="text-gray-500 text-lg">
-                    Nenhuma solicitação travada por falta de documentos
-                    encontrada.
+                <CardContent className="min-h-[220px] px-10 pb-10 flex items-center justify-center">
+                  <p className="text-gray-500 text-base text-center">
+                    Nenhuma solicitação travada por falta de documentos no período.
                   </p>
                 </CardContent>
               )}
