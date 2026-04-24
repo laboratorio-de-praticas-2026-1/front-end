@@ -112,7 +112,7 @@ const EditarSolicitacao = () => {
 
   const handleSalvar = async () => {
     if (!id) return;
-    const sucesso = await solicitacoesService.atualizarStatus(id, status);
+    const sucesso = await solicitacoesService.atualizarStatus(id, status, observacao);
     if (sucesso) {
       navigate('/admin/solicitacoes');
     } else {
