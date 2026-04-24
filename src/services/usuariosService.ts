@@ -1,4 +1,9 @@
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL?.trim();
+if (!API_URL) {
+  throw new Error(
+    'A variável de ambiente VITE_API_URL não está definida. Configure-a antes de usar usuariosService.'
+  );
+}
 
 const authHeaders = (): HeadersInit => ({
   'Content-Type': 'application/json',

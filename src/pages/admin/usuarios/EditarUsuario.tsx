@@ -24,8 +24,15 @@ export default function EditarUsuario() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
+  const userId = Number(id);
+
   useEffect(() => {
-    usuariosService.buscarPorId(Number(id)).then((user) => {
+    if (!id || Number.isNaN(userId)) {
+      navigate("/admin/usuarios");
+      return;
+    }
+
+    usuariosService.buscarPorId(userId).then((user) => {
       if (!user) return navigate("/admin/usuarios");
       setInitialData({
         nome: user.nome,
@@ -50,7 +57,7 @@ export default function EditarUsuario() {
         celular: data.telefone.replace(/\D/g, ""),
         ...(data.senha ? { senha: data.senha } : {}),
       };
-      await usuariosService.atualizar(Number(id), payload);
+      await usuariosService.atualizar(userId, payload);
       navigate("/admin/usuarios");
     } catch (error) {
       console.error("Erro ao salvar usuário:", error);
@@ -64,7 +71,7 @@ export default function EditarUsuario() {
   const handleConfirmDelete = async () => {
     setDeleteLoading(true);
     try {
-      await usuariosService.deletar(Number(id));
+      await usuariosService.deletar(userId);
       navigate("/admin/usuarios");
     } catch (error) {
       console.error("Erro ao excluir usuário:", error);
