@@ -65,7 +65,7 @@ export default function ServicoForm({
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         }),
-        prazoEstimado: servico.prazoEstimado,
+        prazoEstimado: Number(servico.prazoEstimado ?? 0),
         status: servico.status,
       })
     }
