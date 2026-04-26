@@ -54,6 +54,8 @@ import Usuarios from "@/pages/admin/Usuarios";
 import NovoUsuario from "@/pages/admin/usuarios/NovoUsuario";
 import EditarUsuario from "@/pages/admin/usuarios/EditarUsuario";
 import { Fa500Px } from "react-icons/fa";
+import NovoFAQ from "./components/admin/faq/CreateFaqCMS";
+import EditarFAQ from "./components/admin/faq/EditarFaqCMS";
 
 function App() {
   return (
@@ -101,6 +103,8 @@ function App() {
           <Route path="relatorios" element={<Relatorios />} />
           <Route path="relatorios/novo" element={<NovoRelatorio />} />
           <Route path="faq" element={<FAQ />} />
+          <Route path="faq/novo" element={<NovoFAQ />} />
+          <Route path="/admin/faq/editar/:id" element={<EditarFAQ />} />
           
           {/* Rota da tabela de posts */}
           <Route path="posts" element={<BlogAdmin />} />

@@ -68,7 +68,6 @@ export const FAQ_MOCK_DATA: FAQItem[] = [
 ];
 
 export const FAQ_CATEGORIES_MOCK: FAQCategoryOption[] = [
-  { value: "todas", label: "Todas as Categorias" },
   { value: "Documentação", label: "Documentação" },
   { value: "Financeiro", label: "Financeiro" },
   { value: "Trânsito", label: "Trânsito" },

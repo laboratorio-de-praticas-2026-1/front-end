@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { FAQItem, FAQStatus, FAQFilters, FAQCategoryOption, FAQStatusOption } from "@/types/faq.types";
 import { FAQ_MOCK_DATA, FAQ_CATEGORIES_MOCK, FAQ_STATUS_MOCK } from "@/mocks/faq.mocks";
+import { id } from "date-fns/locale";
 
 export default function FAQ() {
   const navigate = useNavigate();
@@ -229,7 +230,7 @@ export default function FAQ() {
                     <div className="flex justify-end gap-1">
                       <button 
                       className="p-2 text-primary hover:bg-primary/10 rounded-md transition-colors cursor-pointer"
-                      onClick={() => navigate("/admin/faq/editar/:id")}
+                      onClick={() => navigate(`/admin/faq/editar/${faqs.id.replace('#', '')}`)}
                       >
                         <SquarePen size={18}/>
                         </button>
