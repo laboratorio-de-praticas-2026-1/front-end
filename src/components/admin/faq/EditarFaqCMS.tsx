@@ -10,12 +10,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FAQ_CATEGORIES_MOCK, FAQ_MOCK_DATA } from "@/mocks/faq.mocks"; 
 import type { FAQCategoryOption } from '@/types/faq.types';
+import { ConfirmDeleteModalFaq } from './ConfirmDeleteModal';
+import { toast } from 'sonner';
 
 export default function EditarFAQ() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(false);
   const [catOptions, setCatOptions] = useState<FAQCategoryOption[]>([]);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const {
     register,
@@ -68,6 +71,9 @@ export default function EditarFAQ() {
   const onSubmit = async (data: FAQFormData) => {
     setLoading(true);
     try {
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       const payload = {
         ...data,
         id,
@@ -84,7 +90,22 @@ export default function EditarFAQ() {
     }
   };
 
-  console.log("categoria form:", watch("categoria"));
+  const handleDelete = async () => {
+  try {
+    // Simulação de chamada de API
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    
+    // Logica de exclusão (aqui entraria sua chamada axios/fetch)
+    console.log(`Item ${id} excluído com sucesso`);
+
+    // Redireciona o usuário após a exclusão bem-sucedida
+    navigate("/admin/faq");
+  } catch (erro) {
+    // O modal já trata o toast.error internamente se a promise falhar, 
+    // mas você pode lançar o erro novamente se precisar de algo específico aqui.
+    throw erro;
+  }
+};
 
   return (
     <div className="min-h-screen text-muted-foreground animate-in fade-in duration-500">
@@ -100,7 +121,12 @@ export default function EditarFAQ() {
           <p className="text-sm text-gray-500">Gerencie e atualize as informações desta pergunta.</p>
         </div>
 
-        <Button variant={'destructive'} className='text-white font-semibold'>
+        <Button 
+          type="button"
+          variant={'destructive'} 
+          className='text-white font-semibold cursor-pointer'
+          onClick={() => setIsDeleteModalOpen(true)}
+          >
           <Trash size={20} />
           Excluir
         </Button>
@@ -240,6 +266,22 @@ export default function EditarFAQ() {
           </Button>
         </footer>
       </form>
+      <ConfirmDeleteModalFaq
+        open={isDeleteModalOpen}
+        onOpenChange={setIsDeleteModalOpen}
+        onConfirm={handleDelete}
+        title="Excluir Pergunta?"
+        description={
+          <>
+            Tem certeza que deseja excluir a pergunta{" "}
+            <span className="font-bold text-muted-fore">
+              #{id}
+            </span>
+            ?<br />
+            A pergunta será removida do blog imediatamente.
+          </>
+        }
+      />
     </div>
   );
 }

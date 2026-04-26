@@ -41,6 +41,9 @@ export default function NovoFAQ() {
   const onSubmit = async (data: FAQFormData) => {
     setLoading(true);
     try {
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       const payload = {
         ...data,
         status: data.status ? "Ativo" : "Inativo",
@@ -179,14 +182,16 @@ export default function NovoFAQ() {
             disabled={loading}
             className="w-full md:w-auto bg-primary text-white font-semibold h-11 px-6 rounded-lg flex items-center gap-2 cursor-pointer transition-all hover:scale-[1.02]"
           >
-            <Printer size={22} />
             {loading ? (
               <>
                 <Loader2 className="animate-spin h-4 w-4" />
                 Salvando...
               </>
             ) : (
-              "Criar pergunta"
+              <>
+              <Printer size={22} />
+              Criar pergunta
+              </>
             )}
           </Button>
         </footer>

@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "sonner";
 
 import { Home } from "@/pages/Home"; 
 import { Servicos } from "@/pages/Servicos"; 
@@ -60,6 +61,7 @@ import EditarFAQ from "./components/admin/faq/EditarFaqCMS";
 function App() {
   return (
     <BrowserRouter>
+      <Toaster position="top-right" richColors />
       <Routes>
         {/* === ROTAS PÚBLICAS === */}
         <Route path="/" element={<Home />} />
@@ -105,6 +107,7 @@ function App() {
           <Route path="faq" element={<FAQ />} />
           <Route path="faq/novo" element={<NovoFAQ />} />
           <Route path="/admin/faq/editar/:id" element={<EditarFAQ />} />
+
           
           {/* Rota da tabela de posts */}
           <Route path="posts" element={<BlogAdmin />} />
