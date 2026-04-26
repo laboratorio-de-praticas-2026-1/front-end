@@ -12,6 +12,7 @@ import Relatorios from "./components/admin/relatorios/RelatoriosAdmin";
 import SolicitacaoSucesso from "@/pages/cliente/solicitacoes/SolicitacaoSucesso";
 import HistoricoSolicitacoes from "@/pages/cliente/solicitacoes/HistoricoSolicitacoes";
 import DetalhesSolicitacao from "@/pages/cliente/solicitacoes/DetalhesSolicitacao";
+import FAQ from "./components/admin/faq/FaqAdmin";
 
 
 import { ClienteLayout } from "@/components/layout/ClienteLayout";
@@ -52,6 +53,7 @@ import NovoRelatorio from "./components/admin/relatorios/CreateRelatorioCMS";
 import Usuarios from "@/pages/admin/Usuarios";
 import NovoUsuario from "@/pages/admin/usuarios/NovoUsuario";
 import EditarUsuario from "@/pages/admin/usuarios/EditarUsuario";
+import { Fa500Px } from "react-icons/fa";
 
 function App() {
   return (
@@ -98,6 +100,7 @@ function App() {
           <Route path="solicitacoes/:id/editar" element={<EditarSolicitacao />} />
           <Route path="relatorios" element={<Relatorios />} />
           <Route path="relatorios/novo" element={<NovoRelatorio />} />
+          <Route path="faq" element={<FAQ />} />
           
           {/* Rota da tabela de posts */}
           <Route path="posts" element={<BlogAdmin />} />
