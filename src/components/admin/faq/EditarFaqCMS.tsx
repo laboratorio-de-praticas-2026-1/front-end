@@ -12,11 +12,13 @@ import { FAQ_CATEGORIES_MOCK, FAQ_MOCK_DATA } from "@/mocks/faq.mocks";
 import type { FAQCategoryOption } from '@/types/faq.types';
 import { ConfirmDeleteModalFaq } from './ConfirmDeleteModal';
 import { toast } from 'sonner';
+import { faqService } from '@/services/faqService';
 
 export default function EditarFAQ() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false); 
   const [catOptions, setCatOptions] = useState<FAQCategoryOption[]>([]);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -41,70 +43,77 @@ export default function EditarFAQ() {
   const status = watch("status");
 
   useEffect(() => {
-    const options = FAQ_CATEGORIES_MOCK;
-    setCatOptions(options);
+    const carregarDados = async () => {
+      const options = FAQ_CATEGORIES_MOCK;
+      setCatOptions(options);
 
-    if (!id) return;
+      if (!id) return;
 
-    const data = FAQ_MOCK_DATA.find((item) => {
-      const itemId = item.id.replace("#", "");
-      const routeId = String(id).replace("#", "");
-      return itemId === routeId;
-    });
+      setLoading(true);
+      try{
+        const cleanId = id.replace("#", "");
+        const data = await faqService.buscarPorId(id);
 
-    if (!data) return;
-
-    // 🔥 garante que categoria existe no select
-    const categoriaMatch = options.find(
-      (cat) => cat.value === data.categoria
-    );
-
-    reset({
-      pergunta: data.pergunta,
-      resposta: data.resposta,
-      categoria: categoriaMatch?.value || "",
-      status: data.status === "Ativo",
-    });
+        if(data) {
+          reset({
+            pergunta: data.pergunta,
+            resposta: data.resposta,
+            categoria: data.categoria,
+            status: data.status === "Ativo",
+          })
+        }
+      } catch(error){
+        toast.error("Erro ao carregar os dados da pergunta.")
+      } finally {
+        setLoading(false)
+      }
+    }
+    carregarDados();
 
   }, [id, reset]);
 
   const onSubmit = async (data: FAQFormData) => {
+    if (!id) return;
     setLoading(true);
     try {
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       const payload = {
-        ...data,
-        id,
-        status: data.status ? "Ativo" : "Inativo",
-        dataAtualizacao: new Date().toISOString(),
+        pergunta: data.pergunta,
+        resposta: data.resposta,
+        categoria: data.categoria,
+        status: (data.status ? "Ativo" : "Inativo") as "Ativo" | "Inativo",
       };
 
-      console.log("Payload enviado:", payload);
-      navigate("/admin/faq");
+      const sucesso = await faqService.atualizar(id, payload)
+
+      if(sucesso){
+        toast.success("Pergunta atualizada com sucesso")
+        navigate("/admin/faq");
+      }
+
     } catch (err) {
-      console.error(err);
+      toast.error("Erro ao salvar alterações")
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async () => {
-  try {
-    // Simulação de chamada de API
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    
-    // Logica de exclusão (aqui entraria sua chamada axios/fetch)
-    console.log(`Item ${id} excluído com sucesso`);
+    if (!id) return;
+    setIsDeleting(true);
+    try {
+      const sucesso = await faqService.excluir(id);
 
-    // Redireciona o usuário após a exclusão bem-sucedida
-    navigate("/admin/faq");
-  } catch (erro) {
-    // O modal já trata o toast.error internamente se a promise falhar, 
-    // mas você pode lançar o erro novamente se precisar de algo específico aqui.
-    throw erro;
-  }
+      if(sucesso){
+        navigate("/admin/faq");
+      }
+      // Redireciona o usuário após a exclusão bem-sucedida
+    } catch (erro) {
+      toast.error("Erro ao excluir a pergunta.");
+    } finally {
+      setIsDeleting(false);
+      setIsDeleteModalOpen(false);
+    }
 };
 
   return (
@@ -175,10 +184,10 @@ export default function EditarFAQ() {
               <Controller
                 name="categoria"
                 control={control}
-                defaultValue="" // 🔥 obrigatório
+                defaultValue=""
                 render={({ field }) => (
                   <Select
-                    key={field.value} // 🔥 força render
+                    key={field.value}
                     value={field.value || ""}
                     onValueChange={field.onChange}
                   >

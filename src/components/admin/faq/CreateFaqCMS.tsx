@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FAQ_CATEGORIES_MOCK } from "@/mocks/faq.mocks"; 
 import type { FAQCategoryOption } from '@/types/faq.types';
+import { faqService } from '@/services/faqService';
 
 
 
@@ -42,19 +43,25 @@ export default function NovoFAQ() {
     setLoading(true);
     try {
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       const payload = {
-        ...data,
-        status: data.status ? "Ativo" : "Inativo",
-        dataCriacao: new Date().toISOString(),
+        pergunta: data.pergunta,
+        resposta: data.resposta,
+        categoria: data.categoria,
+        status: (data.status ? "Ativo" : "Inativo") as "Ativo" | "Inativo",
       };
 
-      console.log("Payload enviado:", payload);
+      const sucesso = await faqService.criar(payload);
 
-      navigate("/admin/faq");
+      if(sucesso){
+        console.log("FAQ criado com sucesso!");
+        navigate("/admin/faq");
+
+      } else{
+        alert("Erro ao criar a pergunta. Tente novamente.");
+      }
+
     } catch (err) {
-      console.error(err);
+      console.error("Erro na submissão",err);
     } finally {
       setLoading(false);
     }

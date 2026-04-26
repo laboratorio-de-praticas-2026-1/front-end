@@ -8,7 +8,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import type { FAQItem, FAQStatus, FAQFilters, FAQCategoryOption, FAQStatusOption } from "@/types/faq.types";
 import { FAQ_MOCK_DATA, FAQ_CATEGORIES_MOCK, FAQ_STATUS_MOCK } from "@/mocks/faq.mocks";
 import { ConfirmDeleteModalFaq } from "./ConfirmDeleteModal";
-import { id } from "date-fns/locale";
+// import { id } from "date-fns/locale";
+import { faqService } from "@/services/faqService";
 
 export default function FAQ() {
   const navigate = useNavigate();
@@ -41,7 +42,8 @@ export default function FAQ() {
   const loadData = async () => {
     setLoading(true);
     try {
-      setFaqs(FAQ_MOCK_DATA);
+      const dados = await faqService.listarTodos();
+      setFaqs(dados)
       setCatOptions(FAQ_CATEGORIES_MOCK);
       setStatusOptions(FAQ_STATUS_MOCK);
 
@@ -123,8 +125,21 @@ export default function FAQ() {
 
   const handleDelete = async () => {
     if (!selectedFaq) return
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    setFaqs((prev) => prev.filter((f) => f.id !== selectedFaq.id))
+    setLoading(true)
+    
+    try{
+      const sucesso = await faqService.excluir(selectedFaq.id)
+
+      if(sucesso) {
+        setFaqs((prev) => prev.filter((f) => f.id !== selectedFaq.id))
+      }
+    } catch(error){
+      console.log("Erro ao excluir", error)
+    } finally {
+      setLoading(false)
+      setOpenModal(false)
+      setSelectedFaq(null)
+    }
   }
 
   return (
