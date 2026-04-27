@@ -14,9 +14,7 @@ import HistoricoSolicitacoes from "@/pages/cliente/solicitacoes/HistoricoSolicit
 import DetalhesSolicitacao from "@/pages/cliente/solicitacoes/DetalhesSolicitacao";
 import FAQ from "./components/admin/faq/FaqAdmin";
 
-
 import { ClienteLayout } from "@/components/layout/ClienteLayout";
-
 
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { BlogAdmin } from "@/pages/admin/blog/BlogAdmin";
@@ -49,13 +47,14 @@ import FinanceiroDashboard from "./components/admin/dashboard/FinanceiroDashboar
 import ClientesDashboard from "./components/admin/dashboard/ClientesDashboard";
 import NovoRelatorio from "./components/admin/relatorios/CreateRelatorioCMS";
 
-
 import Usuarios from "@/pages/admin/Usuarios";
 import NovoUsuario from "@/pages/admin/usuarios/NovoUsuario";
 import EditarUsuario from "@/pages/admin/usuarios/EditarUsuario";
 import { Fa500Px } from "react-icons/fa";
 import NovoFAQ from "./components/admin/faq/CreateFaqCMS";
 import EditarFAQ from "./components/admin/faq/EditarFaqCMS";
+
+import { EmpresasAdmin } from "@/pages/admin/empresas/EmpresasAdmin";
 
 function App() {
   return (
@@ -68,7 +67,7 @@ function App() {
         <Route path="/blog/:id" element={<Artigo />} />
         <Route path="/contato" element={<Contato />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/cadastro" element={<Cadastro />} />  {/* <-- NOVA ROTA DE CADASTRO */}
+        <Route path="/cadastro" element={<Cadastro />} /> 
         
 
         {/* === ROTAS DO PORTAL DO CLIENTE === */}
@@ -80,8 +79,6 @@ function App() {
           <Route path="solicitacoes/historico" element={<HistoricoSolicitacoes />} />
           <Route path="solicitacoes/:id" element={<DetalhesSolicitacao />} />
 
-
-          
           {/* Tela temporária: Pega qualquer link dentro do /cliente e mostra a sidebar */}
           <Route path="*" element={
             <div className="flex flex-col items-center justify-center h-full text-zinc-500 text-center py-20">
@@ -106,6 +103,9 @@ function App() {
           <Route path="faq/novo" element={<NovoFAQ />} />
           <Route path="/admin/faq/editar/:id" element={<EditarFAQ />} />
           
+          {/* ROTA DE EMPRESAS ADICIONADA AQUI */}
+          <Route path="empresas" element={<EmpresasAdmin />} />
+
           {/* Rota da tabela de posts */}
           <Route path="posts" element={<BlogAdmin />} />
 
