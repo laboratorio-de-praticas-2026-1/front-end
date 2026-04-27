@@ -1,6 +1,4 @@
-const API_URL =
-  import.meta.env.VITE_API_URL ||
-  "https://despachante-bortone-release-production.up.railway.app";
+const API_URL = import.meta.env.VITE_API_URL || "https://despachante-bortone-release-production.up.railway.app";
 
 export type StatusSolicitacao =
   | "recebido"

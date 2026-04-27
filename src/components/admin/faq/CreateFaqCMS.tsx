@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FAQ_CATEGORIES_MOCK } from "@/mocks/faq.mocks"; 
 import type { FAQCategoryOption } from '@/types/faq.types';
+import { faqService } from '@/services/faqService';
 
 
 
@@ -41,17 +42,26 @@ export default function NovoFAQ() {
   const onSubmit = async (data: FAQFormData) => {
     setLoading(true);
     try {
+
       const payload = {
-        ...data,
-        status: data.status ? "Ativo" : "Inativo",
-        dataCriacao: new Date().toISOString(),
+        pergunta: data.pergunta,
+        resposta: data.resposta,
+        categoria: data.categoria,
+        status: (data.status ? "Ativo" : "Inativo") as "Ativo" | "Inativo",
       };
 
-      console.log("Payload enviado:", payload);
+      const sucesso = await faqService.criar(payload);
 
-      navigate("/admin/faq");
+      if(sucesso){
+        console.log("FAQ criado com sucesso!");
+        navigate("/admin/faq");
+
+      } else{
+        alert("Erro ao criar a pergunta. Tente novamente.");
+      }
+
     } catch (err) {
-      console.error(err);
+      console.error("Erro na submissão",err);
     } finally {
       setLoading(false);
     }
@@ -179,14 +189,16 @@ export default function NovoFAQ() {
             disabled={loading}
             className="w-full md:w-auto bg-primary text-white font-semibold h-11 px-6 rounded-lg flex items-center gap-2 cursor-pointer transition-all hover:scale-[1.02]"
           >
-            <Printer size={22} />
             {loading ? (
               <>
                 <Loader2 className="animate-spin h-4 w-4" />
                 Salvando...
               </>
             ) : (
-              "Criar pergunta"
+              <>
+              <Printer size={22} />
+              Criar pergunta
+              </>
             )}
           </Button>
         </footer>

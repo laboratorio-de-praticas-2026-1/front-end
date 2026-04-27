@@ -7,7 +7,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { FAQItem, FAQStatus, FAQFilters, FAQCategoryOption, FAQStatusOption } from "@/types/faq.types";
 import { FAQ_MOCK_DATA, FAQ_CATEGORIES_MOCK, FAQ_STATUS_MOCK } from "@/mocks/faq.mocks";
-import { id } from "date-fns/locale";
+import { ConfirmDeleteModalFaq } from "./ConfirmDeleteModal";
+// import { id } from "date-fns/locale";
+import { faqService } from "@/services/faqService";
 
 export default function FAQ() {
   const navigate = useNavigate();
@@ -40,7 +42,8 @@ export default function FAQ() {
   const loadData = async () => {
     setLoading(true);
     try {
-      setFaqs(FAQ_MOCK_DATA);
+      const dados = await faqService.listarTodos();
+      setFaqs(dados)
       setCatOptions(FAQ_CATEGORIES_MOCK);
       setStatusOptions(FAQ_STATUS_MOCK);
 
@@ -119,6 +122,25 @@ export default function FAQ() {
     sortOrder: "desc",
   });
 }
+
+  const handleDelete = async () => {
+    if (!selectedFaq) return
+    setLoading(true)
+    
+    try{
+      const sucesso = await faqService.excluir(selectedFaq.id)
+
+      if(sucesso) {
+        setFaqs((prev) => prev.filter((f) => f.id !== selectedFaq.id))
+      }
+    } catch(error){
+      console.log("Erro ao excluir", error)
+    } finally {
+      setLoading(false)
+      setOpenModal(false)
+      setSelectedFaq(null)
+    }
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -287,11 +309,22 @@ export default function FAQ() {
       <div className="text-sm text-zinc-500 text-center sm:text-right">
         {filteredFaqs.length} resultados
       </div>
-      {/* <ReportModal
-        report={selectedReport}
+      <ConfirmDeleteModalFaq
         open={openModal}
-        onClose={() => setOpenModal(false)}
-      /> */}
+        onOpenChange={setOpenModal}
+        onConfirm={handleDelete}
+        title="Excluir Pergunta?"
+        description={
+          <>
+            Tem certeza que deseja excluir a pergunta{" "}
+            <span className="font-bold text-muted-fore">
+              {selectedFaq?.id}
+            </span>
+            ?<br />
+            A pergunta será removida do blog imediatamente.
+          </>
+        }
+      />
     </div>
   );
 }
