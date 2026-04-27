@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Toaster } from "sonner";
 
 import { Home } from "@/pages/Home"; 
 import { Servicos } from "@/pages/Servicos"; 
@@ -58,7 +57,7 @@ import EditarFAQ from "./components/admin/faq/EditarFaqCMS";
 import { EmpresasAdmin } from "@/pages/admin/empresas/EmpresasAdmin";
 import { EmpresaFormPage } from "@/pages/admin/empresas/EmpresaFormPage";
 
-// IMPORT DO SONNER PARA FEEDBACKS (ISSUE #120)
+// IMPORT DO SONNER PARA FEEDBACKS
 import { Toaster } from "@/components/ui/sonner";
 
 function App() {
