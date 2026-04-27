@@ -10,12 +10,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FAQ_CATEGORIES_MOCK, FAQ_MOCK_DATA } from "@/mocks/faq.mocks"; 
 import type { FAQCategoryOption } from '@/types/faq.types';
+import { ConfirmDeleteModalFaq } from './ConfirmDeleteModal';
+import { toast } from 'sonner';
+import { faqService } from '@/services/faqService';
 
 export default function EditarFAQ() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false); 
   const [catOptions, setCatOptions] = useState<FAQCategoryOption[]>([]);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const {
     register,
@@ -38,53 +43,78 @@ export default function EditarFAQ() {
   const status = watch("status");
 
   useEffect(() => {
-    const options = FAQ_CATEGORIES_MOCK;
-    setCatOptions(options);
+    const carregarDados = async () => {
+      const options = FAQ_CATEGORIES_MOCK;
+      setCatOptions(options);
 
-    if (!id) return;
+      if (!id) return;
 
-    const data = FAQ_MOCK_DATA.find((item) => {
-      const itemId = item.id.replace("#", "");
-      const routeId = String(id).replace("#", "");
-      return itemId === routeId;
-    });
+      setLoading(true);
+      try{
+        const cleanId = id.replace("#", "");
+        const data = await faqService.buscarPorId(id);
 
-    if (!data) return;
-
-    // 🔥 garante que categoria existe no select
-    const categoriaMatch = options.find(
-      (cat) => cat.value === data.categoria
-    );
-
-    reset({
-      pergunta: data.pergunta,
-      resposta: data.resposta,
-      categoria: categoriaMatch?.value || "",
-      status: data.status === "Ativo",
-    });
+        if(data) {
+          reset({
+            pergunta: data.pergunta,
+            resposta: data.resposta,
+            categoria: data.categoria,
+            status: data.status === "Ativo",
+          })
+        }
+      } catch(error){
+        toast.error("Erro ao carregar os dados da pergunta.")
+      } finally {
+        setLoading(false)
+      }
+    }
+    carregarDados();
 
   }, [id, reset]);
 
   const onSubmit = async (data: FAQFormData) => {
+    if (!id) return;
     setLoading(true);
     try {
+
       const payload = {
-        ...data,
-        id,
-        status: data.status ? "Ativo" : "Inativo",
-        dataAtualizacao: new Date().toISOString(),
+        pergunta: data.pergunta,
+        resposta: data.resposta,
+        categoria: data.categoria,
+        status: (data.status ? "Ativo" : "Inativo") as "Ativo" | "Inativo",
       };
 
-      console.log("Payload enviado:", payload);
-      navigate("/admin/faq");
+      const sucesso = await faqService.atualizar(id, payload)
+
+      if(sucesso){
+        toast.success("Pergunta atualizada com sucesso")
+        navigate("/admin/faq");
+      }
+
     } catch (err) {
-      console.error(err);
+      toast.error("Erro ao salvar alterações")
     } finally {
       setLoading(false);
     }
   };
 
-  console.log("categoria form:", watch("categoria"));
+  const handleDelete = async () => {
+    if (!id) return;
+    setIsDeleting(true);
+    try {
+      const sucesso = await faqService.excluir(id);
+
+      if(sucesso){
+        navigate("/admin/faq");
+      }
+      // Redireciona o usuário após a exclusão bem-sucedida
+    } catch (erro) {
+      toast.error("Erro ao excluir a pergunta.");
+    } finally {
+      setIsDeleting(false);
+      setIsDeleteModalOpen(false);
+    }
+};
 
   return (
     <div className="min-h-screen text-muted-foreground animate-in fade-in duration-500">
@@ -100,7 +130,12 @@ export default function EditarFAQ() {
           <p className="text-sm text-gray-500">Gerencie e atualize as informações desta pergunta.</p>
         </div>
 
-        <Button variant={'destructive'} className='text-white font-semibold'>
+        <Button 
+          type="button"
+          variant={'destructive'} 
+          className='text-white font-semibold cursor-pointer'
+          onClick={() => setIsDeleteModalOpen(true)}
+          >
           <Trash size={20} />
           Excluir
         </Button>
@@ -149,10 +184,10 @@ export default function EditarFAQ() {
               <Controller
                 name="categoria"
                 control={control}
-                defaultValue="" // 🔥 obrigatório
+                defaultValue=""
                 render={({ field }) => (
                   <Select
-                    key={field.value} // 🔥 força render
+                    key={field.value}
                     value={field.value || ""}
                     onValueChange={field.onChange}
                   >
@@ -240,6 +275,22 @@ export default function EditarFAQ() {
           </Button>
         </footer>
       </form>
+      <ConfirmDeleteModalFaq
+        open={isDeleteModalOpen}
+        onOpenChange={setIsDeleteModalOpen}
+        onConfirm={handleDelete}
+        title="Excluir Pergunta?"
+        description={
+          <>
+            Tem certeza que deseja excluir a pergunta{" "}
+            <span className="font-bold text-muted-fore">
+              #{id}
+            </span>
+            ?<br />
+            A pergunta será removida do blog imediatamente.
+          </>
+        }
+      />
     </div>
   );
 }
