@@ -12,8 +12,8 @@ Ele é responsável pela interface do usuário, incluindo a Landing Page públic
 
 | Branch    | URL       |
 | --------- | --------- |
-| `main`    | (definir) |
-| `develop` | (definir) |
+| `main`    | https://frontend-main-412027788376.southamerica-east1.run.app |
+| `develop` | https://frontend-develop-412027788376.southamerica-east1.run.app |
 
 ### API (Back-end)
 
