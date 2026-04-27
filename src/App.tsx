@@ -57,9 +57,15 @@ import EditarFAQ from "./components/admin/faq/EditarFaqCMS";
 import { EmpresasAdmin } from "@/pages/admin/empresas/EmpresasAdmin";
 import { EmpresaFormPage } from "@/pages/admin/empresas/EmpresaFormPage";
 
+// IMPORT DO SONNER PARA FEEDBACKS (ISSUE #120)
+import { Toaster } from "@/components/ui/sonner";
+
 function App() {
   return (
     <BrowserRouter>
+      {/* TOASTER ADICIONADO PARA FUNCIONAR OS TOASTS DO REVESTE KIDS */}
+      <Toaster position="top-right" richColors closeButton />
+      
       <Routes>
         {/* === ROTAS PÚBLICAS === */}
         <Route path="/" element={<Home />} />

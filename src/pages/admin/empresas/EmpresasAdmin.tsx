@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Plus, Search, ChevronRight } from "lucide-react";
+import { toast } from "sonner";
 
 import { Input } from "@/components/ui/input";
 import {
@@ -12,10 +14,16 @@ import {
 import { Button } from "@/components/ui/button";
 
 import { EmpresaTable } from "@/components/tables/EmpresaTable";
+import { ConfirmActionModal } from "./components/ConfirmActionModal";
 import type { EmpresaFilters } from "@/types/empresa.types"; 
 import { MOCK_EMPRESAS } from "@/mocks/empresas.mock";
 
 export const EmpresasAdmin = () => {
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [selectedEmpresa, setSelectedEmpresa] = useState<{ id: string; nome: string } | null>(null);
+
   const [filters, setFilters] = useState<EmpresaFilters>({
     tipo: "",
     estado: "",
@@ -36,6 +44,29 @@ export const EmpresasAdmin = () => {
     setFilters({ tipo: "", estado: "", cidade: "", search: "", page: 1 });
   };
 
+  const handleOpenDeleteModal = (id: string) => {
+    const empresa = MOCK_EMPRESAS.find(emp => emp.id === id);
+    if (empresa) {
+      setSelectedEmpresa({ id, nome: empresa.nomeFantasia });
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!selectedEmpresa) return;
+    setIsDeleting(true);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      toast.success("Empresa excluída com sucesso!");
+    } catch (error) {
+      toast.error("Erro ao excluir empresa.");
+    } finally {
+      setIsDeleting(false);
+      setIsModalOpen(false);
+      setSelectedEmpresa(null);
+    }
+  };
+
   const filteredData = MOCK_EMPRESAS.filter((emp) => {
     const matchesSearch = emp.nomeFantasia.toLowerCase().includes(filters.search?.toLowerCase() || "");
     const matchesTipo = filters.tipo ? emp.tipo === filters.tipo : true;
@@ -46,7 +77,6 @@ export const EmpresasAdmin = () => {
 
   return (
     <div className="p-8">
-
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold text-[#001f3f]">Empresas</h1>
@@ -54,7 +84,10 @@ export const EmpresasAdmin = () => {
             Visualize, crie, organize e gerencie todas as empresas que aparecerão no mapa.
           </p>
         </div>
-        <Button className="bg-[#1e90ff] hover:bg-blue-600 gap-2">
+        <Button 
+          onClick={() => navigate("novo")}
+          className="bg-[#1e90ff] hover:bg-blue-600 gap-2"
+        >
           <Plus size={20} /> Nova empresa
         </Button>
       </div>
@@ -114,13 +147,12 @@ export const EmpresasAdmin = () => {
       <div className="relative z-10">
         <EmpresaTable 
           data={filteredData} 
-          onEdit={(id) => console.log("Editar:", id)} 
-          onDelete={(id) => console.log("Excluir:", id)} 
+          onEdit={(id) => navigate(`editar/${id}`)} 
+          onDelete={handleOpenDeleteModal} 
         />
       </div>
 
       <div className="mt-8 grid grid-cols-3 items-center">
-        {/* Coluna Esquerda Vazia para garantir centralização do meio */}
         <div></div>
 
         <div className="flex items-center justify-center gap-2">
@@ -128,7 +160,6 @@ export const EmpresasAdmin = () => {
             Previous
           </button>
           
-          {/* Página Ativa */}
           <button className="w-10 h-10 flex items-center justify-center border rounded-xl border-gray-200 text-[#103454] font-bold shadow-sm bg-white">
             1
           </button>
@@ -154,6 +185,16 @@ export const EmpresasAdmin = () => {
           </p>
         </div>
       </div>
+
+      <ConfirmActionModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        isLoading={isDeleting}
+        title="Excluir empresa?"
+        description={`Tem certeza que deseja excluir a empresa ${selectedEmpresa?.nome || `#${selectedEmpresa?.id.padStart(3, '0')}`}?\nA empresa será removida do mapa imediatamente.`}
+        confirmText="Excluir"
+      />
     </div>
   );
 };
