@@ -52,7 +52,6 @@ export const MapViewer = ({ lat, lng }: MapViewerProps) => {
 
   return (
     <Card className="shadow-sm border-gray-200 overflow-hidden">
-      {/* Header mantido exatamente como você mandou */}
       <CardHeader className="h-[72px] flex flex-row items-center px-6 pb-[20px] border-b border-gray-100 bg-[#F9FAFB]">
         <CardTitle className="text-lg font-bold text-[#001f3f]">
           Visualização
@@ -60,8 +59,7 @@ export const MapViewer = ({ lat, lng }: MapViewerProps) => {
       </CardHeader>
       
       <CardContent className="p-0">
-        {/* Ajustado para h-[270px] para esticar o mapa um pouco mais para baixo 
-            e compensar o deslocamento visual do header */}
+
         <div className="h-[270px] w-full bg-slate-100 relative z-0">
           <MapContainer
             center={position}

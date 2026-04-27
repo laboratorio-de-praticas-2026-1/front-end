@@ -33,7 +33,6 @@ export const CompanyDataForm = () => {
 
   return (
     <Card className="shadow-sm border-gray-200">
-      {/* Header com fundo cinza #F9FAFB e linha suave */}
       <CardHeader className="flex flex-row items-center gap-2 py-4 px-6 border-b border-gray-100 bg-[#F9FAFB]">
         <Building2 size={20} className="text-[#001f3f]" />
         <CardTitle className="text-lg font-bold text-[#001f3f]">
@@ -42,7 +41,6 @@ export const CompanyDataForm = () => {
       </CardHeader>
 
       <CardContent className="space-y-6 p-6">
-        {/* Nome Fantasia */}
         <div className="space-y-1">
           <Label className="text-sm font-semibold text-[#001f3f]">
             Nome fantasia <span className="text-[#F15B5B]">*</span>
@@ -59,7 +57,6 @@ export const CompanyDataForm = () => {
           )}
         </div>
 
-        {/* CNPJ */}
         <div className="space-y-1">
           <Label className="text-sm font-semibold text-[#001f3f]">
             CNPJ <span className="text-[#F15B5B]">*</span>
@@ -77,7 +74,6 @@ export const CompanyDataForm = () => {
           )}
         </div>
 
-        {/* Tipo de Empresa */}
         <div className="space-y-1">
           <Label className="text-sm font-semibold text-[#001f3f]">
             Tipo de empresa <span className="text-[#F15B5B]">*</span>

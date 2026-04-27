@@ -21,9 +21,7 @@ export const ContactForm = () => {
 
   return (
     <Card className="shadow-sm border-gray-200 bg-white">
-      {/* h-[64px] faz a linha subir. 
-        mb-[8px] garante que o Header ainda ocupe 72px de espaço total, mantendo a altura da DIV perfeita.
-      */}
+
       <CardHeader className="flex flex-row items-center gap-2 h-[64px] mb-[8px] px-6 border-b border-gray-100 bg-[#F9FAFB]">
         <Contact size={20} className="text-[#001f3f]" />
         <CardTitle className="text-lg font-bold text-[#001f3f]">
@@ -31,9 +29,7 @@ export const ContactForm = () => {
         </CardTitle>
       </CardHeader>
 
-      {/* pb-[34px] mantido para alinhar a base com o card vizinho */}
       <CardContent className="grid gap-4 p-6 pb-[34px]">
-        {/* Telefone */}
         <div className="space-y-1">
           <Label className="text-sm font-semibold text-[#001f3f]">
             Telefone <span className="text-[#F15B5B]">*</span>
@@ -51,7 +47,6 @@ export const ContactForm = () => {
           )}
         </div>
 
-        {/* E-mail */}
         <div className="space-y-1">
           <Label className="text-sm font-semibold text-[#001f3f]">
             E-mail <span className="text-[#F15B5B]">*</span>
@@ -69,7 +64,6 @@ export const ContactForm = () => {
           )}
         </div>
 
-        {/* Site */}
         <div className="space-y-1">
           <Label className="text-sm font-semibold text-[#001f3f]">
             Site <span className="text-[#F15B5B]">*</span>
