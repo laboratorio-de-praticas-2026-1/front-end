@@ -15,9 +15,7 @@ import HistoricoSolicitacoes from "@/pages/cliente/solicitacoes/HistoricoSolicit
 import DetalhesSolicitacao from "@/pages/cliente/solicitacoes/DetalhesSolicitacao";
 import FAQ from "./components/admin/faq/FaqAdmin";
 
-
 import { ClienteLayout } from "@/components/layout/ClienteLayout";
-
 
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { BlogAdmin } from "@/pages/admin/blog/BlogAdmin";
@@ -50,13 +48,18 @@ import FinanceiroDashboard from "./components/admin/dashboard/FinanceiroDashboar
 import ClientesDashboard from "./components/admin/dashboard/ClientesDashboard";
 import NovoRelatorio from "./components/admin/relatorios/CreateRelatorioCMS";
 
-
 import Usuarios from "@/pages/admin/Usuarios";
 import NovoUsuario from "@/pages/admin/usuarios/NovoUsuario";
 import EditarUsuario from "@/pages/admin/usuarios/EditarUsuario";
 import { Fa500Px } from "react-icons/fa";
 import NovoFAQ from "./components/admin/faq/CreateFaqCMS";
 import EditarFAQ from "./components/admin/faq/EditarFaqCMS";
+
+import { EmpresasAdmin } from "@/pages/admin/empresas/EmpresasAdmin";
+import { EmpresaFormPage } from "@/pages/admin/empresas/EmpresaFormPage";
+
+// IMPORT DO SONNER PARA FEEDBACKS (ISSUE #120)
+import { Toaster } from "@/components/ui/sonner";
 
 function App() {
   return (
@@ -83,13 +86,11 @@ function App() {
           <Route path="solicitacoes/historico" element={<HistoricoSolicitacoes />} />
           <Route path="solicitacoes/:id" element={<DetalhesSolicitacao />} />
 
-
-          
           {/* Tela temporária: Pega qualquer link dentro do /cliente e mostra a sidebar */}
           <Route path="*" element={
             <div className="flex flex-col items-center justify-center h-full text-zinc-500 text-center py-20">
-               <h2 className="text-2xl font-bold mb-2 text-[#032a4e]">Bem-vindo ao Portal do Cliente 🚗</h2>
-               <p>A sua sidebar já está funcionando! O Dev construirá as telas aqui no meio.</p>
+                <h2 className="text-2xl font-bold mb-2 text-[#032a4e]">Bem-vindo ao Portal do Cliente 🚗</h2>
+                <p>A sua sidebar já está funcionando! O Dev construirá as telas aqui no meio.</p>
             </div>
           } />
         </Route>
@@ -108,8 +109,12 @@ function App() {
           <Route path="faq" element={<FAQ />} />
           <Route path="faq/novo" element={<NovoFAQ />} />
           <Route path="/admin/faq/editar/:id" element={<EditarFAQ />} />
-
           
+          {/* ROTA DE EMPRESAS ADICIONADA AQUI */}
+          <Route path="empresas" element={<EmpresasAdmin />} />
+          <Route path="empresas/novo" element={<EmpresaFormPage />} />
+          <Route path="empresas/editar/:id" element={<EmpresaFormPage />} />
+
           {/* Rota da tabela de posts */}
           <Route path="posts" element={<BlogAdmin />} />
 
