@@ -26,12 +26,12 @@ import { EditCarouselBanner } from "@/components/sections/admin/carrossel/EditCa
 import EditPostCMS from "@/components/sections/admin/blog/EditPostCMS";
 import CreatePostCMS from "@/components/sections/admin/blog/CreatePostCMS";
 import { Contato } from "@/pages/Contato";
+import SobreNos from "@/pages/SobreNos";
 
 import { PublicidadeAdmin } from "@/pages/admin/publicidade/PublicidadeAdmin";
 import CreatePublicidadeCMS from "@/components/sections/admin/publicidade/CreatePublicidadeCMS";
 import CreateRelatorioCMS from "./components/admin/relatorios/CreateRelatorioCMS";
 import EditPublicidadeCMS from "@/components/sections/admin/publicidade/EditPublicidadeCMS";
-
 import Solicitacoes from "@/pages/cliente/solicitacoes/SolicitacoesAdmin";
 
 import EditarSolicitacao from "@/components/admin/EditarSolicitacao"
@@ -68,7 +68,8 @@ function App() {
         <Route path="/blog/:id" element={<Artigo />} />
         <Route path="/contato" element={<Contato />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/cadastro" element={<Cadastro />} />  {/* <-- NOVA ROTA DE CADASTRO */}
+        <Route path="/cadastro" element={<Cadastro />} /> 
+        <Route path="/SobreNos" element={<SobreNos />} />
         
 
         {/* === ROTAS DO PORTAL DO CLIENTE === */}
