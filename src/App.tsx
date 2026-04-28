@@ -34,8 +34,12 @@ import CreatePublicidadeCMS from "@/components/sections/admin/publicidade/Create
 import CreateRelatorioCMS from "./components/admin/relatorios/CreateRelatorioCMS";
 import EditPublicidadeCMS from "@/components/sections/admin/publicidade/EditPublicidadeCMS";
 import Solicitacoes from "@/pages/cliente/solicitacoes/SolicitacoesAdmin";
+import InicioDashboard from "@/pages/cliente/InicioDashboard";
+import DebitosPage from "@/pages/cliente/DebitosPage";
 
-import EditarSolicitacao from "@/components/admin/EditarSolicitacao"
+import EditarSolicitacao from "@/components/admin/EditarSolicitacao";
+
+
 import { ServicosAdmin } from "@/pages/admin/servicos/ServicosAdmin.tsx";
 import NovoServicoCMS from "@/pages/admin/servicos/NovoServicoCMS";
 import EditarServicoCMS from "@/pages/admin/servicos/EditarServicoCMS";
@@ -82,8 +86,10 @@ function App() {
 
         {/* === ROTAS DO PORTAL DO CLIENTE === */}
         <Route path="/cliente" element={<ClienteLayout />}>
-          <Route index element={<Navigate to="/cliente/solicitacoes" replace />} />
+          <Route index element={<Navigate to="/cliente/inicio" replace />} />
 
+          <Route path="inicio" element={<InicioDashboard />} />
+          <Route path="debitos" element={<DebitosPage />} />
           <Route path="solicitacoes" element={<Solicitacoes />} />
           <Route path="solicitacoes/sucesso" element={<SolicitacaoSucesso />} />
           <Route path="solicitacoes/historico" element={<HistoricoSolicitacoes />} />
@@ -106,9 +112,6 @@ function App() {
         {/* === ROTAS DO ADMIN === */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="/admin/posts" replace />} />
-          <Route path="servicos" element={<ServicosAdmin />} />
-          <Route path="servicos/novo" element={<NovoServicoCMS />} />
-          <Route path="servicos/editar/:id" element={<EditarServicoCMS />} />
           <Route path="solicitacoes" element={<SolicitacoesAdmin />} />
           <Route path="solicitacoes/:id/editar" element={<EditarSolicitacao />} />
           <Route path="relatorios" element={<Relatorios />} />
