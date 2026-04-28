@@ -19,11 +19,10 @@ type SidebarLink = {
 
 const sidebarLinks: SidebarLink[] = [
   { name: "Início", href: "/cliente/inicio", icon: FiHome },
-  { name: "Meus Veículos", href: "/cliente/veiculos", icon: FaCar },
+  { name: "Meus Veículos", href: "/cliente/meus-veiculos", icon: FaCar },
   { name: "Débitos", href: "/cliente/debitos", icon: FiCreditCard },
   { name: "Solicitações", href: "/cliente/solicitacoes", icon: FiFileText },
-  { name: "Notificações", href: "/cliente/notificacoes", icon: FiBell },
-  { name: "Meu perfil", href: "/cliente/perfil", icon: FiUser },
+  // { name: "Meu perfil", href: "/cliente/perfil", icon: FiUser },
 ];
 
 interface ClienteSidebarProps {

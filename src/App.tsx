@@ -5,16 +5,19 @@ import { Servicos } from "@/pages/Servicos";
 import { Blog } from "@/pages/Blog";
 import { Artigo } from "@/pages/Artigo";
 import { Login } from "@/pages/Login";
-import { Cadastro } from "@/pages/Cadastro"; // <-- NOVA IMPORTAÇÃO
+import { Cadastro } from "@/pages/Cadastro"; 
+import Mapa from "@/pages/Mapa";
 
 import SolicitacoesAdmin from "./components/admin/solicitacoes/SolicitacoesAdmin";
-import SolicitacaoSucesso from "@/pages/cliente/SolicitacaoSucesso";
-import HistoricoSolicitacoes from "@/pages/cliente/HistoricoSolicitacoes";
-import DetalhesSolicitacao from "@/pages/cliente/DetalhesSolicitacao";
-
+import Relatorios from "./components/admin/relatorios/RelatoriosAdmin";
+import SolicitacaoSucesso from "@/pages/cliente/solicitacoes/SolicitacaoSucesso";
+import HistoricoSolicitacoes from "@/pages/cliente/solicitacoes/HistoricoSolicitacoes";
+import DetalhesSolicitacao from "@/pages/cliente/solicitacoes/DetalhesSolicitacao";
+import FAQ from "./components/admin/faq/FaqAdmin";
 
 import { ClienteLayout } from "@/components/layout/ClienteLayout";
-
+import MeusVeiculos from "@/pages/MeusVeiculos";
+import { DetalhesVeiculo } from "@/pages/MeusVeiculos/DetalhesVeiculo";
 
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { BlogAdmin } from "@/pages/admin/blog/BlogAdmin";
@@ -24,18 +27,51 @@ import { EditCarouselBanner } from "@/components/sections/admin/carrossel/EditCa
 import EditPostCMS from "@/components/sections/admin/blog/EditPostCMS";
 import CreatePostCMS from "@/components/sections/admin/blog/CreatePostCMS";
 import { Contato } from "@/pages/Contato";
+import SobreNos from "@/pages/SobreNos";
+import { Duvida } from "./pages/Duvida";
 
 import { PublicidadeAdmin } from "@/pages/admin/publicidade/PublicidadeAdmin";
 import CreatePublicidadeCMS from "@/components/sections/admin/publicidade/CreatePublicidadeCMS";
+import CreateRelatorioCMS from "./components/admin/relatorios/CreateRelatorioCMS";
 import EditPublicidadeCMS from "@/components/sections/admin/publicidade/EditPublicidadeCMS";
-
-import Solicitacoes from "@/pages/cliente/SolicitacoesAdmin";
+import Solicitacoes from "@/pages/cliente/solicitacoes/SolicitacoesAdmin";
+import InicioDashboard from "@/pages/cliente/InicioDashboard";
+import DebitosPage from "@/pages/cliente/DebitosPage";
 
 import EditarSolicitacao from "@/components/admin/EditarSolicitacao";
+
+
+import { ServicosAdmin } from "@/pages/admin/servicos/ServicosAdmin.tsx";
+import NovoServicoCMS from "@/pages/admin/servicos/NovoServicoCMS";
+import EditarServicoCMS from "@/pages/admin/servicos/EditarServicoCMS";
+
+import { DashboardAdmin } from "@/pages/admin/dashboard/DashboardAdmin";  
+import GeralDashboard from "./components/admin/dashboard/GeralDashboard";
+import SolicitacoesDashboard from "./components/admin/dashboard/SolicitacoesDashboard";
+import VeiculosDashboard from "./components/admin/dashboard/VeiculosDashboard";
+import ServicosDashboard from "./components/admin/dashboard/ServicosDashboard";
+import DocumentosDashboard from "./components/admin/dashboard/DocumentosDashboard";
+import FinanceiroDashboard from "./components/admin/dashboard/FinanceiroDashboard";
+import ClientesDashboard from "./components/admin/dashboard/ClientesDashboard";
+import NovoRelatorio from "./components/admin/relatorios/CreateRelatorioCMS";
+
+import Usuarios from "@/pages/admin/Usuarios";
+import NovoUsuario from "@/pages/admin/usuarios/NovoUsuario";
+import EditarUsuario from "@/pages/admin/usuarios/EditarUsuario";
+import { Fa500Px } from "react-icons/fa";
+import NovoFAQ from "./components/admin/faq/CreateFaqCMS";
+import EditarFAQ from "./components/admin/faq/EditarFaqCMS";
+
+import { EmpresasAdmin } from "@/pages/admin/empresas/EmpresasAdmin";
+import { EmpresaFormPage } from "@/pages/admin/empresas/EmpresaFormPage";
+
+// IMPORT DO SONNER PARA FEEDBACKS
+import { Toaster } from "@/components/ui/sonner";
 
 function App() {
   return (
     <BrowserRouter>
+      <Toaster position="top-right" richColors />
       <Routes>
         {/* === ROTAS PÚBLICAS === */}
         <Route path="/" element={<Home />} />
@@ -43,26 +79,34 @@ function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:id" element={<Artigo />} />
         <Route path="/contato" element={<Contato />} />
+        <Route path="/duvidas" element={<Duvida />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/cadastro" element={<Cadastro />} />  {/* <-- NOVA ROTA DE CADASTRO */}
+        <Route path="/cadastro" element={<Cadastro />} /> 
+        <Route path="/SobreNos" element={<SobreNos />} />
+        <Route path="/mapa" element={<Mapa />} />
+
         
 
         {/* === ROTAS DO PORTAL DO CLIENTE === */}
         <Route path="/cliente" element={<ClienteLayout />}>
-          <Route index element={<Navigate to="/cliente/solicitacoes" replace />} />
+          <Route index element={<Navigate to="/cliente/inicio" replace />} />
 
+          <Route path="inicio" element={<InicioDashboard />} />
+          <Route path="debitos" element={<DebitosPage />} />
           <Route path="solicitacoes" element={<Solicitacoes />} />
           <Route path="solicitacoes/sucesso" element={<SolicitacaoSucesso />} />
           <Route path="solicitacoes/historico" element={<HistoricoSolicitacoes />} />
           <Route path="solicitacoes/:id" element={<DetalhesSolicitacao />} />
 
-
+          <Route path="meus-veiculos" element={<MeusVeiculos />} />
+          <Route path="meus-veiculos/:id" element={<DetalhesVeiculo />} />
           
+
           {/* Tela temporária: Pega qualquer link dentro do /cliente e mostra a sidebar */}
           <Route path="*" element={
             <div className="flex flex-col items-center justify-center h-full text-zinc-500 text-center py-20">
-               <h2 className="text-2xl font-bold mb-2 text-[#032a4e]">Bem-vindo ao Portal do Cliente 🚗</h2>
-               <p>A sua sidebar já está funcionando! O Dev construirá as telas aqui no meio.</p>
+                <h2 className="text-2xl font-bold mb-2 text-[#032a4e]">Bem-vindo ao Portal do Cliente 🚗</h2>
+                <p>A sua sidebar já está funcionando! O Dev construirá as telas aqui no meio.</p>
             </div>
           } />
         </Route>
@@ -73,7 +117,17 @@ function App() {
           <Route index element={<Navigate to="/admin/posts" replace />} />
           <Route path="solicitacoes" element={<SolicitacoesAdmin />} />
           <Route path="solicitacoes/:id/editar" element={<EditarSolicitacao />} />
+          <Route path="relatorios" element={<Relatorios />} />
+          <Route path="relatorios/novo" element={<NovoRelatorio />} />
+          <Route path="faq" element={<FAQ />} />
+          <Route path="faq/novo" element={<NovoFAQ />} />
+          <Route path="/admin/faq/editar/:id" element={<EditarFAQ />} />
           
+          {/* ROTA DE EMPRESAS ADICIONADA AQUI */}
+          <Route path="empresas" element={<EmpresasAdmin />} />
+          <Route path="empresas/novo" element={<EmpresaFormPage />} />
+          <Route path="empresas/editar/:id" element={<EmpresaFormPage />} />
+
           {/* Rota da tabela de posts */}
           <Route path="posts" element={<BlogAdmin />} />
 
@@ -92,6 +146,21 @@ function App() {
           <Route path="publicidade" element={<PublicidadeAdmin />} />
           <Route path="publicidade/novo" element={<CreatePublicidadeCMS />} />
           <Route path="publicidade/editar/:id" element={<EditPublicidadeCMS />} />
+
+          {/* Rota do dashboard*/}
+          <Route path="dashboard" element={<DashboardAdmin />}>
+            <Route index element={<Navigate to="/admin/dashboard/geral" replace />} />
+            <Route path="geral" element={<GeralDashboard />} />
+            <Route path="solicitacoes" element={<SolicitacoesDashboard />} />
+            <Route path="veiculos" element={<VeiculosDashboard />} />
+            <Route path="servicos" element={<ServicosDashboard />} />
+            <Route path="documentos" element={<DocumentosDashboard />} />
+            <Route path="financeiro" element={<FinanceiroDashboard />} />
+            <Route path="clientes" element={<ClientesDashboard />} />
+          </Route>
+          <Route path="usuarios" element={<Usuarios />} />
+          <Route path="usuarios/novo" element={<NovoUsuario />} />
+          <Route path="usuarios/editar/:id" element={<EditarUsuario />} />
         </Route>
       </Routes>
     </BrowserRouter>
