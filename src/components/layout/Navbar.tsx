@@ -5,7 +5,7 @@ import logoDespachanteEscura from "@/assets/logo-despachante-escura.png";
 import logoBortoneEscura from "@/assets/logo-bortone-escura.png";
 
 const navLinks = [
-  { name: "Sobre Nós", href: "/#sobre" },
+  { name: "Sobre Nós", href: "/SobreNos" },
   { name: "Serviços", href: "/servicos" },
   { name: "Mapa", href: "/#mapa" },
   { name: "Blog", href: "/blog" },
