@@ -1,0 +1,35 @@
+{
+  "veiculo": {
+    "id": "veiculo-001",
+    "placa": "CDJ6718",
+    "modelo": "Fiat Argo Trekking",
+    "versao": "1.3 Automático",
+    "ultimaAtualizacao": "09/03/2026 - 10:36",
+    "ultimoPagamento": "2026",
+    "vencimento": "Dez/2026",
+    "statusLicenciamento": "em_dia"
+  },
+  "debitos": [
+    {
+      "id": "debito-001",
+      "tipo": "licenciamento",
+      "titulo": "Licenciamento",
+      "ano": 2026,
+      "valor": 197.83,
+      "vencimento": "Dezembro",
+      "vencimentoISO": "2026-12-31",
+      "descricao": "Licenciamento 2026"
+    },
+    {
+      "id": "debito-002",
+      "tipo": "ipva_parcela",
+      "titulo": "IPVA",
+      "subtitulo": "Parcela 3 de 6",
+      "valor": 386.16,
+      "valorTotal": 2316.96,
+      "vencimento": "27/06/2026",
+      "vencimentoISO": "2026-06-27",
+      "descricao": "IPVA 2026 - Parcelas restantes"
+    }
+  ]
+}

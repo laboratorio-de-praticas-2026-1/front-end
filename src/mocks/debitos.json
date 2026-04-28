@@ -1,0 +1,182 @@
+{
+  "veiculos": [
+    {
+      "id": "veiculo-001",
+      "placa": "ABC-1023",
+      "modelo": "Toyota Corolla",
+      "ano": 2022
+    },
+    {
+      "id": "veiculo-002",
+      "placa": "XYZ-4987",
+      "modelo": "Honda Civic",
+      "ano": 2021
+    },
+    {
+      "id": "veiculo-003",
+      "placa": "DEF-2500",
+      "modelo": "Volkswagen Golf",
+      "ano": 2020
+    }
+  ],
+  "debitos": {
+    "veiculo-001": {
+      "taxaServico": 14.99,
+      "itens": [
+        {
+          "id": "d-001-1",
+          "tipo": "IPVA",
+          "titulo": "IPVA 2026 – Parcela 1/3",
+          "vencimento": "Vence no dia 15 de fevereiro de 2026",
+          "vencimentoISO": "2026-02-15",
+          "valorTotal": 1245.67,
+          "valorOriginal": 1200.00,
+          "juros": 30.67,
+          "multa": 15.00,
+          "isAtrasado": true,
+          "badges": ["IPVA", "Atrasado"]
+        },
+        {
+          "id": "d-001-2",
+          "tipo": "IPVA",
+          "titulo": "IPVA 2026 – Parcela 2/3",
+          "vencimento": "Vence no dia 15 de março de 2026",
+          "vencimentoISO": "2026-03-15",
+          "valorTotal": 1200.00,
+          "valorOriginal": 1200.00,
+          "juros": 0,
+          "multa": 0,
+          "isAtrasado": false,
+          "badges": ["IPVA"]
+        },
+        {
+          "id": "d-001-3",
+          "tipo": "IPVA",
+          "titulo": "IPVA 2026 – Parcela 3/3",
+          "vencimento": "Vence no dia 15 de julho de 2026",
+          "vencimentoISO": "2026-07-15",
+          "valorTotal": 1200.00,
+          "valorOriginal": 1200.00,
+          "juros": 0,
+          "multa": 0,
+          "isAtrasado": false,
+          "badges": ["IPVA"]
+        },
+        {
+          "id": "d-001-4",
+          "tipo": "Licenciamento",
+          "titulo": "Licenciamento de Veículos 2026",
+          "vencimento": "Vence no dia 1 de setembro de 2026",
+          "vencimentoISO": "2026-09-01",
+          "valorTotal": 165.39,
+          "valorOriginal": 165.39,
+          "juros": 0,
+          "multa": 0,
+          "isAtrasado": false,
+          "badges": ["Licenciamento"]
+        },
+        {
+          "id": "d-001-5",
+          "tipo": "Multa",
+          "titulo": "Infração de velocidade – Radar AV-4821",
+          "vencimento": "Venceu em 20 de fevereiro de 2026",
+          "vencimentoISO": "2026-02-20",
+          "valorTotal": 293.47,
+          "valorOriginal": 293.47,
+          "juros": 0,
+          "multa": 0,
+          "isAtrasado": true,
+          "badges": ["Multa", "Atrasado"]
+        },
+        {
+          "id": "d-001-6",
+          "tipo": "Multa",
+          "titulo": "Infração de estacionamento – Zona B",
+          "vencimento": "Vence no dia 10 de maio de 2026",
+          "vencimentoISO": "2026-05-10",
+          "valorTotal": 195.23,
+          "valorOriginal": 195.23,
+          "juros": 0,
+          "multa": 0,
+          "isAtrasado": false,
+          "badges": ["Multa"]
+        }
+      ],
+      "servicosAdicionais": [
+        {
+          "id": "s-001-1",
+          "tipo": "ServicoAdicional",
+          "titulo": "Emissão de documento digital CRLV",
+          "descricao": "Serviço adicional",
+          "valorTotal": 120.00
+        },
+        {
+          "id": "s-001-2",
+          "tipo": "ServicoAdicional",
+          "titulo": "Relatório de histórico do veículo",
+          "descricao": "Serviço adicional",
+          "valorTotal": 39.90
+        }
+      ]
+    },
+    "veiculo-002": {
+      "taxaServico": 14.99,
+      "itens": [
+        {
+          "id": "d-002-1",
+          "tipo": "IPVA",
+          "titulo": "IPVA 2026 – Parcela 1/2",
+          "vencimento": "Vence no dia 10 de março de 2026",
+          "vencimentoISO": "2026-03-10",
+          "valorTotal": 980.00,
+          "valorOriginal": 980.00,
+          "juros": 0,
+          "multa": 0,
+          "isAtrasado": false,
+          "badges": ["IPVA"]
+        },
+        {
+          "id": "d-002-2",
+          "tipo": "Licenciamento",
+          "titulo": "Licenciamento de Veículos 2026",
+          "vencimento": "Vence no dia 1 de outubro de 2026",
+          "vencimentoISO": "2026-10-01",
+          "valorTotal": 142.00,
+          "valorOriginal": 142.00,
+          "juros": 0,
+          "multa": 0,
+          "isAtrasado": false,
+          "badges": ["Licenciamento"]
+        }
+      ],
+      "servicosAdicionais": [
+        {
+          "id": "s-002-1",
+          "tipo": "ServicoAdicional",
+          "titulo": "Emissão de documento digital CRLV",
+          "descricao": "Serviço adicional",
+          "valorTotal": 120.00
+        }
+      ]
+    },
+    "veiculo-003": {
+      "taxaServico": 14.99,
+      "itens": [
+        {
+          "id": "d-003-1",
+          "tipo": "Multa",
+          "titulo": "Infração de velocidade – Radar BR-101",
+          "vencimento": "Venceu em 5 de janeiro de 2026",
+          "vencimentoISO": "2026-01-05",
+          "valorTotal": 880.41,
+          "valorOriginal": 800.00,
+          "juros": 50.41,
+          "multa": 30.00,
+          "isAtrasado": true,
+          "badges": ["Multa", "Atrasado"]
+        }
+      ],
+      "servicosAdicionais": []
+    }
+  }
+}
