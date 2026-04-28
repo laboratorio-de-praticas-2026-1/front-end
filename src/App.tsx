@@ -6,6 +6,7 @@ import { Blog } from "@/pages/Blog";
 import { Artigo } from "@/pages/Artigo";
 import { Login } from "@/pages/Login";
 import { Cadastro } from "@/pages/Cadastro"; 
+import Mapa from "@/pages/Mapa";
 
 import SolicitacoesAdmin from "./components/admin/solicitacoes/SolicitacoesAdmin";
 import Relatorios from "./components/admin/relatorios/RelatoriosAdmin";
@@ -82,6 +83,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} /> 
         <Route path="/SobreNos" element={<SobreNos />} />
+        <Route path="/mapa" element={<Mapa />} />
+
         
 
         {/* === ROTAS DO PORTAL DO CLIENTE === */}

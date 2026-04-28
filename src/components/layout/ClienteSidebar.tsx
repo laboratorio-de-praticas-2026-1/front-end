@@ -22,7 +22,7 @@ const sidebarLinks: SidebarLink[] = [
   { name: "Meus Veículos", href: "/cliente/meus-veiculos", icon: FaCar },
   { name: "Débitos", href: "/cliente/debitos", icon: FiCreditCard },
   { name: "Solicitações", href: "/cliente/solicitacoes", icon: FiFileText },
-  { name: "Meu perfil", href: "/cliente/perfil", icon: FiUser },
+  // { name: "Meu perfil", href: "/cliente/perfil", icon: FiUser },
 ];
 
 interface ClienteSidebarProps {

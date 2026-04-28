@@ -7,7 +7,7 @@ import logoBortoneEscura from "@/assets/logo-bortone-escura.png";
 const navLinks = [
   { name: "Sobre Nós", href: "/SobreNos" },
   { name: "Serviços", href: "/servicos" },
-  { name: "Mapa", href: "/#mapa" },
+  { name: "Mapa", href: "/mapa" },
   { name: "Blog", href: "/blog" },
   { name: "Dúvidas", href: "/duvidas" },
   { name: "Contato", href: "/contato" },
