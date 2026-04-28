@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { EmptyVehicles } from './components/EmptyVehicles';
 import { VehicleCard } from './components/VehicleCard';
+import { AddVehicleModal } from './components/AddVehicleModal';
 import type { Veiculo } from '@/types/veiculo';
 
 export default function MeusVeiculos() {
-
   const [veiculos] = useState<Veiculo[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <div className="p-8 w-full max-w-7xl mx-auto">
@@ -22,8 +23,8 @@ export default function MeusVeiculos() {
         {veiculos.length > 0 && (
           <button 
             type="button"
-            className="bg-[#3B82F6] hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors font-medium"
-            onClick={() => console.log('Abrir modal...')}
+            className="bg-[#3979A5] hover:bg-[#2d5f82] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors font-medium"
+            onClick={() => setIsModalOpen(true)}
           >
             <span className="text-xl">+</span> Adicionar Veículo
           </button>
@@ -32,7 +33,7 @@ export default function MeusVeiculos() {
 
       <main>
         {veiculos.length === 0 ? (
-          <EmptyVehicles />
+          <EmptyVehicles onOpenModal={() => setIsModalOpen(true)} />
         ) : (
           <div className="flex flex-col gap-4">
             {veiculos.map((veiculo) => (
@@ -41,6 +42,11 @@ export default function MeusVeiculos() {
           </div>
         )}
       </main>
+
+      <AddVehicleModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
     </div>
   );
 }
