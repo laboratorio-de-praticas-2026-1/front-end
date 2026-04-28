@@ -16,6 +16,7 @@ import FAQ from "./components/admin/faq/FaqAdmin";
 
 import { ClienteLayout } from "@/components/layout/ClienteLayout";
 import MeusVeiculos from "@/pages/MeusVeiculos";
+import { DetalhesVeiculo } from "@/pages/MeusVeiculos/DetalhesVeiculo";
 
 import { AdminLayout } from "@/components/layout/AdminLayout";
 import { BlogAdmin } from "@/pages/admin/blog/BlogAdmin";
@@ -87,7 +88,8 @@ function App() {
           <Route path="solicitacoes/:id" element={<DetalhesSolicitacao />} />
 
           <Route path="meus-veiculos" element={<MeusVeiculos />} />
-          <Route path="meus-veiculos/:id" element={<div>Detalhes do Veículo</div>} />
+          <Route path="meus-veiculos/:id" element={<DetalhesVeiculo />} />
+          
 
           {/* Tela temporária: Pega qualquer link dentro do /cliente e mostra a sidebar */}
           <Route path="*" element={
