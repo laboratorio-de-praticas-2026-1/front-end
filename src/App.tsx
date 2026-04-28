@@ -31,6 +31,7 @@ import EditPublicidadeCMS from "@/components/sections/admin/publicidade/EditPubl
 
 import Solicitacoes from "@/pages/cliente/SolicitacoesAdmin";
 import InicioDashboard from "@/pages/cliente/InicioDashboard";
+import DebitosPage from "@/pages/cliente/DebitosPage";
 
 import EditarSolicitacao from "@/components/admin/EditarSolicitacao";
 
@@ -53,6 +54,7 @@ function App() {
           <Route index element={<Navigate to="/cliente/inicio" replace />} />
 
           <Route path="inicio" element={<InicioDashboard />} />
+          <Route path="debitos" element={<DebitosPage />} />
           <Route path="solicitacoes" element={<Solicitacoes />} />
           <Route path="solicitacoes/sucesso" element={<SolicitacaoSucesso />} />
           <Route path="solicitacoes/historico" element={<HistoricoSolicitacoes />} />
