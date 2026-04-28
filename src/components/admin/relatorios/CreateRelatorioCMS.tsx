@@ -1,14 +1,14 @@
     "use client";
 
-    import React, { useState } from 'react';
-    import { useNavigate } from "react-router-dom";
-    import { FileText } from 'lucide-react';
     import { Button } from "@/components/ui/button";
-    import { Input } from '@/components/ui/input';
-    import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-    import { DatePicker } from '@/components/ui/DatePicker';
-    import { Categorias } from '@/mocks/categoria';
-    import { format } from "date-fns"; // Certifique-se de ter o date-fns instalado
+import { DatePicker } from '@/components/ui/DatePicker';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Categorias } from '@/mocks/categoria';
+import { format } from "date-fns"; // Certifique-se de ter o date-fns instalado
+import { FileText } from 'lucide-react';
+import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
     export default function NovoRelatorio() {
     const navigate = useNavigate();
