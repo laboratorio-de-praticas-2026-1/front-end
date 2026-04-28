@@ -140,13 +140,13 @@ export function PainelLateral({
             </div>
           )}
 
-          <Button
+          {/* <Button
             onClick={handleContinuar}
             disabled={!temSelecao || !formaPagamentoId}
             className="w-full bg-primary hover:bg-primary/90 text-white font-semibold rounded-lg disabled:opacity-40"
           >
             Continuar para simular débitos
-          </Button>
+          </Button> */}
         </CardContent>
       </Card>
     </div>
