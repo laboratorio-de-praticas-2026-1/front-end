@@ -27,6 +27,7 @@ import EditPostCMS from "@/components/sections/admin/blog/EditPostCMS";
 import CreatePostCMS from "@/components/sections/admin/blog/CreatePostCMS";
 import { Contato } from "@/pages/Contato";
 import SobreNos from "@/pages/SobreNos";
+import { Duvida } from "./pages/Duvida";
 
 import { PublicidadeAdmin } from "@/pages/admin/publicidade/PublicidadeAdmin";
 import CreatePublicidadeCMS from "@/components/sections/admin/publicidade/CreatePublicidadeCMS";
@@ -73,6 +74,7 @@ function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:id" element={<Artigo />} />
         <Route path="/contato" element={<Contato />} />
+        <Route path="/duvidas" element={<Duvida />} />
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} /> 
         <Route path="/SobreNos" element={<SobreNos />} />
