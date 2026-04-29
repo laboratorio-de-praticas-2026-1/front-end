@@ -1,6 +1,6 @@
 import { SlidersHorizontal } from "lucide-react";
 import LocationCard from "./LocationCard";
-import MapSearch from "./MapSearch"; // <-- IMPORTAÇÃO AQUI
+import MapSearch from "./MapSearch";
 import type { Local } from "@/pages/Mapa";
 
 interface MapSidebarProps {
@@ -11,14 +11,20 @@ interface MapSidebarProps {
   onFilterChange: (filter: string) => void;
 }
 
-export default function MapSidebar({ locais, activeLocation, onLocationSelect, activeFilter, onFilterChange }: MapSidebarProps) {
-  const filtros = ["Clínicas", "Vistoria", "Detran"];
+const FILTROS = ["Clínicas", "Vistoria", "Detran"];
 
+export default function MapSidebar({
+  locais,
+  activeLocation,
+  onLocationSelect,
+  activeFilter,
+  onFilterChange,
+}: MapSidebarProps) {
   return (
     <div className="w-full lg:w-[450px] flex flex-col h-full shrink-0 min-h-0">
-      
+
       <div className="shrink-0">
-        <MapSearch />
+        <MapSearch activeFilter={activeFilter} onFilterChange={onFilterChange} />
       </div>
 
       <h1 className="text-3xl text-gray-600 font-light mb-6 shrink-0">
@@ -26,13 +32,13 @@ export default function MapSidebar({ locais, activeLocation, onLocationSelect, a
       </h1>
 
       <div className="flex items-center gap-3 mb-6 overflow-x-auto pb-2 shrink-0 custom-scrollbar">
-        {filtros.map((filtro) => (
-          <button 
+        {FILTROS.map((filtro) => (
+          <button
             key={filtro}
             onClick={() => onFilterChange(filtro)}
             className={`px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-              activeFilter === filtro 
-                ? "bg-[#82B1E1] text-white" 
+              activeFilter === filtro
+                ? "bg-[#82B1E1] text-white"
                 : "border border-gray-300 text-gray-600 hover:bg-gray-50"
             }`}
           >
@@ -47,15 +53,17 @@ export default function MapSidebar({ locais, activeLocation, onLocationSelect, a
       <div className="pl-1 pt-1 flex-1 overflow-y-auto pr-4 pb-4 space-y-4 custom-scrollbar min-h-0">
         {locais.length > 0 ? (
           locais.map((local) => (
-            <LocationCard 
-              key={local.id} 
-              {...local} 
+            <LocationCard
+              key={local.id}
+              {...local}
               isActive={activeLocation?.id === local.id}
               onClick={() => onLocationSelect(local)}
             />
           ))
         ) : (
-          <p className="text-gray-500 text-center mt-10">Nenhum local encontrado para este filtro.</p>
+          <p className="text-gray-500 text-center mt-10">
+            Nenhum local encontrado para este filtro.
+          </p>
         )}
       </div>
     </div>
