@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Handshake,
@@ -19,18 +18,9 @@ interface AdminSidebarProps {
   onLinkClick?: () => void;
 }
 
-interface AdminUser {
-  nome: string;
-}
-
 export function AdminSidebar({ onLinkClick }: AdminSidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
-
-  // Estado preparado para receber os dados da API
-  const [currentAdmin, setCurrentAdmin] = useState<AdminUser | null>({
-    nome: "Admin Principal",
-  });
 
   const navItems = [
     { icon: Handshake, label: "Solicitações", path: "/admin/solicitacoes" },
@@ -46,17 +36,14 @@ export function AdminSidebar({ onLinkClick }: AdminSidebarProps) {
   ];
 
   const handleLogout = async () => {
-    // Equipe de integração: adicionar chamada de logout na API se necessário
     localStorage.removeItem("admin_token");
     sessionStorage.clear();
-    setCurrentAdmin(null);
     navigate("/login");
   };
 
   return (
-    <aside className="w-[260px] min-h-screen bg-[#002845] flex flex-col text-white shadow-xl flex-shrink-0">
+    <aside className="w-[260px] h-screen overflow-y-auto bg-[#002845] flex flex-col text-white shadow-xl flex-shrink-0 custom-scrollbar">
       
-      {/* Logo Header */}
       <div className="h-28 flex items-center justify-center px-6 border-b border-white/10 shrink-0">
         <img 
           src={logoDespachante}
@@ -65,8 +52,7 @@ export function AdminSidebar({ onLinkClick }: AdminSidebarProps) {
         />
       </div>
 
-      {/* Navegação Principal (Scrollable) */}
-      <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-1 custom-scrollbar">
+      <nav className="flex-1 py-6 px-4 space-y-1">
         {navItems.map((item) => {
           const isActive = location.pathname.startsWith(item.path);
           return (
@@ -87,14 +73,21 @@ export function AdminSidebar({ onLinkClick }: AdminSidebarProps) {
         })}
       </nav>
 
-      {/* Footer (Nome do Admin e Sair) */}
-      <div className="p-4 border-t border-white/10 flex flex-col gap-4">
-        
-        <span className="font-semibold text-sm text-zinc-300 truncate px-2">
-          {currentAdmin?.nome || "Carregando..."}
-        </span>
+      <div className="p-4 border-t border-white/10 flex flex-col gap-6 shrink-0">
+        <div className="flex flex-col gap-4 px-2">
+          <Link
+            to="/admin/configuracoes"
+            onClick={onLinkClick}
+            className={`flex items-center gap-3 transition-colors duration-200 ${
+              location.pathname.startsWith("/admin/configuracoes")
+                ? "text-white font-semibold"
+                : "text-zinc-300 hover:text-white"
+            }`}
+          >
+            <Settings size={20} />
+            <span className="text-[16px]">Configurações</span>
+          </Link>
 
-        <div className="px-2">
           <button
             onClick={handleLogout}
             className="flex items-center justify-center gap-2 w-[100px] py-2.5 bg-[#1E84CF] hover:bg-[#166db0] text-white rounded-full transition-colors text-sm font-semibold shadow-md"
