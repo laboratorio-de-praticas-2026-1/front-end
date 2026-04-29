@@ -40,32 +40,38 @@ const cards: ActionCardItem[] = [
 
 export function ActionCards() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      {cards.map((card) => (
-        <Card
-          key={card.title}
-          className="border border-zinc-200 shadow-sm hover:shadow-md transition-shadow duration-200"
-        >
-          <CardContent className="p-5 flex flex-col gap-3">
-            {/* Icon circle */}
-            <div className="w-11 h-11 bg-[linear-gradient(315deg,_#1E84CF_0%,_#BCE1F9_100%)] rounded-lg flex items-center justify-center">
-              {card.icon}
-            </div>
+    <div className="w-full flex flex-col">
+      <h2 className="text-xl md:text-2xl font-bold text-secondary mb-5 mt-5">
+        Serviços recomendados para você:
+      </h2>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {cards.map((card) => (
+          <Card
+            key={card.title}
+            className="border border-zinc-200 shadow-sm hover:shadow-md transition-shadow duration-200"
+          >
+            <CardContent className="p-5 flex flex-col gap-3">
+              {/* Icon circle */}
+              <div className="w-11 h-11 bg-[linear-gradient(315deg,_#1E84CF_0%,_#BCE1F9_100%)] rounded-lg flex items-center justify-center">
+                {card.icon}
+              </div>
 
-            <div className="space-y-1 flex-1">
-              <h3 className="text-sm font-bold text-secondary">{card.title}</h3>
-              <p className="text-xs text-zinc-500 leading-relaxed">{card.description}</p>
-            </div>
+              <div className="space-y-1 flex-1 mt-2">
+                <h3 className="text-sm font-bold text-secondary">{card.title}</h3>
+                <p className="text-xs text-zinc-500 leading-relaxed">{card.description}</p>
+              </div>
 
-            <Link
-              to={card.href}
-              className="text-xs text-secondary hover:underline font-semibold mt-1"
-            >
-              Veja mais
-            </Link>
-          </CardContent>
-        </Card>
-      ))}
+              <Link
+                to={card.href}
+                className="text-xs text-[#1E84CF] hover:underline font-bold mt-1"
+              >
+                Veja mais
+              </Link>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 }
