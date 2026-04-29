@@ -1,5 +1,6 @@
 import { SlidersHorizontal } from "lucide-react";
 import LocationCard from "./LocationCard";
+import MapSearch from "./MapSearch"; // <-- IMPORTAÇÃO AQUI
 import type { Local } from "@/pages/Mapa";
 
 interface MapSidebarProps {
@@ -15,11 +16,17 @@ export default function MapSidebar({ locais, activeLocation, onLocationSelect, a
 
   return (
     <div className="w-full lg:w-[450px] flex flex-col h-full shrink-0 min-h-0">
+      
+      {/* BARRA DE PESQUISA AGORA FICA AQUI DENTRO, NO TOPO! */}
+      <div className="shrink-0">
+        <MapSearch />
+      </div>
+
       <h1 className="text-3xl text-gray-600 font-light mb-6 shrink-0">
         Encontre em <span className="font-bold text-[#1E293B]">Registro-SP</span>
       </h1>
 
-      <div className="flex items-center gap-3 mb-6 overflow-x-auto pb-2 shrink-0 custom-scrollbar ">
+      <div className="flex items-center gap-3 mb-6 overflow-x-auto pb-2 shrink-0 custom-scrollbar">
         {filtros.map((filtro) => (
           <button 
             key={filtro}
@@ -38,7 +45,7 @@ export default function MapSidebar({ locais, activeLocation, onLocationSelect, a
         </button>
       </div>
 
-      <div className="pl-1 pt-1 flex-1 overflow-y-auto pr-4 pb-4 space-y-4 custom-scrollbar min-h-0">
+      <div className="flex-1 overflow-y-auto pr-4 pb-4 space-y-4 custom-scrollbar min-h-0">
         {locais.length > 0 ? (
           locais.map((local) => (
             <LocationCard 

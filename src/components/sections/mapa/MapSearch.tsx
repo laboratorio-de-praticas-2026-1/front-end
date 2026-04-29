@@ -10,7 +10,7 @@ export default function MapSearch() {
       
       <div className="flex-1 flex items-center px-3 bg-white">
         <div className="flex items-center gap-2 bg-[#E2E8F0] px-3 py-1 rounded-full">
-          <span className="text-xs font-medium text-gray-700">Centro</span>
+          <span className="text-xs font-medium text-gray-700"></span>
           <X className="w-3 h-3 text-gray-500 cursor-pointer hover:text-gray-800" />
         </div>
         <input 
@@ -19,7 +19,7 @@ export default function MapSearch() {
         />
       </div>
 
-      <button className="bg-[#002749] w-14 flex items-center justify-center hover:bg-[#001d36] transition-colors shrink-0">
+      <button className="bg-secondary w-14 flex items-center justify-center hover:bg-[#001d36] transition-colors shrink-0">
         <Search className="w-5 h-5 text-white" />
       </button>
     </div>
