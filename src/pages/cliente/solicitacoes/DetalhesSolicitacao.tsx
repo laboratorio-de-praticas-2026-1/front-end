@@ -255,7 +255,7 @@ export default function DetalhesSolicitacao() {
           <Button
             type="button"
             variant="outline"
-            className="gap-2 bg-white"
+            className="gap-2 bg-[#43B75D] text-white hover:bg-[#43B75D]/90 disabled:bg-gray-300 disabled:text-gray-500 disabled:border-gray-300"
             onClick={handleBaixarRecibo}
             disabled={baixandoRecibo}
           >

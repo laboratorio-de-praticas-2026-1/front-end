@@ -23,7 +23,7 @@ import {
 } from '@/components/ui/table';
 import { DatePicker } from '../ui/DatePicker';
 import { solicitacoesService, type Documento, type DocumentoStatus, type Solicitacao } from '@/services/solicitacoesService';
-import ModalAlterarStatusDocumento from './solicitacoes/ModalAlterarStatusDocumento'
+import ModalAlterarStatusDocumento from './solicitacoes/ModalAlterarStatusDocumento';
 
 const status_labels: Record<string, string> = {
   recebido: 'Recebido',
@@ -73,6 +73,10 @@ const EditarSolicitacao = () => {
     aberto: boolean;
     index: number | null;
   }>({ aberto: false, index: null });
+
+  // Estados copiados do DetalhesSolicitacao.tsx
+  const [baixandoRecibo, setBaixandoRecibo] = useState(false);
+  const [erroRecibo, setErroRecibo] = useState<string | null>(null);
 
   useEffect(() => {
     const carregar = async () => {
@@ -149,24 +153,69 @@ const EditarSolicitacao = () => {
     }
   };
 
+  // Lógica de download do recibo copiada
+  const handleBaixarRecibo = async () => {
+    if (!id) return;
+
+    setBaixandoRecibo(true);
+    setErroRecibo(null);
+
+    try {
+      // Usando any para evitar erro de TS caso o método baixarRecibo ainda não esteja tipado no service de admin
+      const blob = await (solicitacoesService as any).baixarRecibo({
+        idSolicitacao: Number(id),
+      });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `recibo-solicitacao-${id}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      setErroRecibo("Não foi possível baixar o recibo.");
+    } finally {
+      setBaixandoRecibo(false);
+    }
+  };
+
   const documentos: Documento[] = documentosState;
 
   return (
     <div className="bg-[#f8fafc] min-h-screen space-y-6 font-sans pb-10">
 
-      {/* cabeçalho */}
-      <header>
-        <div className="flex items-center gap-3 flex-wrap">
-          <h1 className="text-2xl font-bold text-secondary">
-            Detalhes da solicitação #{id}
-          </h1>
-          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${status_badge_variant[status]}`}>
-            {status_labels[status]}
-          </span>
+      {/* cabeçalho com o botão de recibo incorporado */}
+      <header className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-3 flex-wrap">
+            <h1 className="text-2xl font-bold text-secondary">
+              Detalhes da solicitação #{id}
+            </h1>
+            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${status_badge_variant[status]}`}>
+              {status_labels[status]}
+            </span>
+          </div>
+          <p className="text-slate-500 text-sm mt-1">
+            Gerencie e atualize as informações desta solicitação de serviço.
+          </p>
         </div>
-        <p className="text-slate-500 text-sm mt-1">
-          Gerencie e atualize as informações desta solicitação de serviço.
-        </p>
+
+        <div className="flex flex-col items-start md:items-end gap-1">
+          <Button
+            type="button"
+            variant="outline"
+            className="gap-2 bg-[#43B75D] text-white hover:bg-[#43B75D]/90 disabled:bg-gray-300 disabled:text-gray-500 disabled:border-gray-300"
+            onClick={handleBaixarRecibo}
+            disabled={baixandoRecibo}
+          >
+            <Download className="w-4 h-4" />
+            {baixandoRecibo ? "Baixando..." : "Baixar recibo"}
+          </Button>
+          {erroRecibo && (
+            <span className="text-xs text-red-500">{erroRecibo}</span>
+          )}
+        </div>
       </header>
 
       {/* informações gerais */}
