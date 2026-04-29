@@ -24,7 +24,7 @@ export default function LocationCard({ nome, tipo, nota, endereco, horario, imag
       <img
         src={imagem}
         alt={nome}
-        className="w-[140px] h-[110px] object-cover rounded-2xl shrink-0"
+        className=" w-[140px] h-[110px] object-cover rounded-2xl shrink-0"
       />
       <div className="flex flex-col justify-center">
         <h3 className="font-bold text-[#1E293B] text-lg leading-tight mb-1">{nome}</h3>

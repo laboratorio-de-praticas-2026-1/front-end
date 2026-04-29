@@ -17,7 +17,6 @@ export default function MapSidebar({ locais, activeLocation, onLocationSelect, a
   return (
     <div className="w-full lg:w-[450px] flex flex-col h-full shrink-0 min-h-0">
       
-      {/* BARRA DE PESQUISA AGORA FICA AQUI DENTRO, NO TOPO! */}
       <div className="shrink-0">
         <MapSearch />
       </div>
@@ -45,7 +44,7 @@ export default function MapSidebar({ locais, activeLocation, onLocationSelect, a
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto pr-4 pb-4 space-y-4 custom-scrollbar min-h-0">
+      <div className="pl-1 pt-1 flex-1 overflow-y-auto pr-4 pb-4 space-y-4 custom-scrollbar min-h-0">
         {locais.length > 0 ? (
           locais.map((local) => (
             <LocationCard 
