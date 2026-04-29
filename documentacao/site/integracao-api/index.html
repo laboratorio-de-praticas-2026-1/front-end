@@ -1,0 +1,1532 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação técnica do front-end da aplicação Despachante Bortone">
+      
+      
+        <meta name="author" content="Laboratorio de Praticas 2026-1">
+      
+      
+        <link rel="canonical" href="https://laboratorio-de-praticas-2026-1.github.io/front-end/integracao-api/">
+      
+      
+        <link rel="prev" href="../paginas-e-rotas/">
+      
+      
+        <link rel="next" href="../status-implementacao/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Integracao com a API - Front-end Bortone - Documentação Técnica</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/custom.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#integracao-com-a-api" class="md-skip">
+          Ir para o conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href=".." title="Front-end Bortone - Documentação Técnica" class="md-header__button md-logo" aria-label="Front-end Bortone - Documentação Técnica" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Front-end Bortone - Documentação Técnica
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Integracao com a API
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando a pesquisa
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/laboratorio-de-praticas-2026-1/front-end" title="Ir ao repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    laboratorio-de-praticas-2026-1/front-end
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../configuracao/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Configuracao do Ambiente
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../arquitetura/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Arquitetura
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../componentes/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Componentes
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../paginas-e-rotas/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Paginas e Rotas
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Integracao com a API
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../status-implementacao/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Status de Implementacao
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Front-end Bortone - Documentação Técnica" class="md-nav__button md-logo" aria-label="Front-end Bortone - Documentação Técnica" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Front-end Bortone - Documentação Técnica
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/laboratorio-de-praticas-2026-1/front-end" title="Ir ao repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    laboratorio-de-praticas-2026-1/front-end
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuracao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuracao do Ambiente
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arquitetura/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../componentes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Componentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../paginas-e-rotas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paginas e Rotas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integracao com a API
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integracao com a API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#http-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP Client
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#autenticacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autenticação
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Autenticação">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#armazenamento-do-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Armazenamento do token
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#envio-nos-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Envio nos headers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tratamento-de-erros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tratamento de erros
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modulos-de-servico-e-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Módulos de serviço e endpoints
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Módulos de serviço e endpoints">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#blogservice-blog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        blogService — /blog
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#buscaservice-busca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        buscaService — /busca
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contatoservice-contato" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        contatoService — /contato
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#carrosselservice-header" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        carrosselService — /header
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solicitacaoservice-solicitacoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        solicitacaoService — /solicitacoes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#publicidadeservice-publicidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        publicidadeService — /publicidade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usuariosservice-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        usuariosService — /usuario
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#empresaservice-empresa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        empresaService — /empresa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#faqservice-faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        faqService — /faq
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dashboardservice-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dashboardService — /dashboard
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reportsservice-relatorios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        reportsService — /relatorios
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#servicos-em-stub-sem-integracao-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Serviços em stub (sem integração real)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#websocket-chat-em-tempo-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WebSocket — Chat em tempo real
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="WebSocket — Chat em tempo real">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conexao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conexão
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eventos-de-erro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Eventos de erro
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#desconexao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Desconexão
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../status-implementacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Status de Implementacao
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="integracao-com-a-api">Integração com a API</h1>
+<p>Esta página documenta como o front-end consome a API REST do back-end NestJS da aplicação Despachante Bortone.</p>
+<hr />
+<h2 id="http-client">HTTP Client</h2>
+<p>O projeto utiliza a <strong>Fetch API nativa</strong> do browser para todas as requisições HTTP. Não há uma biblioteca de terceiros como axios. Cada módulo de serviço em <code>src/services/</code> gerencia suas próprias chamadas.</p>
+<p>A URL base é configurada via variável de ambiente:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">API_URL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">import</span><span class="p">.</span><span class="nx">meta</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">VITE_API_URL</span><span class="p">;</span>
+</code></pre></div>
+<hr />
+<h2 id="autenticacao">Autenticação</h2>
+<h3 id="armazenamento-do-token">Armazenamento do token</h3>
+<p>Após o login bem-sucedido, o token JWT é armazenado no <code>localStorage</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="s1">&#39;token&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">tokenRecebido</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="envio-nos-headers">Envio nos headers</h3>
+<p>Endpoints autenticados recebem o token no header <code>Authorization</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">authHeaders</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">()</span><span class="o">:</span><span class="w"> </span><span class="nx">HeadersInit</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">({</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;application/json&#39;</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nx">Authorization</span><span class="o">:</span><span class="w"> </span><span class="sb">`Bearer </span><span class="si">${</span><span class="nx">localStorage</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="s1">&#39;token&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">});</span>
+</code></pre></div>
+<blockquote>
+<p><strong>Atenção:</strong> O token é recuperado do <code>localStorage</code> a cada chamada. Não há interceptor global — cada service que exige autenticação inclui os headers manualmente.</p>
+</blockquote>
+<hr />
+<h2 id="tratamento-de-erros">Tratamento de erros</h2>
+<p>O padrão adotado nos services é:</p>
+<ol>
+<li>Verificar <code>response.ok</code> após o <code>fetch</code></li>
+<li>Em caso de erro, ler o corpo da resposta com <code>response.text()</code> e logar via <code>console.error</code></li>
+<li>Lançar um <code>Error</code> com mensagem descritiva para que a camada de UI trate via <code>try/catch</code></li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">API_URL</span><span class="si">}</span><span class="sb">/recurso`</span><span class="p">);</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">motivo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">text</span><span class="p">();</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="sb">`Erro (</span><span class="si">${</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="si">}</span><span class="sb">):`</span><span class="p">,</span><span class="w"> </span><span class="nx">motivo</span><span class="p">);</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="s1">&#39;Mensagem amigável para o usuário&#39;</span><span class="p">);</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="modulos-de-servico-e-endpoints">Módulos de serviço e endpoints</h2>
+<h3 id="blogservice-blog"><code>blogService</code> — <code>/blog</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Endpoint</th>
+<th>Autenticação</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/blog</code></td>
+<td>Não</td>
+<td>Lista todos os posts do blog</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/blog/:id</code></td>
+<td>Não</td>
+<td>Busca um post específico</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/blog</code></td>
+<td>Sim (admin)</td>
+<td>Cria um novo post (multipart/form-data com imagem)</td>
+</tr>
+<tr>
+<td><code>PUT</code></td>
+<td><code>/blog/:id</code></td>
+<td>Sim (admin)</td>
+<td>Atualiza um post existente (multipart/form-data)</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/blog/:id</code></td>
+<td>Sim (admin)</td>
+<td>Remove um post</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="buscaservice-busca"><code>buscaService</code> — <code>/busca</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Endpoint</th>
+<th>Autenticação</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/busca/blog/periodo</code></td>
+<td>Não</td>
+<td>Filtra posts de blog por intervalo de data (<code>de</code>, <code>ate</code>)</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/busca/blog/termo</code></td>
+<td>Não</td>
+<td>Busca posts por termo no título/conteúdo</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/busca/banner/status</code></td>
+<td>Não</td>
+<td>Filtra banners por status (<code>ativo</code> | <code>inativo</code>)</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/busca/carrossel/termo</code></td>
+<td>Não</td>
+<td>Busca banners do carrossel por termo</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="contatoservice-contato"><code>contatoService</code> — <code>/contato</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Endpoint</th>
+<th>Autenticação</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/contato</code></td>
+<td>Não</td>
+<td>Retorna dados de contato/empresa</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/contato/:id</code></td>
+<td>Não</td>
+<td>Busca registro de contato por ID</td>
+</tr>
+<tr>
+<td><code>PUT</code></td>
+<td><code>/contato/:id</code></td>
+<td>Sim (admin)</td>
+<td>Atualiza dados de contato</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="carrosselservice-header"><code>carrosselService</code> — <code>/header</code></h3>
+<blockquote>
+<p>O serviço de carrossel no front-end consome o módulo <code>/header</code> do back-end, responsável pelos banners exibidos no carrossel da página inicial.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Endpoint</th>
+<th>Autenticação</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/header/carrossel</code></td>
+<td>Não</td>
+<td>Retorna banners ativos para exibição no carrossel</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/header</code></td>
+<td>Não</td>
+<td>Lista todos os banners</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/header/:id</code></td>
+<td>Não</td>
+<td>Busca banner por ID</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/header</code></td>
+<td>Sim (admin)</td>
+<td>Cria banner (multipart/form-data com imagem)</td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td><code>/header/:id</code></td>
+<td>Sim (admin)</td>
+<td>Atualiza banner (multipart/form-data, imagem opcional)</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/header/:id</code></td>
+<td>Sim (admin)</td>
+<td>Remove banner</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="solicitacaoservice-solicitacoes"><code>solicitacaoService</code> — <code>/solicitacoes</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Endpoint</th>
+<th>Autenticação</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/solicitacoes</code></td>
+<td>Não (atual)</td>
+<td>Lista todas as solicitações (com filtros client-side)</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/solicitacoes</code></td>
+<td>Não (atual)</td>
+<td>Cria uma nova solicitação</td>
+</tr>
+<tr>
+<td><code>PUT</code></td>
+<td><code>/solicitacoes/:id</code></td>
+<td>Sim (admin)</td>
+<td>Atualiza status da solicitação</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/solicitacoes/:id/documentos</code></td>
+<td>Sim</td>
+<td>Envia documento para uma solicitação (multipart/form-data)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Filtros disponíveis</strong> (aplicados client-side após busca completa):</p>
+<table>
+<thead>
+<tr>
+<th>Filtro</th>
+<th>Tipo</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>usuario_id</code></td>
+<td><code>number</code></td>
+<td>Filtra por ID do cliente</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td><code>string</code></td>
+<td>Filtra por status da solicitação</td>
+</tr>
+<tr>
+<td><code>search</code></td>
+<td><code>string</code></td>
+<td>Busca textual em protocolo, serviço e observações</td>
+</tr>
+<tr>
+<td><code>dataInicio</code></td>
+<td><code>string</code> (YYYY-MM-DD)</td>
+<td>Data mínima da solicitação</td>
+</tr>
+<tr>
+<td><code>dataFim</code></td>
+<td><code>string</code> (YYYY-MM-DD)</td>
+<td>Data máxima da solicitação</td>
+</tr>
+<tr>
+<td><code>page</code></td>
+<td><code>number</code></td>
+<td>Página para paginação</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td><code>number</code></td>
+<td>Itens por página</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Status possíveis:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kr">type</span><span class="w"> </span><span class="nx">StatusSolicitacao</span><span class="w"> </span><span class="o">=</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;recebido&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;em_andamento&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;aguardando_pagamento&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;aguardando_documento&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;concluido&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;cancelado&quot;</span><span class="p">;</span>
+</code></pre></div>
+<hr />
+<h3 id="publicidadeservice-publicidade"><code>publicidadeService</code> — <code>/publicidade</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Endpoint</th>
+<th>Autenticação</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/publicidade</code></td>
+<td>Não</td>
+<td>Lista itens de publicidade</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/publicidade/:id</code></td>
+<td>Não</td>
+<td>Busca publicidade por ID</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/publicidade/status/:status</code></td>
+<td>Não</td>
+<td>Filtra por status (<code>ativo</code> | <code>inativo</code>)</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/publicidade</code></td>
+<td>Sim (admin)</td>
+<td>Cria item de publicidade (multipart/form-data com campo <code>file</code>)</td>
+</tr>
+<tr>
+<td><code>PUT</code></td>
+<td><code>/publicidade/:id</code></td>
+<td>Sim (admin)</td>
+<td>Atualiza item existente (multipart/form-data)</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/publicidade/:id</code></td>
+<td>Sim (admin)</td>
+<td>Remove item</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="usuariosservice-usuario"><code>usuariosService</code> — <code>/usuario</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Endpoint</th>
+<th>Autenticação</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/usuario</code></td>
+<td>Sim</td>
+<td>Lista todos os usuários</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/usuario/:id</code></td>
+<td>Sim</td>
+<td>Busca usuário por ID</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/usuario/admin/usuarios</code></td>
+<td>Sim (admin)</td>
+<td>Cria novo usuário (admin)</td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td><code>/usuario/:id</code></td>
+<td>Sim</td>
+<td>Atualiza dados do usuário</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/usuario/:id</code></td>
+<td>Sim (admin)</td>
+<td>Remove usuário</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="empresaservice-empresa"><code>empresaService</code> — <code>/empresa</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Endpoint</th>
+<th>Autenticação</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/empresa</code></td>
+<td>Não</td>
+<td>Lista empresas parceiras</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/empresa/:id</code></td>
+<td>Não</td>
+<td>Busca empresa por ID</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/empresa</code></td>
+<td>Sim (admin)</td>
+<td>Cria nova empresa</td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td><code>/empresa/:id</code></td>
+<td>Sim (admin)</td>
+<td>Atualiza empresa existente</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/empresa/:id</code></td>
+<td>Sim (admin)</td>
+<td>Remove empresa</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="faqservice-faq"><code>faqService</code> — <code>/faq</code></h3>
+<blockquote>
+<p>⚠️ <strong>Stub:</strong> O <code>faqService</code> está atualmente usando dados mock locais (<code>src/mocks/faq.mocks.ts</code>). A integração com o endpoint real do back-end está comentada no código e aguarda implementação.</p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// Código comentado aguardando integração:</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1">// const response = await fetch(`${API_URL}/faq`);</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1">// return await handleResponse(response);</span>
+</code></pre></div>
+<hr />
+<h3 id="dashboardservice-dashboard"><code>dashboardService</code> — <code>/dashboard</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Endpoint</th>
+<th>Autenticação</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/dashboard</code></td>
+<td>Sim</td>
+<td>Dados analíticos para os gráficos do painel admin</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ O módulo <code>dashboard</code> ainda está em fase de estrutura base no back-end (sem rotas HTTP finalizadas).</p>
+</blockquote>
+<hr />
+<h3 id="reportsservice-relatorios"><code>reportsService</code> — <code>/relatorios</code></h3>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Endpoint</th>
+<th>Autenticação</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/relatorios</code></td>
+<td>Sim (admin)</td>
+<td>Lista relatórios gerados</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/relatorios</code></td>
+<td>Sim (admin)</td>
+<td>Cria novo relatório</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="servicos-em-stub-sem-integracao-real">Serviços em stub (sem integração real)</h3>
+<p>Os serviços abaixo existem no front-end mas ainda consomem dados mock ou aguardam endpoint do back-end:</p>
+<table>
+<thead>
+<tr>
+<th>Serviço</th>
+<th>Endpoint esperado</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>clienteDashboardService</code></td>
+<td><code>/dashboard/cliente</code></td>
+<td>Stub / mock</td>
+</tr>
+<tr>
+<td><code>debitosService</code></td>
+<td><code>/debitos</code></td>
+<td>Stub / mock</td>
+</tr>
+<tr>
+<td><code>faqPublicoService</code></td>
+<td><code>/faq</code></td>
+<td>Stub (aguarda back-end)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="websocket-chat-em-tempo-real">WebSocket — Chat em tempo real</h2>
+<h3 id="conexao">Conexão</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">connectChatSocket</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@/services/socket&quot;</span><span class="p">;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">socket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">connectChatSocket</span><span class="p">(</span><span class="nx">localStorage</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="s1">&#39;token&#39;</span><span class="p">));</span>
+</code></pre></div>
+<p>A conexão é feita com <code>socket.io-client</code> apontando para <code>VITE_SOCKET_URL</code>. O JWT é enviado no objeto <code>auth</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nx">socket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">io</span><span class="p">(</span><span class="nx">SOCKET_URL</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nx">auth</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">token</span><span class="o">:</span><span class="w"> </span><span class="kt">tokenJWT</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nx">transports</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;websocket&quot;</span><span class="p">],</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p">});</span>
+</code></pre></div>
+<h3 id="eventos-de-erro">Eventos de erro</h3>
+<table>
+<thead>
+<tr>
+<th>Evento</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>connect_error</code></td>
+<td>Falha na conexão com o servidor</td>
+</tr>
+<tr>
+<td><code>chat_error</code></td>
+<td>Erros de validação do chat (spam, fora do horário, mensagem longa)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Mensagens de erro possíveis (vindas do back-end):</strong>
+- "Fora do horário comercial (8h às 18h)"
+- "Limite de mensagens atingido (Spam)"
+- "Mensagem maior que 200 caracteres"</p>
+<h3 id="desconexao">Desconexão</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">disconnectChatSocket</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@/services/socket&quot;</span><span class="p">;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nx">disconnectChatSocket</span><span class="p">();</span>
+</code></pre></div>
+<p>O socket é um <strong>singleton</strong> gerenciado em módulo — uma única instância é compartilhada por toda a aplicação.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "Mais 1 nesta p\u00e1gina", "search.result.more.other": "Mais # nesta p\u00e1gina", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

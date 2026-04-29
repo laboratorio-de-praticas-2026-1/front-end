@@ -1,0 +1,1317 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação técnica do front-end da aplicação Despachante Bortone">
+      
+      
+        <meta name="author" content="Laboratorio de Praticas 2026-1">
+      
+      
+        <link rel="canonical" href="https://laboratorio-de-praticas-2026-1.github.io/front-end/paginas-e-rotas/">
+      
+      
+        <link rel="prev" href="../componentes/">
+      
+      
+        <link rel="next" href="../integracao-api/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Paginas e Rotas - Front-end Bortone - Documentação Técnica</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/custom.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#paginas-e-rotas" class="md-skip">
+          Ir para o conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href=".." title="Front-end Bortone - Documentação Técnica" class="md-header__button md-logo" aria-label="Front-end Bortone - Documentação Técnica" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Front-end Bortone - Documentação Técnica
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Paginas e Rotas
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando a pesquisa
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/laboratorio-de-praticas-2026-1/front-end" title="Ir ao repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    laboratorio-de-praticas-2026-1/front-end
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Inicio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../configuracao/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Configuracao do Ambiente
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../arquitetura/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Arquitetura
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../componentes/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Componentes
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Paginas e Rotas
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../integracao-api/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Integracao com a API
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../status-implementacao/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Status de Implementacao
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Front-end Bortone - Documentação Técnica" class="md-nav__button md-logo" aria-label="Front-end Bortone - Documentação Técnica" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Front-end Bortone - Documentação Técnica
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/laboratorio-de-praticas-2026-1/front-end" title="Ir ao repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    laboratorio-de-praticas-2026-1/front-end
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuracao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuracao do Ambiente
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arquitetura/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../componentes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Componentes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paginas e Rotas
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Paginas e Rotas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#sistema-de-roteamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sistema de roteamento
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rotas-publicas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rotas Públicas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rotas-do-portal-do-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rotas do Portal do Cliente
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rotas-do-painel-administrativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rotas do Painel Administrativo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rotas do Painel Administrativo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#solicitacoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solicitações
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relatorios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relatórios
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#faq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FAQ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#empresas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Empresas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blog-cms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blog (CMS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#carrossel-cms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Carrossel (CMS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#publicidade-cms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Publicidade (CMS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#servicos-cms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Serviços (CMS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dashboard-analytics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dashboard Analytics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usuários
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rotas-protegidas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rotas protegidas
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integracao-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integracao com a API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../status-implementacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Status de Implementacao
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="paginas-e-rotas">Páginas e Rotas</h1>
+<p>Mapeamento completo de todas as rotas da aplicação Despachante Bortone, organizado por área de acesso.</p>
+<hr />
+<h2 id="sistema-de-roteamento">Sistema de roteamento</h2>
+<p>O roteamento é feito com <strong>React Router DOM v7</strong> usando <code>BrowserRouter</code>. As rotas são definidas centralmente em <code>src/App.tsx</code>.</p>
+<p>Existem três grupos de rotas:
+- <strong>Rotas públicas</strong> — sem autenticação
+- <strong>Rotas do Portal do Cliente</strong> (<code>/cliente/*</code>) — protegidas pelo <code>ClienteLayout</code>
+- <strong>Rotas do Painel Administrativo</strong> (<code>/admin/*</code>) — protegidas pelo <code>AdminLayout</code></p>
+<hr />
+<h2 id="rotas-publicas">Rotas Públicas</h2>
+<p>Acessíveis por qualquer visitante, sem necessidade de login.</p>
+<table>
+<thead>
+<tr>
+<th>Rota</th>
+<th>Componente</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/</code></td>
+<td><code>Home</code></td>
+<td>Landing page principal do Despachante Bortone</td>
+</tr>
+<tr>
+<td><code>/servicos</code></td>
+<td><code>Servicos</code></td>
+<td>Lista de serviços oferecidos pelo despachante</td>
+</tr>
+<tr>
+<td><code>/blog</code></td>
+<td><code>Blog</code></td>
+<td>Listagem de posts do blog</td>
+</tr>
+<tr>
+<td><code>/blog/:id</code></td>
+<td><code>Artigo</code></td>
+<td>Leitura de um artigo específico do blog</td>
+</tr>
+<tr>
+<td><code>/contato</code></td>
+<td><code>Contato</code></td>
+<td>Página de contato</td>
+</tr>
+<tr>
+<td><code>/duvidas</code></td>
+<td><code>Duvida</code></td>
+<td>FAQ público (accordion com perguntas e respostas)</td>
+</tr>
+<tr>
+<td><code>/login</code></td>
+<td><code>Login</code></td>
+<td>Página de autenticação</td>
+</tr>
+<tr>
+<td><code>/cadastro</code></td>
+<td><code>Cadastro</code></td>
+<td>Formulário de cadastro de novo cliente</td>
+</tr>
+<tr>
+<td><code>/SobreNos</code></td>
+<td><code>SobreNos</code></td>
+<td>Página institucional "Sobre Nós"</td>
+</tr>
+<tr>
+<td><code>/mapa</code></td>
+<td><code>Mapa</code></td>
+<td>Mapa interativo (React Leaflet) com localização</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="rotas-do-portal-do-cliente">Rotas do Portal do Cliente</h2>
+<p><strong>Prefixo:</strong> <code>/cliente</code><br />
+<strong>Layout:</strong> <code>ClienteLayout</code> (sidebar lateral)<br />
+<strong>Proteção:</strong> Verificação de token JWT no <code>ClienteLayout</code>. Redireciona para <code>/login</code> se não autenticado.</p>
+<table>
+<thead>
+<tr>
+<th>Rota</th>
+<th>Componente</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/cliente</code></td>
+<td>—</td>
+<td>Redireciona para <code>/cliente/inicio</code></td>
+</tr>
+<tr>
+<td><code>/cliente/inicio</code></td>
+<td><code>InicioDashboard</code></td>
+<td>Dashboard inicial do cliente logado</td>
+</tr>
+<tr>
+<td><code>/cliente/debitos</code></td>
+<td><code>DebitosPage</code></td>
+<td>Consulta de débitos veiculares</td>
+</tr>
+<tr>
+<td><code>/cliente/solicitacoes</code></td>
+<td><code>Solicitacoes</code></td>
+<td>Lista de solicitações do cliente</td>
+</tr>
+<tr>
+<td><code>/cliente/solicitacoes/sucesso</code></td>
+<td><code>SolicitacaoSucesso</code></td>
+<td>Confirmação de criação de solicitação</td>
+</tr>
+<tr>
+<td><code>/cliente/solicitacoes/historico</code></td>
+<td><code>HistoricoSolicitacoes</code></td>
+<td>Histórico completo de solicitações</td>
+</tr>
+<tr>
+<td><code>/cliente/solicitacoes/:id</code></td>
+<td><code>DetalhesSolicitacao</code></td>
+<td>Detalhes de uma solicitação específica</td>
+</tr>
+<tr>
+<td><code>/cliente/meus-veiculos</code></td>
+<td><code>MeusVeiculos</code></td>
+<td>Lista de veículos do cliente</td>
+</tr>
+<tr>
+<td><code>/cliente/meus-veiculos/:id</code></td>
+<td><code>DetalhesVeiculo</code></td>
+<td>Detalhes de um veículo específico</td>
+</tr>
+<tr>
+<td><code>/cliente/*</code></td>
+<td>(placeholder)</td>
+<td>Tela genérica para rotas ainda não implementadas</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="rotas-do-painel-administrativo">Rotas do Painel Administrativo</h2>
+<p><strong>Prefixo:</strong> <code>/admin</code><br />
+<strong>Layout:</strong> <code>AdminLayout</code> (sidebar lateral)<br />
+<strong>Proteção:</strong> Verificação de token JWT e nível de acesso no <code>AdminLayout</code>. Redireciona para <code>/login</code> se não autenticado ou sem permissão.</p>
+<h3 id="solicitacoes">Solicitações</h3>
+<table>
+<thead>
+<tr>
+<th>Rota</th>
+<th>Componente</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/admin</code></td>
+<td>—</td>
+<td>Redireciona para <code>/admin/posts</code></td>
+</tr>
+<tr>
+<td><code>/admin/solicitacoes</code></td>
+<td><code>SolicitacoesAdmin</code></td>
+<td>Lista todas as solicitações com filtros</td>
+</tr>
+<tr>
+<td><code>/admin/solicitacoes/:id/editar</code></td>
+<td><code>EditarSolicitacao</code></td>
+<td>Editar solicitação (status, documentos, observações)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="relatorios">Relatórios</h3>
+<table>
+<thead>
+<tr>
+<th>Rota</th>
+<th>Componente</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/admin/relatorios</code></td>
+<td><code>Relatorios</code></td>
+<td>Listagem de relatórios gerados</td>
+</tr>
+<tr>
+<td><code>/admin/relatorios/novo</code></td>
+<td><code>CreateRelatorioCMS</code></td>
+<td>Criação de novo relatório</td>
+</tr>
+</tbody>
+</table>
+<h3 id="faq">FAQ</h3>
+<table>
+<thead>
+<tr>
+<th>Rota</th>
+<th>Componente</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/admin/faq</code></td>
+<td><code>FAQ</code></td>
+<td>Gestão de perguntas frequentes</td>
+</tr>
+<tr>
+<td><code>/admin/faq/novo</code></td>
+<td><code>NovoFAQ</code></td>
+<td>Criação de nova pergunta</td>
+</tr>
+<tr>
+<td><code>/admin/faq/editar/:id</code></td>
+<td><code>EditarFAQ</code></td>
+<td>Edição de pergunta existente</td>
+</tr>
+</tbody>
+</table>
+<h3 id="empresas">Empresas</h3>
+<table>
+<thead>
+<tr>
+<th>Rota</th>
+<th>Componente</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/admin/empresas</code></td>
+<td><code>EmpresasAdmin</code></td>
+<td>Listagem de empresas parceiras</td>
+</tr>
+<tr>
+<td><code>/admin/empresas/novo</code></td>
+<td><code>EmpresaFormPage</code></td>
+<td>Cadastro de nova empresa</td>
+</tr>
+<tr>
+<td><code>/admin/empresas/editar/:id</code></td>
+<td><code>EmpresaFormPage</code></td>
+<td>Edição de empresa existente</td>
+</tr>
+</tbody>
+</table>
+<h3 id="blog-cms">Blog (CMS)</h3>
+<table>
+<thead>
+<tr>
+<th>Rota</th>
+<th>Componente</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/admin/posts</code></td>
+<td><code>BlogAdmin</code></td>
+<td>Tabela de posts do blog</td>
+</tr>
+<tr>
+<td><code>/admin/posts/novo</code></td>
+<td><code>CreatePostCMS</code></td>
+<td>Criação de novo post</td>
+</tr>
+<tr>
+<td><code>/admin/posts/editar/:id</code></td>
+<td><code>EditPostCMS</code></td>
+<td>Edição de post existente</td>
+</tr>
+</tbody>
+</table>
+<h3 id="carrossel-cms">Carrossel (CMS)</h3>
+<table>
+<thead>
+<tr>
+<th>Rota</th>
+<th>Componente</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/admin/carrossel</code></td>
+<td><code>CarouselAdmin</code></td>
+<td>Listagem de banners do carrossel</td>
+</tr>
+<tr>
+<td><code>/admin/carrossel/novo</code></td>
+<td><code>CreateCarouselBanner</code></td>
+<td>Criação de novo banner</td>
+</tr>
+<tr>
+<td><code>/admin/carrossel/:id/editar</code></td>
+<td><code>EditCarouselBanner</code></td>
+<td>Edição de banner existente</td>
+</tr>
+</tbody>
+</table>
+<h3 id="publicidade-cms">Publicidade (CMS)</h3>
+<table>
+<thead>
+<tr>
+<th>Rota</th>
+<th>Componente</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/admin/publicidade</code></td>
+<td><code>PublicidadeAdmin</code></td>
+<td>Listagem de itens de publicidade</td>
+</tr>
+<tr>
+<td><code>/admin/publicidade/novo</code></td>
+<td><code>CreatePublicidadeCMS</code></td>
+<td>Criação de item de publicidade</td>
+</tr>
+<tr>
+<td><code>/admin/publicidade/editar/:id</code></td>
+<td><code>EditPublicidadeCMS</code></td>
+<td>Edição de item de publicidade</td>
+</tr>
+</tbody>
+</table>
+<h3 id="servicos-cms">Serviços (CMS)</h3>
+<table>
+<thead>
+<tr>
+<th>Rota</th>
+<th>Componente</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/admin/servicos</code></td>
+<td><code>ServicosAdmin</code></td>
+<td>Listagem de serviços cadastrados</td>
+</tr>
+<tr>
+<td><code>/admin/servicos/novo</code></td>
+<td><code>NovoServicoCMS</code></td>
+<td>Criação de novo serviço</td>
+</tr>
+<tr>
+<td><code>/admin/servicos/editar/:id</code></td>
+<td><code>EditarServicoCMS</code></td>
+<td>Edição de serviço existente</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dashboard-analytics">Dashboard Analytics</h3>
+<table>
+<thead>
+<tr>
+<th>Rota</th>
+<th>Componente</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/admin/dashboard</code></td>
+<td><code>DashboardAdmin</code></td>
+<td>Container do dashboard (redireciona para <code>/geral</code>)</td>
+</tr>
+<tr>
+<td><code>/admin/dashboard/geral</code></td>
+<td><code>GeralDashboard</code></td>
+<td>KPIs gerais do sistema</td>
+</tr>
+<tr>
+<td><code>/admin/dashboard/solicitacoes</code></td>
+<td><code>SolicitacoesDashboard</code></td>
+<td>Métricas de solicitações</td>
+</tr>
+<tr>
+<td><code>/admin/dashboard/veiculos</code></td>
+<td><code>VeiculosDashboard</code></td>
+<td>Métricas de veículos</td>
+</tr>
+<tr>
+<td><code>/admin/dashboard/servicos</code></td>
+<td><code>ServicosDashboard</code></td>
+<td>Métricas de serviços</td>
+</tr>
+<tr>
+<td><code>/admin/dashboard/documentos</code></td>
+<td><code>DocumentosDashboard</code></td>
+<td>Métricas de documentos</td>
+</tr>
+<tr>
+<td><code>/admin/dashboard/financeiro</code></td>
+<td><code>FinanceiroDashboard</code></td>
+<td>Métricas financeiras</td>
+</tr>
+<tr>
+<td><code>/admin/dashboard/clientes</code></td>
+<td><code>ClientesDashboard</code></td>
+<td>Métricas de clientes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="usuarios">Usuários</h3>
+<table>
+<thead>
+<tr>
+<th>Rota</th>
+<th>Componente</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/admin/usuarios</code></td>
+<td><code>Usuarios</code></td>
+<td>Listagem de usuários do sistema</td>
+</tr>
+<tr>
+<td><code>/admin/usuarios/novo</code></td>
+<td><code>NovoUsuario</code></td>
+<td>Cadastro de novo usuário</td>
+</tr>
+<tr>
+<td><code>/admin/usuarios/editar/:id</code></td>
+<td><code>EditarUsuario</code></td>
+<td>Edição de usuário existente</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="rotas-protegidas">Rotas protegidas</h2>
+<p>As rotas sob <code>/cliente/*</code> e <code>/admin/*</code> são <strong>protegidas</strong>. A autenticação é verificada nos layouts:</p>
+<ul>
+<li><strong><code>ClienteLayout</code></strong> — verifica token no <code>localStorage</code> e redireciona para <code>/login</code> se ausente</li>
+<li><strong><code>AdminLayout</code></strong> — verifica token no <code>localStorage</code> e, adicionalmente, valida o nível de acesso do usuário (apenas <code>administrador</code> pode acessar o painel admin)</li>
+</ul>
+<p>O token JWT é armazenado em <code>localStorage</code> após login bem-sucedido e enviado nos headers <code>Authorization: Bearer &lt;token&gt;</code> para endpoints autenticados.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "Mais 1 nesta p\u00e1gina", "search.result.more.other": "Mais # nesta p\u00e1gina", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
