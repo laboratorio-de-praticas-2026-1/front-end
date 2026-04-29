@@ -1,4 +1,5 @@
-import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Handshake,
   Settings,
@@ -18,10 +19,19 @@ interface AdminSidebarProps {
   onLinkClick?: () => void;
 }
 
+interface AdminUser {
+  nome: string;
+}
+
 export function AdminSidebar({ onLinkClick }: AdminSidebarProps) {
   const location = useLocation();
+  const navigate = useNavigate();
 
-  // Mapeamento das rotas baseado no UX
+  // Estado preparado para receber os dados da API
+  const [currentAdmin, setCurrentAdmin] = useState<AdminUser | null>({
+    nome: "Admin Principal",
+  });
+
   const navItems = [
     { icon: Handshake, label: "Solicitações", path: "/admin/solicitacoes" },
     { icon: Settings, label: "Serviços", path: "/admin/servicos" },
@@ -35,10 +45,18 @@ export function AdminSidebar({ onLinkClick }: AdminSidebarProps) {
     { icon: Users, label: "Usuários", path: "/admin/usuarios" },
   ];
 
+  const handleLogout = async () => {
+    // Equipe de integração: adicionar chamada de logout na API se necessário
+    localStorage.removeItem("admin_token");
+    sessionStorage.clear();
+    setCurrentAdmin(null);
+    navigate("/login");
+  };
+
   return (
     <aside className="w-[260px] min-h-screen bg-[#002845] flex flex-col text-white shadow-xl flex-shrink-0">
       
-      {/* Logo Header (Restaurado do original) */}
+      {/* Logo Header */}
       <div className="h-28 flex items-center justify-center px-6 border-b border-white/10 shrink-0">
         <img 
           src={logoDespachante}
@@ -69,29 +87,21 @@ export function AdminSidebar({ onLinkClick }: AdminSidebarProps) {
         })}
       </nav>
 
-      {/* Footer (Configurações e Sair) */}
-      <div className="p-4 border-t border-white/10 space-y-4">
-        <Link
-          to="/admin/configuracoes"
-          onClick={onLinkClick}
-          className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-colors duration-200 ${
-            location.pathname.startsWith("/admin/configuracoes")
-              ? "bg-white/10 font-semibold"
-              : "text-zinc-300 hover:bg-white/5 hover:text-white"
-          }`}
-        >
-          <Settings size={20} />
-          <span className="text-[15px]">Configurações</span>
-        </Link>
+      {/* Footer (Nome do Admin e Sair) */}
+      <div className="p-4 border-t border-white/10 flex flex-col gap-4">
+        
+        <span className="font-semibold text-sm text-zinc-300 truncate px-2">
+          {currentAdmin?.nome || "Carregando..."}
+        </span>
 
         <div className="px-2">
-          <Link
-            to="/login"
+          <button
+            onClick={handleLogout}
             className="flex items-center justify-center gap-2 w-[100px] py-2.5 bg-[#1E84CF] hover:bg-[#166db0] text-white rounded-full transition-colors text-sm font-semibold shadow-md"
           >
             Sair
             <LogOut size={16} />
-          </Link>
+          </button>
         </div>
       </div>
       
