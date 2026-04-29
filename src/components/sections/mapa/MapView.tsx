@@ -18,7 +18,10 @@ L.Icon.Default.mergeOptions({
 function ChangeView({ center }: { center: [number, number] }) {
   const map = useMap();
   useEffect(() => {
-    map.flyTo(center, 15, { duration: 1.5 });
+    map.flyTo(center, 15, { 
+      duration: 0.5,
+      easeLinearity: 0.25
+    });
   }, [center, map]);
   return null;
 }

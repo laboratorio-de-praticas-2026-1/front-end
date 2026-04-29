@@ -35,7 +35,7 @@ export default function LocationDetail({ local, onBack }: LocationDetailProps) {
   const next = () => setCurrentIndex((i) => (i === imagens.length - 1 ? 0 : i + 1));
 
   return (
-    <div className="w-full lg:w-[450px] flex flex-col h-full shrink-0 min-h-0 overflow-y-auto pr-2 custom-scrollbar animate-in fade-in slide-in-from-left-4 duration-300">
+    <div className="w-full lg:w-[450px] flex flex-col h-full shrink-0 min-h-0 overflow-y-auto pr-2 custom-scrollbar animate-fade-in-slide">
       
       <button
         onClick={onBack}

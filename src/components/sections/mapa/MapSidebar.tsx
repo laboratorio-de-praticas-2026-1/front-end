@@ -21,7 +21,7 @@ export default function MapSidebar({
   onFilterChange,
 }: MapSidebarProps) {
   return (
-    <div className="w-full lg:w-[450px] flex flex-col h-full shrink-0 min-h-0">
+    <div className="w-full lg:w-[450px] flex flex-col h-full shrink-0 min-h-0 animate-fade-in-slide">
 
       <div className="shrink-0">
         <MapSearch activeFilter={activeFilter} onFilterChange={onFilterChange} />
