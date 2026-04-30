@@ -1,6 +1,6 @@
 const API_URL =
   import.meta.env.VITE_API_URL ||
-  "https://despachante-bortone-release-production.up.railway.app";
+  "https://backend-release-entrega-23-04-412027788376.southamerica-east1.run.app";
 
 export type StatusSolicitacao =
   | "recebido"
@@ -11,8 +11,9 @@ export type StatusSolicitacao =
   | "cancelado";
 
 export interface SolicitacaoResumo {
-  id: number | null;
+  id: number;
   clienteId: number;
+  servicoId: number | null;
   protocolo: string | null;
   servico: string;
   valorBase: number;
@@ -45,6 +46,10 @@ export interface CriarSolicitacaoPayload {
   observacao_cliente?: string;
 }
 
+export interface CriarReciboPayload {
+  idSolicitacao: number;
+}
+
 export interface CreateSolicitacaoResponse {
   message: string;
   protocolo: {
@@ -66,6 +71,17 @@ export interface ServicoDisponivel {
   id: number;
   nome: string;
   valorBase: number;
+  prazoEstimadoDias?: number;
+  exigeVeiculo?: boolean;
+}
+
+interface ApiServicoItem {
+  id: number;
+  nome: string;
+  valorBase: number | string;
+  prazoEstimadoDias?: number;
+  ativo?: boolean;
+  exigeVeiculo?: boolean;
 }
 
 interface ApiSolicitacaoItem {
@@ -125,10 +141,14 @@ function normalizarStatus(status: string): StatusSolicitacao {
   }
 }
 
-function mapApiSolicitacao(raw: ApiSolicitacaoItem): SolicitacaoResumo {
+function mapApiSolicitacao(
+  raw: ApiSolicitacaoItem,
+  index: number,
+): SolicitacaoResumo {
   return {
-    id: raw.id ?? raw.solicitacao.id ?? null,
+    id: raw.id ?? raw.solicitacao.id ?? index + 1,
     clienteId: raw.cliente.id,
+    servicoId: raw.servico.id ?? null,
     protocolo: raw.protocolo ?? null,
     servico: raw.servico.tipo,
     valorBase: Number(raw.servico.valorBase ?? 0),
@@ -251,6 +271,17 @@ export const solicitacaoService = {
     };
   },
 
+  async buscarPorId(
+    id: number | string,
+    filtros: FiltrosSolicitacoes = {},
+  ): Promise<SolicitacaoResumo | null> {
+    const data = await this.listar(filtros);
+    return (
+      data.solicitacoes.find((solicitacao) => solicitacao.id === Number(id)) ??
+      null
+    );
+  },
+
   async criar(
     payload: CriarSolicitacaoPayload,
   ): Promise<CreateSolicitacaoResponse> {
@@ -268,32 +299,39 @@ export const solicitacaoService = {
     return res.json() as Promise<CreateSolicitacaoResponse>;
   },
 
+  async baixarRecibo(payload: CriarReciboPayload): Promise<Blob> {
+    const res = await fetch(`${API_URL}/recibo/preview/download`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const msg = await res.text();
+      throw new Error(msg || "Erro ao baixar recibo");
+    }
+
+    return res.blob();
+  },
+
   async listarServicosDisponiveis(): Promise<ServicoDisponivel[]> {
-    const res = await fetch(`${API_URL}/solicitacoes`);
+    const res = await fetch(`${API_URL}/servicos`);
     if (!res.ok) {
       throw new Error("Erro ao listar servicos");
     }
 
-    const data = (await res.json()) as ApiListSolicitacoesResponse;
-    const servicosPorId = new Map<number, ServicoDisponivel>();
+    const data = (await res.json()) as ApiServicoItem[];
 
-    for (const item of data.solicitacoes) {
-      if (!item.servico.id) {
-        continue;
-      }
-
-      if (!servicosPorId.has(item.servico.id)) {
-        servicosPorId.set(item.servico.id, {
-          id: item.servico.id,
-          nome: item.servico.tipo,
-          valorBase: Number(item.servico.valorBase ?? 0),
-        });
-      }
-    }
-
-    return Array.from(servicosPorId.values()).sort((a, b) =>
-      a.nome.localeCompare(b.nome),
-    );
+    return data
+      .filter((servico) => servico.ativo !== false)
+      .map((servico) => ({
+        id: servico.id,
+        nome: servico.nome,
+        valorBase: Number(servico.valorBase ?? 0),
+        prazoEstimadoDias: servico.prazoEstimadoDias,
+        exigeVeiculo: servico.exigeVeiculo,
+      }))
+      .sort((a, b) => a.nome.localeCompare(b.nome));
   },
 
   async enviarDocumento(

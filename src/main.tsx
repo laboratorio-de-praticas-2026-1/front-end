@@ -8,10 +8,13 @@ import '@fontsource/montserrat/600.css'; // Semi-bold
 import '@fontsource/montserrat/700.css'; // Bold
 import './index.css'
 import App from './App.tsx'
+import { VeiculoProvider } from './context/VeiculoContext.tsx'
 
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <VeiculoProvider>
+      <App />
+    </VeiculoProvider>
   </StrictMode>,
 )

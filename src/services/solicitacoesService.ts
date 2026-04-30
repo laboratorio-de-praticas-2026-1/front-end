@@ -35,7 +35,14 @@ export const solicitacoesService = {
     try {
       const response = await fetch(`${API_URL}/solicitacoes`);
       const data = await handleResponse(response);
-      return data.solicitacoes || [];
+      return (data.solicitacoes || []).map((item: any) => ({
+        id: item.solicitacao?.id,
+        cliente: item.cliente?.nome || '',
+        servico: item.servico?.tipo || item.servico?.nome || '',
+        data: item.solicitacao?.dataSolicitacao?.split('T')[0] || '',
+        status: item.solicitacao?.status?.toLowerCase() || '',
+        observacao: item.solicitacao?.observacaoAdmin || '',
+      }));
     } catch (erro) {
       console.error('Erro ao listar solicitações:', erro);
       return [];
@@ -46,7 +53,17 @@ export const solicitacoesService = {
     try {
       const response = await fetch(`${API_URL}/solicitacoes/${id}`);
       if (response.status === 404) return null;
-      return await handleResponse(response);
+      const data = await handleResponse(response);
+      return {
+        id: data.id,
+        cliente: data.usuario?.nome || '',
+        servico: data.servico?.nome || '',
+        veiculo: data.veiculo ? `${data.veiculo.modelo || ''} - ${data.veiculo.placa || ''}` : '',
+        data: data.data_solicitacao?.split('T')[0] || '',
+        status: data.status?.toLowerCase() || '',
+        observacao: data.observacao_admin || '',
+        documentos: [], // O back-end ainda não retorna os documentos nesta rota
+      };
     } catch (erro) {
       console.error('Erro ao buscar solicitação:', erro);
       return null;
@@ -55,15 +72,21 @@ export const solicitacoesService = {
 
   atualizarStatus: async (
     id: string | number,
-    novoStatus: string
+    novoStatus: string,
+    observacaoAdmin?: string
   ): Promise<boolean> => {
     try {
-      const response = await fetch(`${API_URL}/solicitacoes/${id}`, {
-        method: 'PUT',
+      const payload: any = { status: novoStatus };
+      if (observacaoAdmin !== undefined) {
+        payload.observacaoAdmin = observacaoAdmin;
+      }
+      
+      const response = await fetch(`${API_URL}/solicitacoes/${id}/status`, {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ status: novoStatus }),
+        body: JSON.stringify(payload),
       });
       if (!response.ok) return false;
       return true;

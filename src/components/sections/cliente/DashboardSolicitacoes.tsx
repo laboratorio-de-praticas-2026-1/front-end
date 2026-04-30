@@ -54,7 +54,7 @@ export function DashboardSolicitacoes({
         new Date(b.dataSolicitacao).getTime() -
         new Date(a.dataSolicitacao).getTime(),
     )
-    .slice(0, 1);
+    .slice(0, 3);
 
   return (
     <div className="space-y-6">
@@ -119,8 +119,17 @@ export function DashboardSolicitacoes({
         <div className="space-y-3">
           {recentes.map((solicitacao) => (
             <Card
-              key={`${solicitacao.clienteId}-${solicitacao.servico}-${solicitacao.dataSolicitacao.toISOString()}`}
-              className="border-gray-200 shadow-sm"
+              key={solicitacao.id}
+              className="cursor-pointer border-gray-200 shadow-sm transition-shadow hover:shadow-md"
+              role="button"
+              tabIndex={0}
+              onClick={() => navigate(`/cliente/solicitacoes/${solicitacao.id}`)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  navigate(`/cliente/solicitacoes/${solicitacao.id}`);
+                }
+              }}
             >
               <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="space-y-1">

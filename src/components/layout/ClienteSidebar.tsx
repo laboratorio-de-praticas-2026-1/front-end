@@ -1,14 +1,8 @@
-import { 
-  FiHome, 
-  FiCreditCard, 
-  FiFileText, 
-  FiBell, 
-  FiUser, 
-  FiLogOut
-} from "react-icons/fi";
+import { useState } from "react";
+import { FiHome, FiCreditCard, FiFileText, FiLogOut } from "react-icons/fi";
 import { FaCar } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import logoDespachante from "@/assets/logo-despachante.png";
 
 type SidebarLink = {
@@ -19,24 +13,30 @@ type SidebarLink = {
 
 const sidebarLinks: SidebarLink[] = [
   { name: "Início", href: "/cliente/inicio", icon: FiHome },
-  { name: "Meus Veículos", href: "/cliente/veiculos", icon: FaCar },
+  { name: "Meus Veículos", href: "/cliente/meus-veiculos", icon: FaCar },
   { name: "Débitos", href: "/cliente/debitos", icon: FiCreditCard },
   { name: "Solicitações", href: "/cliente/solicitacoes", icon: FiFileText },
-  { name: "Notificações", href: "/cliente/notificacoes", icon: FiBell },
-  { name: "Meu perfil", href: "/cliente/perfil", icon: FiUser },
 ];
 
 interface ClienteSidebarProps {
   onLinkClick?: () => void;
 }
 
-export function ClienteSidebar({ onLinkClick }: ClienteSidebarProps) {
-  const currentUser = {
-    name: "Arthur Fukunaga F...",
-  };
+interface Cliente {
+  nome: string;
+}
 
-  const handleLogout = () => {
-    console.log("Back-end: Inserir lógica de limpar token do cliente");
+export function ClienteSidebar({ onLinkClick }: ClienteSidebarProps) {
+  const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState<Cliente | null>({
+    nome: "Arthur Fukunaga F...",
+  });
+
+  const handleLogout = async () => {
+    localStorage.removeItem("token");
+    sessionStorage.clear();
+    setCurrentUser(null);
+    navigate("/login");
   };
 
   return (
@@ -72,7 +72,7 @@ export function ClienteSidebar({ onLinkClick }: ClienteSidebarProps) {
 
       <div className="p-6 border-t border-white/10 flex flex-col gap-4 shrink-0">
         <span className="font-bold text-sm text-white truncate px-1">
-          {currentUser.name}
+          {currentUser?.nome || "Carregando..."}
         </span>
         <Button 
           onClick={handleLogout}

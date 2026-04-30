@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Handshake,
   Settings,
@@ -20,8 +20,8 @@ interface AdminSidebarProps {
 
 export function AdminSidebar({ onLinkClick }: AdminSidebarProps) {
   const location = useLocation();
+  const navigate = useNavigate();
 
-  // Mapeamento das rotas baseado no UX
   const navItems = [
     { icon: Handshake, label: "Solicitações", path: "/admin/solicitacoes" },
     { icon: Settings, label: "Serviços", path: "/admin/servicos" },
@@ -35,10 +35,15 @@ export function AdminSidebar({ onLinkClick }: AdminSidebarProps) {
     { icon: Users, label: "Usuários", path: "/admin/usuarios" },
   ];
 
+  const handleLogout = async () => {
+    localStorage.removeItem("admin_token");
+    sessionStorage.clear();
+    navigate("/login");
+  };
+
   return (
-    <aside className="w-[260px] min-h-screen bg-[#002845] flex flex-col text-white shadow-xl flex-shrink-0">
+    <aside className="w-[260px] h-screen overflow-y-auto bg-[#002845] flex flex-col text-white shadow-xl flex-shrink-0 custom-scrollbar">
       
-      {/* Logo Header (Restaurado do original) */}
       <div className="h-28 flex items-center justify-center px-6 border-b border-white/10 shrink-0">
         <img 
           src={logoDespachante}
@@ -47,8 +52,7 @@ export function AdminSidebar({ onLinkClick }: AdminSidebarProps) {
         />
       </div>
 
-      {/* Navegação Principal (Scrollable) */}
-      <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-1 custom-scrollbar">
+      <nav className="flex-1 py-6 px-4 space-y-1">
         {navItems.map((item) => {
           const isActive = location.pathname.startsWith(item.path);
           return (
@@ -69,29 +73,28 @@ export function AdminSidebar({ onLinkClick }: AdminSidebarProps) {
         })}
       </nav>
 
-      {/* Footer (Configurações e Sair) */}
-      <div className="p-4 border-t border-white/10 space-y-4">
-        <Link
-          to="/admin/configuracoes"
-          onClick={onLinkClick}
-          className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-colors duration-200 ${
-            location.pathname.startsWith("/admin/configuracoes")
-              ? "bg-white/10 font-semibold"
-              : "text-zinc-300 hover:bg-white/5 hover:text-white"
-          }`}
-        >
-          <Settings size={20} />
-          <span className="text-[15px]">Configurações</span>
-        </Link>
-
-        <div className="px-2">
+      <div className="p-4 border-t border-white/10 flex flex-col gap-6 shrink-0">
+        <div className="flex flex-col gap-4 px-2">
           <Link
-            to="/login"
+            to="/admin/configuracoes"
+            onClick={onLinkClick}
+            className={`flex items-center gap-3 transition-colors duration-200 ${
+              location.pathname.startsWith("/admin/configuracoes")
+                ? "text-white font-semibold"
+                : "text-zinc-300 hover:text-white"
+            }`}
+          >
+            <Settings size={20} />
+            <span className="text-[16px]">Configurações</span>
+          </Link>
+
+          <button
+            onClick={handleLogout}
             className="flex items-center justify-center gap-2 w-[100px] py-2.5 bg-[#1E84CF] hover:bg-[#166db0] text-white rounded-full transition-colors text-sm font-semibold shadow-md"
           >
             Sair
             <LogOut size={16} />
-          </Link>
+          </button>
         </div>
       </div>
       

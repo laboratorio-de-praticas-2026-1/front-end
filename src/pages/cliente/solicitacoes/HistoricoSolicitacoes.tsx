@@ -232,6 +232,15 @@ export default function HistoricoSolicitacoes() {
             <Card
               key={`${solicitacao.clienteId}-${solicitacao.servico}-${solicitacao.dataSolicitacao.toISOString()}`}
               className="border-gray-200"
+              role="button"
+              tabIndex={0}
+              onClick={() => navigate(`/cliente/solicitacoes/${solicitacao.id}`)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  navigate(`/cliente/solicitacoes/${solicitacao.id}`);
+                }
+              }}
             >
               <CardContent className="flex items-center justify-between p-4">
                 <div className="space-y-1">
