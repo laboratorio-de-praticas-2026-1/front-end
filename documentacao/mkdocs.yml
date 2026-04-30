@@ -9,6 +9,8 @@ repo_url: https://github.com/laboratorio-de-praticas-2026-1/front-end
 theme:
   name: material
   language: pt
+  logo: assets/logo-full-branca.png
+  favicon: assets/logo-bortone-escura.png
   palette:
     - scheme: default
       primary: custom
