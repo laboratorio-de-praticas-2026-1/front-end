@@ -4,6 +4,12 @@ import { ArrowLeft, Calendar, Image as ImageIcon } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { blogService, type BlogPost } from "@/services/blogService";
+import {
+  RecomendacaoCategoriaBlogEnum,
+  recomendacaoService,
+} from "@/services/recomendacaoService";
+
+const interacoesEmAndamento = new Set<string>();
 
 export function Artigo() {
   const { id } = useParams();
@@ -16,9 +22,37 @@ export function Artigo() {
   useEffect(() => {
     const carregarPost = async () => {
       if (!id) return;
+
+      const registrarInteracao = async (postCarregado: BlogPost) => {
+        const chaveInteracao = `artigo-${id}`;
+
+        if (interacoesEmAndamento.has(chaveInteracao)) {
+          return;
+        }
+
+        interacoesEmAndamento.add(chaveInteracao);
+
+        try {
+          const categoria =
+            (postCarregado.categoria as
+              | (typeof RecomendacaoCategoriaBlogEnum)[keyof typeof RecomendacaoCategoriaBlogEnum]
+              | undefined) ?? RecomendacaoCategoriaBlogEnum.DOCUMENTACAO;
+
+          console.log("Registrando interação para categoria:", categoria);
+          await recomendacaoService.registrarInteracao(categoria);
+        } catch (error) {
+          console.error("Erro ao registrar interação:", error);
+        } finally {
+          interacoesEmAndamento.delete(chaveInteracao);
+        }
+      };
+
       try {
         const dados = await blogService.buscarPorId(Number(id));
-        setPost(dados);
+        if (dados) {
+          setPost(dados);
+          registrarInteracao(dados);
+        }
       } catch (error) {
         console.error(error);
       } finally {
