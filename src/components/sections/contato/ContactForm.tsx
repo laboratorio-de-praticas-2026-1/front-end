@@ -93,7 +93,7 @@ export default function ContactForm(){
                                         value={formData.nome}
                                         onChange={handleChange}
                                         placeholder="Digite seu nome Aqui"
-                                        className="h-11 border-[#E4E4E7] text-muted mt-1"                                   
+                                        className="h-11 border-[#E4E4E7]  mt-1"                                   
                                     />
                                 </div>
 
@@ -109,12 +109,12 @@ export default function ContactForm(){
                                         value={formData.email}
                                         onChange={handleChange}
                                         placeholder="Seu melhor e-mail aqui"
-                                        className="h-11 border-[#E4E4E7] text-muted mt-1"                                   
+                                        className="h-11 border-[#E4E4E7]  mt-1"                                   
                                     />
                                     </div>
                                     <div className="space-y-2">
                                         <Label htmlFor="telefone" className="text-[#09090B] font-medium">
-                                            E-mail
+                                            Telefone
                                         </Label>
                                         <Input 
                                         id="telefone"
@@ -123,7 +123,7 @@ export default function ContactForm(){
                                         value={formData.telefone}
                                         onChange={handleChange}
                                         placeholder="DDD e Telefone"
-                                        className="h-11 border-[#E4E4E7] text-muted mt-1"                                   
+                                        className="h-11  border-[#E4E4E7]  mt-1"                                   
                                     />
                                     </div>
 
