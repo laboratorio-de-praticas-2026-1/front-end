@@ -6,7 +6,6 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { blogService, type BlogPost } from "@/services/blogService";
 
-// MOCK DO BANNER PUBLICITÁRIO 
 export function Artigo() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -30,7 +29,7 @@ export function Artigo() {
 
     const carregarBanner = async () => {
       try {
-        // const API_URL = import.meta.env.VITE_API_URL || "https://despachante-bortone-release-production.up.railway.app";
+        // Lógica da API de publicidade futura
       } catch (error) {
         console.error("Erro ao buscar publicidade:", error);
       }
@@ -74,74 +73,66 @@ export function Artigo() {
     );
   }
 
+  // Lógica para dividir o texto em duas colunas perfeitas sem cortar palavras no meio
+  const conteudo = post.conteudo || "";
+  const meio = Math.floor(conteudo.length / 2);
+  const espacoIndex = conteudo.indexOf(" ", meio);
+  const pontoDeCorte = espacoIndex === -1 ? meio : espacoIndex;
+  
+  const coluna1 = conteudo.slice(0, pontoDeCorte);
+  const coluna2 = conteudo.slice(pontoDeCorte).trimStart();
+
   return (
     <div className="min-h-screen bg-white font-sans flex flex-col">
       <Navbar />
       
-      <main className="flex-1 w-full pb-24 relative">
+      <main className="flex-1 w-full pb-24">
         
-        {/* HEADER INCLINADO (Background Azul) */}
-        <div 
-          className="absolute top-0 left-0 w-full h-[400px] md:h-[500px] bg-gradient-to-r from-[#1a51c4] to-[#0a2647] z-0"
-          style={{ clipPath: "polygon(0 0, 100% 0, 100% 50%, 0 100%)" }}
-        ></div>
+        {/* Header */}
+        <div className="w-full h-[350px] md:h-[500px] bg-zinc-200 rounded-b-[3rem] md:rounded-b-[5rem] overflow-hidden shrink-0">
+          {post.imagem ? (
+            <img 
+              src={post.imagem} 
+              alt={post.titulo} 
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <ImageIcon size={64} className="text-zinc-400 opacity-50" />
+            </div>
+          )}
+        </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 pt-32 md:pt-40 flex flex-col items-center">
-          
-          <div className="w-full flex justify-start mb-6">
-            <button 
-              onClick={() => navigate('/blog')}
-              className="inline-flex items-center text-sm font-semibold text-white/80 hover:text-white transition-colors group cursor-pointer"
-            >
-              <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
-              Voltar ao Blog
-            </button>
-          </div>
+        <div className="max-w-7xl mx-auto px-6 pt-12 md:pt-16">
+          <button 
+            onClick={() => navigate('/blog')}
+            className="inline-flex items-center text-sm font-semibold text-zinc-500 hover:text-secondary transition-colors group mb-8 cursor-pointer"
+          >
+            <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
+            Voltar ao Blog
+          </button>
 
-          <div className="w-full max-w-4xl h-64 md:h-[450px] bg-zinc-200 rounded-3xl shadow-2xl overflow-hidden border-4 border-white mb-16">
+          <header className="mb-12">
+            <h1 className="text-3xl md:text-5xl font-black text-secondary leading-tight mb-6 tracking-tight">
+              {post.titulo}
+            </h1>
+            <div className="flex items-center text-zinc-500 text-sm font-medium">
+              <Calendar className="w-5 h-5 mr-2" />
+              <span>Publicado em {post.dataPublicacao}</span>
+            </div>
+          </header>
+
+          {/* Grid de 2 Colunas Fixas */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 text-zinc-600 leading-relaxed whitespace-pre-wrap font-medium text-justify">
             
-            {/* LÓGICA INTERNA */}
-            {post.imagem ? (
-              <img 
-                src={post.imagem} 
-                alt={post.titulo} 
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center text-zinc-400 text-center gap-4 p-8">
-                  <ImageIcon size={48} className="stroke-[1.5]" /> {/* Ícone de imagem */}
-                  <p className="text-zinc-500 font-medium text-sm md:text-base">
-                      Esta postagem não possui uma imagem de destaque.
-                  </p>
-              </div>
-            )}
-            
-          </div>
+            {/* Primeira Coluna  */}
+            <div>
+              {coluna1}
+            </div>
 
-          <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-            
-            {/* Lado Esquerdo: Texto do Artigo */}
-            <article className="lg:col-span-8 flex flex-col">
-              <header className="mb-8">
-                <h1 className="text-3xl md:text-[2.5rem] font-black text-secondary leading-tight mb-6 tracking-tight">
-                  {post.titulo}
-                </h1>
-                <div className="flex items-center text-zinc-400 text-sm font-medium">
-                  <Calendar className="w-4 h-4 mr-2" />
-                  <span>Publicado em {post.dataPublicacao}</span>
-                </div>
-              </header>
-
-              <div className="prose prose-lg max-w-none text-zinc-600 leading-relaxed whitespace-pre-wrap font-medium">
-                {post.conteudo}
-              </div>
-            </article>
-
-            {/* Lado Direito: Sidebar / Banner Publicitário */}
-            <aside className="lg:col-span-4 mt-8 lg:mt-32">
-              <div className="sticky top-32 w-full rounded-[2rem] overflow-hidden shadow-xl border border-zinc-100 bg-white">
-                
-                {/* LÓGICA DO BANNER DINÂMICO */}
+            {/* Segunda Coluna  */}
+            <div>
+              <aside className="w-[200px] md:w-[240px] float-right ml-6 mb-6 overflow-hidden rounded-[1.5rem] shadow-lg border border-zinc-100 bg-white break-inside-avoid">
                 {bannerUrl ? (
                   <img 
                     src={bannerUrl} 
@@ -149,16 +140,17 @@ export function Artigo() {
                     className="w-full h-auto object-cover"
                   />
                 ) : (
-                  <div className="bg-[#5c2d91] p-8 text-white text-center aspect-[4/5] flex flex-col justify-center items-center">
-                    <h3 className="font-black text-3xl mb-4 italic uppercase">Anuncie<br/>Aqui</h3>
-                    <p className="text-sm opacity-80">Espaço para publicidade</p>
+                  <div className="bg-[#5c2d91] p-6 text-white text-center aspect-[4/5] flex flex-col justify-center items-center">
+                    <h3 className="font-black text-2xl mb-2 italic uppercase">Anuncie<br/>Aqui</h3>
+                    <p className="text-xs opacity-80 leading-tight">Espaço para<br/>publicidade</p>
                   </div>
                 )}
-
-              </div>
-            </aside>
+              </aside>
+              {coluna2}
+            </div>
 
           </div>
+
         </div>
       </main>
       
