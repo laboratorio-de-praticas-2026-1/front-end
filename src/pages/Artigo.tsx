@@ -79,14 +79,18 @@ export function Artigo() {
   const coluna1 = conteudo.slice(0, pontoDeCorte);
   const coluna2 = conteudo.slice(pontoDeCorte).trimStart();
 
-  let fraseDestaque = "";
-  if (conteudo) {
+  // Usa o olhoDoTexto que veio do banco, ou o cálculo fallback se estiver vazio
+  let fraseDestaque = post.olhoDoTexto;
+
+  if (!fraseDestaque && conteudo) {
     const frases = conteudo.split('. ');
     if (frases.length > 2) {
       fraseDestaque = `"${frases[Math.floor(frases.length / 2)].trim()}."`;
     } else {
       fraseDestaque = `"${conteudo.substring(0, 100).trim()}..."`;
     }
+  } else if (fraseDestaque) {
+    fraseDestaque = `"${fraseDestaque}"`;
   }
 
   return (
