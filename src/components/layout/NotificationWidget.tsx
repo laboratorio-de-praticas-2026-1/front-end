@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Bell, X, AlertCircle, Car } from "lucide-react";
+import { notificationsService } from "@/services/notificationsService";
 
 export interface NotificacaoDebito {
   descricao: string;
@@ -8,39 +9,39 @@ export interface NotificacaoDebito {
   created_at: string;
 }
 
-// MOCK DE DADOS: Mantido como fallback visual até a API ser ligada
-const mockNotificacoes: NotificacaoDebito[] = [
-  {
-    descricao: "Multa por excesso de velocidade",
-    valor: 150.00,
-    placa: "ABC1D23",
-    created_at: "2026-04-28T14:30:00"
-  },
-  {
-    descricao: "Taxa de licenciamento",
-    valor: 98.50,
-    placa: "XYZ9K87",
-    created_at: "2026-04-25T09:15:00"
-  },
-  {
-    descricao: "Multa por estacionamento irregular",
-    valor: 195.20,
-    placa: "QWE4R56",
-    created_at: "2026-04-20T18:45:00"
-  },
-  {
-    descricao: "IPVA atrasado",
-    valor: 850.00,
-    placa: "JKL7M89",
-    created_at: "2026-04-18T11:00:00"
-  },
-  {
-    descricao: "Multa por avanço de sinal vermelho",
-    valor: 293.47,
-    placa: "HGF2T34",
-    created_at: "2026-04-15T07:20:00"
-  }
-];
+// // MOCK DE DADOS: Mantido como fallback visual até a API ser ligada
+// const mockNotificacoes: NotificacaoDebito[] = [
+//   {
+//     descricao: "Multa por excesso de velocidade",
+//     valor: 150.00,
+//     placa: "ABC1D23",
+//     created_at: "2026-04-28T14:30:00"
+//   },
+//   {
+//     descricao: "Taxa de licenciamento",
+//     valor: 98.50,
+//     placa: "XYZ9K87",
+//     created_at: "2026-04-25T09:15:00"
+//   },
+//   {
+//     descricao: "Multa por estacionamento irregular",
+//     valor: 195.20,
+//     placa: "QWE4R56",
+//     created_at: "2026-04-20T18:45:00"
+//   },
+//   {
+//     descricao: "IPVA atrasado",
+//     valor: 850.00,
+//     placa: "JKL7M89",
+//     created_at: "2026-04-18T11:00:00"
+//   },
+//   {
+//     descricao: "Multa por avanço de sinal vermelho",
+//     valor: 293.47,
+//     placa: "HGF2T34",
+//     created_at: "2026-04-15T07:20:00"
+//   }
+// ];
 
 export function NotificationWidget() {
 
@@ -48,24 +49,44 @@ export function NotificationWidget() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isWidgetVisible, setIsWidgetVisible] = useState(true);
 
-  // PREPARAÇÃO PARA INTEGRAÇÃO
-  useEffect(() => {
-    const buscarNotificacoes = async () => {
-      try {
+useEffect(() => {
+  const buscarNotificacoes = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      const userId = user?.id;
 
-        setNotificacoes(mockNotificacoes);
-      } catch (error) {
-        console.error("Erro ao carregar notificações de débito:", error);
-      }
-    };
+      if (!userId) return;
 
-    buscarNotificacoes();
-  }, []);
+      const data = await notificationsService.listarPorUsuario(userId);
 
-  // Se o usuário fechou o widget permanentemente ou não há notificações, não renderiza nada
-  if (!isWidgetVisible || notificacoes.length === 0) {
-    return null;
-  }
+      const adaptado = data.map((item: any) => {
+        const texto = item?.mensagem ?? "";
+
+        const placaMatch = texto.match(/[A-Z]{3}\d[A-Z]\d{2}/);
+        const placa = placaMatch?.[0] ?? "N/A";
+
+        return {
+          descricao: texto,
+          placa,
+          valor: Number(item?.valor) || 0,
+          created_at: item?.data ?? "",
+        };
+      });
+
+      setNotificacoes(adaptado);
+
+    } catch (error) {
+      console.error("Erro ao carregar notificações:", error);
+      setNotificacoes([]);
+    }
+  };
+
+  buscarNotificacoes();
+}, []);
+
+ if (!isWidgetVisible) {
+  return null;
+}
 
   const formatarMoeda = (valor: number) => {
     return new Intl.NumberFormat("pt-BR", {
