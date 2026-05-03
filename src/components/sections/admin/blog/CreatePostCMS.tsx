@@ -13,17 +13,17 @@ import { blogService } from "@/services/blogService";
 
 export default function CreatePostCMS() {
   const navigate = useNavigate();
-  
+
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
-  
+
   const [titulo, setTitulo] = useState("");
   const [conteudo, setConteudo] = useState("");
   const [salvando, setSalvando] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedImage, setSelectedImage] = useState(PreviewImage);
-  
+
   // SOLUÇÃO DEFINITIVA: Criamos um estado específico para guardar o arquivo para o back-end
   const [arquivoParaEnvio, setArquivoParaEnvio] = useState<File | null>(null);
 
@@ -31,7 +31,7 @@ export default function CreatePostCMS() {
     // Pegamos a lista de arquivos com segurança e verificamos se há algo nela
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0]; // Extrai o arquivo real (File/Blob)
-      
+
       // 1. Guarda o arquivo real no nosso novo estado (Isso resolve todos os erros de tipagem do submit!)
       setArquivoParaEnvio(file);
 
@@ -58,7 +58,7 @@ export default function CreatePostCMS() {
       const formData = new FormData();
       formData.append("titulo", titulo);
       formData.append("conteudo", conteudo);
-      
+
       const dataPostagem = date ? date : new Date();
       formData.append("dataPublicacao", dataPostagem.toISOString());
 
@@ -80,14 +80,14 @@ export default function CreatePostCMS() {
 
   return (
     <div className="min-h-screen p-8 text-muted-foreground animate-in fade-in duration-500">
-      
+
       <header className="mb-8">
         <h1 className="text-2xl font-bold text-secondary">Criar novo post</h1>
         <p className="text-sm text-gray-500">Preencha os campos abaixo para configurar e publicar sua postagem.</p>
       </header>
 
       <main className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        
+
         <div className="lg:col-span-2 space-y-6 h-full">
           <section className="bg-white rounded-lg border border-gray-300 overflow-hidden h-full shadow-sm">
             <div className="flex items-center gap-2 p-4 border-b border-gray-300 bg-gray-50">
@@ -139,8 +139,8 @@ export default function CreatePostCMS() {
                 onChange={handleImageChange}
                 accept="image/*"
               />
-              <div 
-                onClick={() => fileInputRef.current?.click()} 
+              <div
+                onClick={() => fileInputRef.current?.click()}
                 className="aspect-video bg-gray-100 rounded-lg flex flex-col items-center justify-center relative cursor-pointer hover:bg-gray-50 transition-colors group"
               >
                 <img
@@ -205,17 +205,17 @@ export default function CreatePostCMS() {
       </main>
 
       <footer className="mt-12 flex justify-end items-center gap-4">
-        <Button 
+        <Button
           type="button"
-          variant="outline" 
-          onClick={() => navigate(-1)} 
+          variant="outline"
+          onClick={() => navigate(-1)}
           disabled={salvando}
           className="cursor-pointer transition-opacity hover:opacity-70 active:opacity-100 disabled:opacity-50 h-11 px-6 rounded-lg font-medium"
         >
           Cancelar criação
         </Button>
 
-        <Button 
+        <Button
           type="button"
           onClick={handleCriarPost}
           disabled={salvando}

@@ -1,43 +1,50 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { EmptyVehicles } from './components/EmptyVehicles';
 import { VehicleCard } from './components/VehicleCard';
 import { AddVehicleModal } from './components/AddVehicleModal';
-import type { Veiculo } from '@/types/veiculo';
-
-const VEICULOS_MOCK: Veiculo[] = [
-  { 
-    id: '1', 
-    placa: 'ABC-1D23', 
-    renavam: '00123456789',
-    marca: 'Toyota', 
-    modelo: 'Corolla', 
-    anoFabricacao: 2023, 
-    anoModelo: 2024 
-  },
-  { 
-    id: '2', 
-    placa: 'XYZ-5E67', 
-    renavam: '98765432100',
-    marca: 'Honda', 
-    modelo: 'Civic', 
-    anoFabricacao: 2022, 
-    anoModelo: 2023 
-  },
-  { 
-    id: '3', 
-    placa: 'DEF-8G90', 
-    renavam: '55566677788',
-    marca: 'Volkswagen', 
-    modelo: 'Golf', 
-    anoFabricacao: 2021, 
-    anoModelo: 2022 
-  },
-];
+import { veiculoService } from '@/services/veiculoService';
+import type { VeiculoApi } from '@/services/veiculoService';
+import { toast } from 'sonner';
 
 export default function MeusVeiculos() {
-
-  const [veiculos] = useState<Veiculo[]>(VEICULOS_MOCK);
+  const [veiculos, setVeiculos] = useState<VeiculoApi[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchVeiculos = async () => {
+    setIsLoading(true);
+    try {
+      const data = await veiculoService.listarTodos();
+      setVeiculos(data);
+    } catch (error) {
+      console.error('Erro ao buscar veículos:', error);
+      toast.error('Erro ao carregar seus veículos.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchVeiculos();
+  }, []);
+
+  const handleDelete = async (id: number) => {
+    try {
+      await veiculoService.deletar(id);
+      toast.success('Veículo removido com sucesso!');
+      fetchVeiculos();
+    } catch (error) {
+      toast.error('Erro ao remover veículo.');
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="p-8 w-full max-w-7xl mx-auto flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#3979A5]"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-8 w-full max-w-7xl mx-auto">
@@ -68,7 +75,11 @@ export default function MeusVeiculos() {
         ) : (
           <div className="flex flex-col gap-4">
             {veiculos.map((veiculo) => (
-              <VehicleCard key={veiculo.id} veiculo={veiculo} />
+              <VehicleCard 
+                key={veiculo.id} 
+                veiculo={veiculo} 
+                onDelete={() => handleDelete(veiculo.id)}
+              />
             ))}
           </div>
         )}
@@ -77,7 +88,8 @@ export default function MeusVeiculos() {
       <AddVehicleModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
+        onSuccess={fetchVeiculos}
       />
     </div>
   );
-}
+}
