@@ -38,7 +38,7 @@ export default function CardServicos({
                 <p>
                     Prazo Estimado:{" "}
                     <span className="font-medium">
-                        {prazo === 1 ? "dia" : "dias"}
+                        {prazo} {prazo === 1 ? "dia" : "dias"}
                      </span>
                 </p>
             </div>
