@@ -1,13 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { ClienteSidebar } from "@/components/layout/ClienteSidebar";
 import { FiMenu, FiX } from "react-icons/fi";
 import ClientChatModal from "../chat/ClientChatModal";
 import ChatFloatingButton from "../chat/ChatFloatingButton";
+import { getStoredUser, getToken } from "@/lib/authStorage";
+import { getChatSocket } from "@/services/socket";
+import { useChatNotifications } from "@/hooks/useChatNotifications";
 
 export function ClienteLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+
+  const t = getToken();
+  const u = getStoredUser();
+  const showClienteChat = !!(t && u?.nivel === "cliente");
+
+  useEffect(() => {
+    if (!showClienteChat) return;
+    const tok = getToken();
+    if (tok) getChatSocket(tok);
+  }, [showClienteChat]);
+
+  const { floatingCount } = useChatNotifications("cliente", isChatOpen);
 
   return (
     <div className="flex h-screen w-full bg-zinc-50 font-sans overflow-hidden">
@@ -73,16 +88,18 @@ export function ClienteLayout() {
         </div>
         
       </main>
-      <ClientChatModal
-        open={isChatOpen}
-        onClose={() => setIsChatOpen(false)}
-      />
-
-      <ChatFloatingButton
-              onClick={() => setIsChatOpen((prev) => !prev)}
-              unreadCount={1}
-              />
-
+      {showClienteChat && (
+        <>
+          <ClientChatModal
+            open={isChatOpen}
+            onClose={() => setIsChatOpen(false)}
+          />
+          <ChatFloatingButton
+            onClick={() => setIsChatOpen((prev) => !prev)}
+            unreadCount={floatingCount}
+          />
+        </>
+      )}
     </div>
   );
 }
