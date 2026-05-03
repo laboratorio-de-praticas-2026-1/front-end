@@ -84,8 +84,6 @@ export function ClienteLayout() {
               unreadCount={1}
               />
 
-      <NotificationWidget />
-
     </div>
   );
 }
