@@ -1,19 +1,38 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import vectorWhiteLogo from "@/assets/vector-white-logo.png";
 import vectorHuman from "@/assets/vector-human.png";
+import { loginRequest } from "@/services/authApi";
+import { setSession } from "@/lib/authStorage";
 
 export function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Payload de login:", { email, password });
+    setLoading(true);
+    try {
+      const data = await loginRequest(email, password);
+      setSession(data.tokenJWT, data.usuario);
+      toast.success(data.message);
+      if (data.usuario.nivel === "administrador") {
+        navigate("/admin/posts", { replace: true });
+      } else {
+        navigate("/cliente/inicio", { replace: true });
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Falha no login");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -44,6 +63,7 @@ export function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                disabled={loading}
               />
             </div>
 
@@ -63,6 +83,7 @@ export function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   className="pr-10"
+                  disabled={loading}
                 />
                 <button
                   type="button"
@@ -76,9 +97,10 @@ export function Login() {
 
             <Button
               type="submit"
+              disabled={loading}
               className="w-full bg-[#3979A5] hover:bg-[#2f678d] text-white"
             >
-              Entrar
+              {loading ? "Entrando…" : "Entrar"}
             </Button>
           </form>
 

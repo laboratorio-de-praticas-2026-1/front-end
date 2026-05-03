@@ -4,6 +4,7 @@ import { FaCar } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { NavLink, useNavigate } from "react-router-dom";
 import logoDespachante from "@/assets/logo-despachante.png";
+import { clearSession, getStoredUser } from "@/lib/authStorage";
 
 type SidebarLink = {
   name: string;
@@ -28,12 +29,13 @@ interface Cliente {
 
 export function ClienteSidebar({ onLinkClick }: ClienteSidebarProps) {
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState<Cliente | null>({
-    nome: "Arthur Fukunaga F...",
-  });
+  const stored = getStoredUser();
+  const [currentUser, setCurrentUser] = useState<Cliente | null>(
+    stored ? { nome: stored.nome } : null,
+  );
 
   const handleLogout = async () => {
-    localStorage.removeItem("token");
+    clearSession();
     sessionStorage.clear();
     setCurrentUser(null);
     navigate("/login");

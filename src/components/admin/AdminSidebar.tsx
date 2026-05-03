@@ -13,6 +13,7 @@ import {
   LogOut
 } from "lucide-react";
 import logoDespachante from "@/assets/logo-despachante.png";
+import { clearSession } from "@/lib/authStorage";
 
 interface AdminSidebarProps {
   onLinkClick?: () => void;
@@ -36,7 +37,7 @@ export function AdminSidebar({ onLinkClick }: AdminSidebarProps) {
   ];
 
   const handleLogout = async () => {
-    localStorage.removeItem("admin_token");
+    clearSession();
     sessionStorage.clear();
     navigate("/login");
   };
