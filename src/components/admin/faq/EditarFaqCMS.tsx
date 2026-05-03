@@ -8,7 +8,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { faqSchema, type FAQFormData } from './faq.schema';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FAQ_CATEGORIES_MOCK, FAQ_MOCK_DATA } from "@/mocks/faq.mocks"; 
 import type { FAQCategoryOption } from '@/types/faq.types';
 import { ConfirmDeleteModalFaq } from './ConfirmDeleteModal';
 import { toast } from 'sonner';
@@ -44,7 +43,7 @@ export default function EditarFAQ() {
 
   useEffect(() => {
     const carregarDados = async () => {
-      const options = FAQ_CATEGORIES_MOCK;
+      const options = await faqService.listarCategorias();
       setCatOptions(options);
 
       if (!id) return;
@@ -107,7 +106,6 @@ export default function EditarFAQ() {
       if(sucesso){
         navigate("/admin/faq");
       }
-      // Redireciona o usuário após a exclusão bem-sucedida
     } catch (erro) {
       toast.error("Erro ao excluir a pergunta.");
     } finally {
