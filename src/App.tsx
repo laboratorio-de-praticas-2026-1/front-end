@@ -32,7 +32,6 @@ import { Duvida } from "./pages/Duvida";
 
 import { PublicidadeAdmin } from "@/pages/admin/publicidade/PublicidadeAdmin";
 import CreatePublicidadeCMS from "@/components/sections/admin/publicidade/CreatePublicidadeCMS";
-import CreateRelatorioCMS from "./components/admin/relatorios/CreateRelatorioCMS";
 import EditPublicidadeCMS from "@/components/sections/admin/publicidade/EditPublicidadeCMS";
 import Solicitacoes from "@/pages/cliente/solicitacoes/SolicitacoesAdmin";
 import InicioDashboard from "@/pages/cliente/InicioDashboard";
@@ -41,9 +40,6 @@ import DebitosPage from "@/pages/cliente/DebitosPage";
 import EditarSolicitacao from "@/components/admin/EditarSolicitacao";
 
 
-import { ServicosAdmin } from "@/pages/admin/servicos/ServicosAdmin.tsx";
-import NovoServicoCMS from "@/pages/admin/servicos/NovoServicoCMS";
-import EditarServicoCMS from "@/pages/admin/servicos/EditarServicoCMS";
 
 import { DashboardAdmin } from "@/pages/admin/dashboard/DashboardAdmin";  
 import GeralDashboard from "./components/admin/dashboard/GeralDashboard";
@@ -58,7 +54,6 @@ import NovoRelatorio from "./components/admin/relatorios/CreateRelatorioCMS";
 import Usuarios from "@/pages/admin/Usuarios";
 import NovoUsuario from "@/pages/admin/usuarios/NovoUsuario";
 import EditarUsuario from "@/pages/admin/usuarios/EditarUsuario";
-import { Fa500Px } from "react-icons/fa";
 import NovoFAQ from "./components/admin/faq/CreateFaqCMS";
 import EditarFAQ from "./components/admin/faq/EditarFaqCMS";
 

@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Calendar, Image as ImageIcon } from "lucide-react";
-
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { blogService, type BlogPost } from "@/services/blogService";
 
-// MOCK DO BANNER PUBLICITÁRIO 
 export function Artigo() {
   const { id } = useParams();
   const navigate = useNavigate();
-  
+
   const [post, setPost] = useState<BlogPost | null>(null);
   const [carregando, setCarregando] = useState(true);
   const [bannerUrl] = useState<string | null>(null);
@@ -22,7 +20,7 @@ export function Artigo() {
         const dados = await blogService.buscarPorId(Number(id));
         setPost(dados);
       } catch (error) {
-        console.error("Erro ao carregar o artigo:", error);
+        console.error(error);
       } finally {
         setCarregando(false);
       }
@@ -30,14 +28,13 @@ export function Artigo() {
 
     const carregarBanner = async () => {
       try {
-        // const API_URL = import.meta.env.VITE_API_URL || "https://despachante-bortone-release-production.up.railway.app";
       } catch (error) {
-        console.error("Erro ao buscar publicidade:", error);
+        console.error(error);
       }
     };
 
     carregarPost();
-    carregarBanner(); 
+    carregarBanner();
   }, [id]);
 
   if (carregando) {
@@ -62,7 +59,7 @@ export function Artigo() {
         <main className="flex-1 flex flex-col items-center justify-center text-center px-6 pt-20">
           <h1 className="text-3xl font-bold text-secondary mb-4">Artigo não encontrado</h1>
           <p className="text-zinc-600 mb-8">Desculpe, não conseguimos encontrar a postagem que você está procurando.</p>
-          <button 
+          <button
             onClick={() => navigate('/blog')}
             className="bg-[#1E84CF] text-white px-8 py-3 rounded-full font-semibold hover:scale-105 transition-transform"
           >
@@ -74,94 +71,108 @@ export function Artigo() {
     );
   }
 
+  const conteudo = post.conteudo || "";
+  const meio = Math.floor(conteudo.length / 2);
+  const espacoIndex = conteudo.indexOf(" ", meio);
+  const pontoDeCorte = espacoIndex === -1 ? meio : espacoIndex;
+
+  const coluna1 = conteudo.slice(0, pontoDeCorte);
+  const coluna2 = conteudo.slice(pontoDeCorte).trimStart();
+
+  // Usa o olhoDoTexto que veio do banco, ou o cálculo fallback se estiver vazio
+  let fraseDestaque = post.olhoDoTexto;
+
+  if (!fraseDestaque && conteudo) {
+    const frases = conteudo.split('. ');
+    if (frases.length > 2) {
+      fraseDestaque = `"${frases[Math.floor(frases.length / 2)].trim()}."`;
+    } else {
+      fraseDestaque = `"${conteudo.substring(0, 100).trim()}..."`;
+    }
+  } else if (fraseDestaque) {
+    fraseDestaque = `"${fraseDestaque}"`;
+  }
+
   return (
     <div className="min-h-screen bg-white font-sans flex flex-col">
       <Navbar />
-      
-      <main className="flex-1 w-full pb-24 relative">
-        
-        {/* HEADER INCLINADO (Background Azul) */}
-        <div 
-          className="absolute top-0 left-0 w-full h-[400px] md:h-[500px] bg-gradient-to-r from-[#1a51c4] to-[#0a2647] z-0"
-          style={{ clipPath: "polygon(0 0, 100% 0, 100% 50%, 0 100%)" }}
-        ></div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 pt-32 md:pt-40 flex flex-col items-center">
-          
-          <div className="w-full flex justify-start mb-6">
-            <button 
-              onClick={() => navigate('/blog')}
-              className="inline-flex items-center text-sm font-semibold text-white/80 hover:text-white transition-colors group cursor-pointer"
-            >
-              <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
-              Voltar ao Blog
-            </button>
-          </div>
+      <main className="flex-1 w-full pb-24">
+        <div className="w-full h-[350px] md:h-[500px] bg-zinc-200 rounded-b-[3rem] md:rounded-b-[5rem] overflow-hidden shrink-0">
+          {post.imagem ? (
+            <img
+              src={post.imagem}
+              alt={post.titulo}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <ImageIcon size={64} className="text-zinc-400 opacity-50" />
+            </div>
+          )}
+        </div>
 
-          <div className="w-full max-w-4xl h-64 md:h-[450px] bg-zinc-200 rounded-3xl shadow-2xl overflow-hidden border-4 border-white mb-16">
+        <div className="max-w-7xl mx-auto px-6 pt-12 md:pt-16">
+          <button
+            onClick={() => navigate('/blog')}
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-sm font-medium text-white rounded-full hover:bg-secondary shadow-sm transition-all mb-8 group"
+          >
+            <ArrowLeft className="w-4 h-4 text-white group-hover:-translate-x-1 transition-transform" />
+            Voltar ao Blog
+          </button>
+
+          <header className="mb-12">
+            <h1 className="text-3xl md:text-5xl font-black text-secondary leading-tight mb-6 tracking-tight">
+              {post.titulo}
+            </h1>
+            <div className="flex items-center text-zinc-500 text-sm font-medium">
+              <Calendar className="w-5 h-5 mr-2" />
+              <span>Publicado em {post.dataPublicacao}</span>
+            </div>
+          </header>
+
+          <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 text-zinc-600 leading-relaxed whitespace-pre-wrap font-medium text-justify">
             
-            {/* LÓGICA INTERNA */}
-            {post.imagem ? (
-              <img 
-                src={post.imagem} 
-                alt={post.titulo} 
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center text-zinc-400 text-center gap-4 p-8">
-                  <ImageIcon size={48} className="stroke-[1.5]" /> {/* Ícone de imagem */}
-                  <p className="text-zinc-500 font-medium text-sm md:text-base">
-                      Esta postagem não possui uma imagem de destaque.
-                  </p>
-              </div>
-            )}
-            
-          </div>
+            <div className="hidden lg:flex absolute top-[160px] left-1/2 -translate-x-1/2 w-[320px] h-[220px] items-center justify-center pointer-events-none z-10 bg-white">
+              <p className="text-2xl font-bold text-[#0F2A44] text-center px-2 leading-snug">
+                {fraseDestaque}
+              </p>
+            </div>
 
-          <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-            
-            {/* Lado Esquerdo: Texto do Artigo */}
-            <article className="lg:col-span-8 flex flex-col">
-              <header className="mb-8">
-                <h1 className="text-3xl md:text-[2.5rem] font-black text-secondary leading-tight mb-6 tracking-tight">
-                  {post.titulo}
-                </h1>
-                <div className="flex items-center text-zinc-400 text-sm font-medium">
-                  <Calendar className="w-4 h-4 mr-2" />
-                  <span>Publicado em {post.dataPublicacao}</span>
-                </div>
-              </header>
+            <div className="relative z-0">
+              <div className="hidden lg:block float-right w-[128px] h-[220px] mt-[160px]"></div>
+              {coluna1}
+            </div>
 
-              <div className="prose prose-lg max-w-none text-zinc-600 leading-relaxed whitespace-pre-wrap font-medium">
-                {post.conteudo}
-              </div>
-            </article>
+            <div className="lg:hidden w-full py-8 my-8 border-y-2 border-zinc-100 flex items-center justify-center">
+              <p className="text-xl font-bold text-[#0F2A44] text-center px-4 leading-snug">
+                {fraseDestaque}
+              </p>
+            </div>
 
-            {/* Lado Direito: Sidebar / Banner Publicitário */}
-            <aside className="lg:col-span-4 mt-8 lg:mt-32">
-              <div className="sticky top-32 w-full rounded-[2rem] overflow-hidden shadow-xl border border-zinc-100 bg-white">
-                
-                {/* LÓGICA DO BANNER DINÂMICO */}
+            <div className="relative z-0">
+              <aside className="w-[200px] md:w-[240px] float-right ml-6 mb-6 overflow-hidden shadow-lg border border-zinc-100 bg-white break-inside-avoid relative z-20">
                 {bannerUrl ? (
-                  <img 
-                    src={bannerUrl} 
-                    alt="Publicidade" 
+                  <img
+                    src={bannerUrl}
+                    alt="Publicidade"
                     className="w-full h-auto object-cover"
                   />
                 ) : (
-                  <div className="bg-[#5c2d91] p-8 text-white text-center aspect-[4/5] flex flex-col justify-center items-center">
-                    <h3 className="font-black text-3xl mb-4 italic uppercase">Anuncie<br/>Aqui</h3>
-                    <p className="text-sm opacity-80">Espaço para publicidade</p>
+                  <div className="bg-[#5c2d91] p-6 text-white text-center aspect-[4/5] flex flex-col justify-center items-center">
+                    <h3 className="font-black text-2xl mb-2 italic uppercase">Anuncie<br/>Aqui</h3>
+                    <p className="text-xs opacity-80 leading-tight">Espaço para<br/>publicidade</p>
                   </div>
                 )}
-
-              </div>
-            </aside>
+              </aside>
+              <div className="hidden lg:block float-left w-[128px] h-[220px] mt-[160px]"></div>
+              {coluna2}
+            </div>
 
           </div>
         </div>
       </main>
-      
+
       <Footer />
     </div>
   );

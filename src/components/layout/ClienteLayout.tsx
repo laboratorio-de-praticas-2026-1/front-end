@@ -82,6 +82,7 @@ export function ClienteLayout() {
               onClick={() => setIsChatOpen((prev) => !prev)}
               unreadCount={1}
               />
+
     </div>
   );
 }

@@ -2,19 +2,25 @@ const API_URL = import.meta.env.VITE_API_URL || "https://despachante-bortone-rel
 
 export interface BlogPost {
   id: number;
-  titulo: string;
-  conteudo: string;
-  dataPublicacao: string;
+  titulo?: string;
+  conteudo?: string;
+  dataPublicacao?: string;
   imagem?: string; // caso o post venha sem foto
+  ativo: boolean;
+  categoria: string;
+  olhoDoTexto?: string;
 }
 
 type ApiBlogPost = {
   id: number;
-  titulo: string;
-  conteudo: string;
-  dataPublicacao: string;
+  titulo?: string;
+  conteudo?: string;
+  dataPublicacao?: string;
   imagem?: string;
   urlImagem?: string;
+  ativo: boolean;
+  categoria: string;
+  olhoDoTexto?: string;
 };
 
 const normalizeImageUrl = (url?: string): string | undefined => {
@@ -45,7 +51,7 @@ export const blogService = {
     }
   },
 
-  // 2. GET /blog/{id} - Busca apenas um post específico
+  // 2. GET /blog/{id}
   buscarPorId: async (id: number): Promise<BlogPost | null> => {
     try {
       const resposta = await fetch(`${API_URL}/blog/${id}`);
@@ -59,7 +65,7 @@ export const blogService = {
     }
   },
 
-// 3. POST /blog - Cria um novo post
+// 3. POST /blog 
   criar: async (dadosDoFormulario: FormData) => {
     try {
       const resposta = await fetch(`${API_URL}/blog`, {
@@ -82,7 +88,7 @@ export const blogService = {
     }
   },
 
-  // 4. PATCH/PUT /blog/{id} - Atualiza um post existente
+  // 4. PATCH/PUT /blog/{id}
   atualizar: async (id: number, dadosDoFormulario: FormData) => {
     try {
       let resposta = await fetch(`${API_URL}/blog/${id}`, {
@@ -114,7 +120,7 @@ export const blogService = {
     }
   },
 
-  // 5. DELETE /blog/{id} - Exclui um post
+  // 5. DELETE /blog/{id}
   deletar: async (id: number) => {
     try {
       const resposta = await fetch(`${API_URL}/blog/${id}`, {

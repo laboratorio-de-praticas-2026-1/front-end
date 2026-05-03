@@ -23,11 +23,11 @@ export default function ContactHeader() {
       </div>
 
       {/* Texto */}
-      <div className="relative z-10 text-center mt-40">
-        <h1 className="text-2xl font-light uppercase tracking-wide text-white md:text-5xl">
+      <div className="relative z-10 text-center mt-60">
+        <h1 className="text-3x1 font-light uppercase tracking-wide text-white md:text-6xl">
           Entre em
         </h1>
-        <h2 className="text-2xl font-bold uppercase tracking-wide text-white md:text-5xl">
+        <h2 className="text-3xl font-bold uppercase tracking-wide text-white md:text-6xl">
           Contato!
         </h2>
       </div>
