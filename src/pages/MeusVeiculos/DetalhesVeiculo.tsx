@@ -9,58 +9,91 @@ import {
   Bell, 
   Pencil, 
   Trash2,
-  Check
+  Check,
+  Loader2
 } from "lucide-react";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
+import { veiculoService, type VeiculoApi } from "@/services/veiculoService";
 
 export function DetalhesVeiculo() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
   const [alertasAtivos, setAlertasAtivos] = useState(false);
-  const [veiculo, setVeiculo] = useState<any>(null);
+  const [veiculo, setVeiculo] = useState<VeiculoApi | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  useEffect(() => {
-    async function loadVeiculo() {
-      setIsLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      const data = {
-        id,
-        marca: "Toyota",
-        modelo: "Corolla",
-        placa: "ABC-1D23",
-        renavam: "00123456789",
-        anoFabricacao: "2023",
-        anoModelo: "2024",
-        alertas: true
-      };
+  // Estados para o formulário de edição
+  const [editFormData, setEditFormData] = useState({
+    placa: "",
+    renavam: "",
+    marca: "",
+    modelo: "",
+    anoFabricacao: 0,
+    anoModelo: 0
+  });
 
-      setVeiculo(data);
-      setAlertasAtivos(data.alertas);
+  const loadVeiculo = async () => {
+    if (!id) return;
+    setIsLoading(true);
+    try {
+      const data = await veiculoService.buscarPorId(Number(id));
+      if (data) {
+        setVeiculo(data);
+        setEditFormData({
+          placa: data.placa,
+          renavam: data.renavam || "",
+          marca: data.marca || "",
+          modelo: data.modelo || "",
+          anoFabricacao: data.anoFabricacao || 0,
+          anoModelo: data.anoModelo || 0
+        });
+        // setAlertasAtivos(data.alertas); // Backend não tem esse campo ainda no DTO, mas podemos simular
+      } else {
+        toast.error("Veículo não encontrado.");
+        navigate("/cliente/meus-veiculos");
+      }
+    } catch (error) {
+      toast.error("Erro ao carregar detalhes do veículo.");
+    } finally {
       setIsLoading(false);
     }
+  };
+
+  useEffect(() => {
     loadVeiculo();
   }, [id]);
 
   const handleToggleAlertas = async () => {
     const novoEstado = !alertasAtivos;
     setAlertasAtivos(novoEstado);
-    
+    toast.success("Preferência de alerta atualizada!");
+  };
+
+  const handleSave = async () => {
+    if (!id || !veiculo) return;
+    setIsSaving(true);
     try {
-      console.log(`PATCH: Atualizando alertas do veículo ${id} para ${novoEstado}`);
-      toast.success("Preferência de alerta atualizada!");
+      await veiculoService.atualizar(Number(id), {
+        ...editFormData,
+        usuarioId: veiculo.usuarioId
+      });
+      toast.success("Veículo atualizado com sucesso!");
+      setIsEditModalOpen(false);
+      loadVeiculo();
     } catch (error) {
-      setAlertasAtivos(!novoEstado);
-      toast.error("Erro ao atualizar alertas.");
+      toast.error("Erro ao atualizar veículo.");
+    } finally {
+      setIsSaving(false);
     }
   };
 
   const handleConfirmDelete = async () => {
+    if (!id) return;
     try {
-      console.log(`DELETE: Removendo veículo ${id}`);
+      await veiculoService.deletar(Number(id));
       toast.success("Veículo excluído com sucesso!");
       setIsDeleteModalOpen(false);
       navigate("/cliente/meus-veiculos");
@@ -70,6 +103,7 @@ export function DetalhesVeiculo() {
   };
 
   if (isLoading) return <DetalhesSkeleton />;
+  if (!veiculo) return null;
 
   return (
     <div className="p-8 max-w-5xl mx-auto">
@@ -104,11 +138,11 @@ export function DetalhesVeiculo() {
 
         <div className="p-8 grid grid-cols-1 md:grid-cols-3 gap-y-10 gap-x-8">
           <InfoItem icon={<Hash size={24} />} label="Placa do veículo" value={veiculo.placa} />
-          <InfoItem icon={<Car size={24} />} label="Marca" value={veiculo.marca} />
-          <InfoItem icon={<Car size={24} />} label="Modelo" value={veiculo.modelo} />
-          <InfoItem icon={<FileText size={24} />} label="RENAVAM" value={veiculo.renavam} />
-          <InfoItem icon={<Calendar size={24} />} label="Ano de fabricação" value={veiculo.anoFabricacao} />
-          <InfoItem icon={<Calendar size={24} />} label="Ano do modelo" value={veiculo.anoModelo} />
+          <InfoItem icon={<Car size={24} />} label="Marca" value={veiculo.marca || "Não informado"} />
+          <InfoItem icon={<Car size={24} />} label="Modelo" value={veiculo.modelo || "Não informado"} />
+          <InfoItem icon={<FileText size={24} />} label="RENAVAM" value={veiculo.renavam || "Não informado"} />
+          <InfoItem icon={<Calendar size={24} />} label="Ano de fabricação" value={veiculo.anoFabricacao?.toString() || "Não informado"} />
+          <InfoItem icon={<Calendar size={24} />} label="Ano do modelo" value={veiculo.anoModelo?.toString() || "Não informado"} />
         </div>
       </div>
 
@@ -166,7 +200,8 @@ export function DetalhesVeiculo() {
                   <label className="block text-sm font-bold text-[#333333] mb-2">Placa do veículo</label>
                   <input 
                     type="text" 
-                    defaultValue={veiculo.placa} 
+                    value={editFormData.placa}
+                    onChange={(e) => setEditFormData({...editFormData, placa: e.target.value})}
                     className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#5D96C0] focus:ring-1 focus:ring-[#5D96C0]" 
                   />
                 </div>
@@ -174,7 +209,8 @@ export function DetalhesVeiculo() {
                   <label className="block text-sm font-bold text-[#333333] mb-2">RENAVAM</label>
                   <input 
                     type="text" 
-                    defaultValue={veiculo.renavam} 
+                    value={editFormData.renavam}
+                    onChange={(e) => setEditFormData({...editFormData, renavam: e.target.value})}
                     className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#5D96C0] focus:ring-1 focus:ring-[#5D96C0]" 
                   />
                 </div>
@@ -182,7 +218,8 @@ export function DetalhesVeiculo() {
                   <label className="block text-sm font-bold text-[#333333] mb-2">Marca</label>
                   <input 
                     type="text" 
-                    defaultValue={veiculo.marca} 
+                    value={editFormData.marca}
+                    onChange={(e) => setEditFormData({...editFormData, marca: e.target.value})}
                     className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#5D96C0] focus:ring-1 focus:ring-[#5D96C0]" 
                   />
                 </div>
@@ -190,23 +227,26 @@ export function DetalhesVeiculo() {
                   <label className="block text-sm font-bold text-[#333333] mb-2">Modelo</label>
                   <input 
                     type="text" 
-                    defaultValue={veiculo.modelo} 
+                    value={editFormData.modelo}
+                    onChange={(e) => setEditFormData({...editFormData, modelo: e.target.value})}
                     className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#5D96C0] focus:ring-1 focus:ring-[#5D96C0]" 
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-[#333333] mb-2">Ano de fabricação</label>
                   <input 
-                    type="text" 
-                    defaultValue={veiculo.anoFabricacao} 
+                    type="number" 
+                    value={editFormData.anoFabricacao}
+                    onChange={(e) => setEditFormData({...editFormData, anoFabricacao: Number(e.target.value)})}
                     className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#5D96C0] focus:ring-1 focus:ring-[#5D96C0]" 
                   />
                 </div>
-                <div className="md:col-span-2">
+                <div>
                   <label className="block text-sm font-bold text-[#333333] mb-2">Ano do Modelo</label>
                   <input 
-                    type="text" 
-                    defaultValue={veiculo.anoModelo} 
+                    type="number" 
+                    value={editFormData.anoModelo}
+                    onChange={(e) => setEditFormData({...editFormData, anoModelo: Number(e.target.value)})}
                     className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:border-[#5D96C0] focus:ring-1 focus:ring-[#5D96C0]" 
                   />
                 </div>
@@ -215,14 +255,18 @@ export function DetalhesVeiculo() {
               <div className="flex justify-end gap-3 mt-10">
                 <button 
                   onClick={() => setIsEditModalOpen(false)}
-                  className="px-8 py-2.5 border border-gray-300 rounded-xl font-bold text-[#333333] hover:bg-gray-50 transition-colors"
+                  disabled={isSaving}
+                  className="px-8 py-2.5 border border-gray-300 rounded-xl font-bold text-[#333333] hover:bg-gray-50 transition-colors disabled:opacity-50"
                 >
                   Cancelar
                 </button>
                 <button 
-                  className="px-8 py-2.5 bg-[#5D96C0] text-white rounded-xl font-bold hover:bg-[#4a82ab] transition-colors shadow-sm"
+                  onClick={handleSave}
+                  disabled={isSaving}
+                  className="px-8 py-2.5 bg-[#5D96C0] text-white rounded-xl font-bold hover:bg-[#4a82ab] transition-colors shadow-sm flex items-center gap-2 disabled:opacity-70"
                 >
-                  Salvar alteração
+                  {isSaving && <Loader2 size={18} className="animate-spin" />}
+                  {isSaving ? "Salvando..." : "Salvar alteração"}
                 </button>
               </div>
             </div>

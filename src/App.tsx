@@ -66,7 +66,7 @@ import { Toaster } from "@/components/ui/sonner";
 function App() {
   return (
     <BrowserRouter>
-      <Toaster position="top-right" richColors />
+      <Toaster position="top-right" />
       <Routes>
         {/* === ROTAS PÚBLICAS === */}
         <Route path="/" element={<Home />} />
