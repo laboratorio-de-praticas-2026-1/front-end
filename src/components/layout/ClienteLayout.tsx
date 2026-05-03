@@ -4,7 +4,6 @@ import { ClienteSidebar } from "@/components/layout/ClienteSidebar";
 import { FiMenu, FiX } from "react-icons/fi";
 import ClientChatModal from "../chat/ClientChatModal";
 import ChatFloatingButton from "../chat/ChatFloatingButton";
-import { NotificationWidget } from "../layout/NotificationWidget";
 
 export function ClienteLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
