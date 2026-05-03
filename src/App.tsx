@@ -38,6 +38,9 @@ import InicioDashboard from "@/pages/cliente/InicioDashboard";
 import DebitosPage from "@/pages/cliente/DebitosPage";
 
 import EditarSolicitacao from "@/components/admin/EditarSolicitacao";
+import { ServicosAdmin } from "@/pages/admin/servicos/ServicosAdmin";
+import NovoServicoCMS from "@/pages/admin/servicos/NovoServicoCMS";
+import EditarServicoCMS from "@/pages/admin/servicos/EditarServicoCMS";
 
 
 
@@ -122,6 +125,10 @@ function App() {
           <Route path="empresas" element={<EmpresasAdmin />} />
           <Route path="empresas/novo" element={<EmpresaFormPage />} />
           <Route path="empresas/editar/:id" element={<EmpresaFormPage />} />
+          
+            <Route path="servicos" element={<ServicosAdmin />} />
+  <Route path="servicos/novo" element={<NovoServicoCMS />} />
+  <Route path="servicos/editar/:id" element={<EditarServicoCMS />} />
 
           {/* Rota da tabela de posts */}
           <Route path="posts" element={<BlogAdmin />} />
