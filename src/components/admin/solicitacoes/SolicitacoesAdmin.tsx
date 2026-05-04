@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   List,
@@ -218,20 +218,37 @@ const SolicitacoesAdmin = () => {
     novoStatus: string;
   } | null>(null);
 
-  useEffect(() => {
-    const carregarSolicitacoes = async () => {
-      setIsLoading(true);
+  const carregarSolicitacoes = useCallback(
+    async (
+      options: { mostrarLoading?: boolean; mostrarErro?: boolean } = {},
+    ) => {
+      const { mostrarLoading = true, mostrarErro = true } = options;
+
+      if (mostrarLoading) {
+        setIsLoading(true);
+      }
+
       try {
         const dados = await solicitacoesService.listarKanban();
         setSolicitacoes(dados);
+        return dados;
       } catch {
-        toast.error("Não foi possível carregar as solicitações.");
+        if (mostrarErro) {
+          toast.error("Não foi possível carregar as solicitações.");
+        }
+        return null;
       } finally {
-        setIsLoading(false);
+        if (mostrarLoading) {
+          setIsLoading(false);
+        }
       }
-    };
+    },
+    [],
+  );
+
+  useEffect(() => {
     carregarSolicitacoes();
-  }, []);
+  }, [carregarSolicitacoes]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -312,8 +329,26 @@ const SolicitacoesAdmin = () => {
   }, [solicitacoes, search, dateFiltro, servicoFilter]);
 
   const handleDragStart = (event: DragStartEvent) => {
-    const item = solicitacoes.find((s) => s.id === event.active.id) ?? null;
+    const item =
+      solicitacoes.find((s) => String(s.id) === String(event.active.id)) ??
+      null;
     setActiveItem(item);
+  };
+
+  const sincronizarStatusAposErro = async (
+    solicitacaoId: string | number,
+    statusEsperado: string,
+  ) => {
+    const dadosAtualizados = await carregarSolicitacoes({
+      mostrarLoading: false,
+      mostrarErro: false,
+    });
+
+    const solicitacaoAtualizada = dadosAtualizados?.find(
+      (s) => String(s.id) === String(solicitacaoId),
+    );
+
+    return solicitacaoAtualizada?.status === statusEsperado;
   };
 
   const handleDragEnd = async (event: DragEndEvent) => {
@@ -322,8 +357,13 @@ const SolicitacoesAdmin = () => {
 
     if (!over) return;
 
-    const novoStatus = over.id as string;
-    const solicitacao = solicitacoes.find((s) => s.id === active.id);
+    const colunaDestino = COLUMNS.find((col) => col.id === String(over.id));
+    if (!colunaDestino) return;
+
+    const novoStatus = colunaDestino.id;
+    const solicitacao = solicitacoes.find(
+      (s) => String(s.id) === String(active.id),
+    );
 
     if (!solicitacao || solicitacao.status === novoStatus) return;
 
@@ -350,7 +390,9 @@ const SolicitacoesAdmin = () => {
     const statusAnterior = solicitacao.status;
 
     setSolicitacoes((prev) =>
-      prev.map((s) => (s.id === active.id ? { ...s, status: novoStatus } : s)),
+      prev.map((s) =>
+        String(s.id) === String(active.id) ? { ...s, status: novoStatus } : s,
+      ),
     );
 
     const sucesso = await solicitacoesService.atualizarStatus(
@@ -359,9 +401,23 @@ const SolicitacoesAdmin = () => {
     );
 
     if (!sucesso) {
+      const statusFoiPersistido = await sincronizarStatusAposErro(
+        active.id,
+        novoStatus,
+      );
+
+      if (statusFoiPersistido) {
+        toast.warning(
+          "Status salvo, mas a API retornou erro após a atualização.",
+        );
+        return;
+      }
+
       setSolicitacoes((prev) =>
         prev.map((s) =>
-          s.id === active.id ? { ...s, status: statusAnterior } : s,
+          String(s.id) === String(active.id)
+            ? { ...s, status: statusAnterior }
+            : s,
         ),
       );
       toast.error("Não foi possível atualizar o status da solicitação.");
@@ -379,14 +435,25 @@ const SolicitacoesAdmin = () => {
     if (sucesso) {
       setSolicitacoes((prev) =>
         prev.map((s) =>
-          s.id === cancelando.solicitacao.id
+          String(s.id) === String(cancelando.solicitacao.id)
             ? { ...s, status: cancelando.novoStatus }
             : s,
         ),
       );
       toast.success("Solicitação cancelada.");
     } else {
-      toast.error("Não foi possível cancelar a solicitação.");
+      const statusFoiPersistido = await sincronizarStatusAposErro(
+        cancelando.solicitacao.id,
+        cancelando.novoStatus,
+      );
+
+      if (statusFoiPersistido) {
+        toast.warning(
+          "Solicitação cancelada, mas a API retornou erro após salvar.",
+        );
+      } else {
+        toast.error("Não foi possível cancelar a solicitação.");
+      }
     }
 
     setCancelando(null);
@@ -406,14 +473,25 @@ const SolicitacoesAdmin = () => {
     if (sucesso) {
       setSolicitacoes((prev) =>
         prev.map((s) =>
-          s.id === recuperando.solicitacao.id
+          String(s.id) === String(recuperando.solicitacao.id)
             ? { ...s, status: recuperando.novoStatus }
             : s,
         ),
       );
       toast.success("Solicitação recuperada.");
     } else {
-      toast.error("Não foi possível recuperar a solicitação.");
+      const statusFoiPersistido = await sincronizarStatusAposErro(
+        recuperando.solicitacao.id,
+        recuperando.novoStatus,
+      );
+
+      if (statusFoiPersistido) {
+        toast.warning(
+          "Solicitação recuperada, mas a API retornou erro após salvar.",
+        );
+      } else {
+        toast.error("Não foi possível recuperar a solicitação.");
+      }
     }
 
     setRecuperando(null);
