@@ -305,7 +305,7 @@ export const solicitacoesService = {
     });
 
     const response = await fetch(`${API_URL}/solicitacoes/kanban${query}`);
-    if (response.status === 404) {
+    if (response.status === 400 || response.status === 404) {
       return fallbackListarTodas(filtros);
     }
 
