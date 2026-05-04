@@ -9,7 +9,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { CheckCircle2, Clock, CircleSlash } from 'lucide-react';
 
-type DocumentoStatus = 'validado' | 'aguardando_revisao' | 'negado';
+type DocumentoStatus = 'pendente' | 'aprovado' | 'rejeitado';
 
 type StatusOption = {
   value: DocumentoStatus;
@@ -21,24 +21,24 @@ type StatusOption = {
 
 const STATUS_OPTIONS: StatusOption[] = [
   {
-    value: 'validado',
-    label: 'Validado',
+    value: 'aprovado',
+    label: 'Aprovado',
     icon: <CheckCircle2 className="size-4" />,
     activeClassName: 'bg-green-500 text-white border-green-500 shadow-sm shadow-green-200',
     inactiveClassName:
       'bg-white text-green-700 border-green-300 hover:bg-green-50 hover:border-green-400',
   },
   {
-    value: 'aguardando_revisao',
-    label: 'Aguardando revisão',
+    value: 'pendente',
+    label: 'Pendente',
     icon: <Clock className="size-4" />,
     activeClassName: 'bg-amber-500 text-white border-amber-500 shadow-sm shadow-amber-200',
     inactiveClassName:
       'bg-white text-amber-700 border-amber-300 hover:bg-amber-50 hover:border-amber-400',
   },
   {
-    value: 'negado',
-    label: 'Negado',
+    value: 'rejeitado',
+    label: 'Rejeitado',
     icon: <CircleSlash className="size-4" />,
     activeClassName: 'bg-red-700 text-white border-red-700 shadow-sm shadow-red-200',
     inactiveClassName:

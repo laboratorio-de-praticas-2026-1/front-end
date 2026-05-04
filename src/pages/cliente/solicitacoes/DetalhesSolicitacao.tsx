@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   solicitacaoService,
+  type DocumentoSolicitacao,
   type SolicitacaoResumo,
   type StatusSolicitacao,
 } from "@/services/solicitacaoService";
-
-const USUARIO_ID = 1;
+import { getStoredUser } from "@/lib/authStorage";
 
 const STATUS_CONFIG: Record<
   StatusSolicitacao,
@@ -54,6 +54,24 @@ const STATUS_CONFIG: Record<
   },
 };
 
+const DOCUMENTO_STATUS_CONFIG: Record<
+  DocumentoSolicitacao["status"],
+  { label: string; className: string }
+> = {
+  pendente: {
+    label: "Pendente",
+    className: "bg-orange-100 text-orange-700",
+  },
+  aprovado: {
+    label: "Aprovado",
+    className: "bg-green-100 text-green-700",
+  },
+  rejeitado: {
+    label: "Rejeitado",
+    className: "bg-red-100 text-red-700",
+  },
+};
+
 const ETAPAS: Array<{ status: StatusSolicitacao; label: string }> = [
   { status: "recebido", label: "Recebido" },
   { status: "em_andamento", label: "Andamento" },
@@ -87,9 +105,18 @@ function calcularPrazo(dataSolicitacao: Date, dias?: number): string {
   return formatarData(prazo);
 }
 
+function formatarDataUpload(data?: string | null): string {
+  if (!data) {
+    return "-";
+  }
+
+  return formatarData(new Date(data));
+}
+
 export default function DetalhesSolicitacao() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const usuarioId = getStoredUser()?.id ?? 1;
   const [solicitacao, setSolicitacao] = useState<SolicitacaoResumo | null>(null);
   const [prazoEstimado, setPrazoEstimado] = useState("-");
   const [loading, setLoading] = useState(true);
@@ -112,7 +139,7 @@ export default function DetalhesSolicitacao() {
 
       try {
         const encontrada = await solicitacaoService.buscarPorId(id, {
-          usuario_id: USUARIO_ID,
+          usuario_id: usuarioId,
         });
 
         if (!encontrada) {
@@ -158,7 +185,7 @@ export default function DetalhesSolicitacao() {
     return () => {
       ativo = false;
     };
-  }, [id]);
+  }, [id, usuarioId]);
 
   if (loading) {
     return (
@@ -218,6 +245,11 @@ export default function DetalhesSolicitacao() {
     }
   }
 
+  function handleDownloadDocumento(documento: DocumentoSolicitacao) {
+    if (documento.url) {
+      window.open(documento.url, "_blank");
+    }
+  }
 
   return (
     <div className="p-4 md:p-6 space-y-6">
@@ -272,7 +304,7 @@ export default function DetalhesSolicitacao() {
         <Card className="border border-zinc-200">
           <div className="p-4">
             <p className="text-[#7F838F] text-sm mb-2">Veiculo</p>
-            <p className="font-medium">Nao informado</p>
+            <p className="font-medium">{solicitacao.veiculo || "Nao informado"}</p>
           </div>
         </Card>
 
@@ -376,11 +408,47 @@ export default function DetalhesSolicitacao() {
             </thead>
 
             <tbody>
-              <tr className="border-b border-gray-200">
-                <td className="py-6 px-6 text-center text-gray-500" colSpan={4}>
-                  Nenhum documento retornado pela API.
-                </td>
-              </tr>
+              {(solicitacao.documentos?.length ?? 0) === 0 ? (
+                <tr className="border-b border-gray-200">
+                  <td className="py-6 px-6 text-center text-gray-500" colSpan={4}>
+                    Nenhum documento enviado.
+                  </td>
+                </tr>
+              ) : (
+                solicitacao.documentos?.map((documento) => {
+                  const statusDocumento = DOCUMENTO_STATUS_CONFIG[documento.status];
+
+                  return (
+                    <tr key={documento.id} className="border-b border-gray-200">
+                      <td className="py-4 px-6 text-zinc-900">
+                        {documento.arquivo}
+                        <span className="block text-xs text-zinc-500">
+                          Enviado em {formatarDataUpload(documento.dataUpload)}
+                        </span>
+                      </td>
+                      <td>{documento.tipo}</td>
+                      <td>
+                        <span
+                          className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusDocumento.className}`}
+                        >
+                          {statusDocumento.label}
+                        </span>
+                      </td>
+                      <td className="pr-6 text-right">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          disabled={!documento.url}
+                          onClick={() => handleDownloadDocumento(documento)}
+                        >
+                          <Download className="h-4 w-4" />
+                        </Button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </CardContent>

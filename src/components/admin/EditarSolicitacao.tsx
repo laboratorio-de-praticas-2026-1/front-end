@@ -24,6 +24,7 @@ import {
 import { DatePicker } from '../ui/DatePicker';
 import { solicitacoesService, type Documento, type DocumentoStatus, type Solicitacao } from '@/services/solicitacoesService';
 import ModalAlterarStatusDocumento from './solicitacoes/ModalAlterarStatusDocumento';
+import { toast } from 'sonner';
 
 const status_labels: Record<string, string> = {
   recebido: 'Recebido',
@@ -46,9 +47,9 @@ const status_badge_variant: Record<string, string> = {
 
 // cores das badges de status dos documentos
 const doc_status_config: Record<DocumentoStatus, { label: string; className: string }> = {
-  validado: { label: 'Validado', className: 'bg-green-100 text-green-700' },
-  aguardando_revisao: { label: 'Aguardando revisão', className: 'bg-orange-100 text-orange-700' },
-  negado: { label: 'Negado', className: 'bg-red-100 text-red-700' },
+  pendente: { label: 'Pendente', className: 'bg-orange-100 text-orange-700' },
+  aprovado: { label: 'Aprovado', className: 'bg-green-100 text-green-700' },
+  rejeitado: { label: 'Rejeitado', className: 'bg-red-100 text-red-700' },
 };
 
 const servicos = [
@@ -118,9 +119,10 @@ const EditarSolicitacao = () => {
     if (!id) return;
     const sucesso = await solicitacoesService.atualizarStatus(id, status, observacao);
     if (sucesso) {
+      toast.success('Solicitação atualizada com sucesso.');
       navigate('/admin/solicitacoes');
     } else {
-      alert('Erro ao salvar solicitação');
+      toast.error('Erro ao salvar solicitação.');
     }
   };
 
@@ -131,7 +133,7 @@ const EditarSolicitacao = () => {
     const doc = documentosState[modalDocumento.index];
     const sucesso = await solicitacoesService.alterarStatusDocumento(
       id,
-      doc.arquivo,
+      doc.id,
       novoStatus
     );
     if (sucesso) {
@@ -140,16 +142,17 @@ const EditarSolicitacao = () => {
           i === modalDocumento.index ? { ...d, status: novoStatus } : d
         )
       );
+      toast.success('Status do documento atualizado.');
+    } else {
+      toast.error('Erro ao atualizar status do documento.');
     }
   };
 
-  const handleDownload = async (arquivo: string) => {
-    if (!id) return;
-    const url = await solicitacoesService.downloadDocumento(id, arquivo);
-    if (url) {
-      window.open(url, '_blank');
+  const handleDownload = (documento: Documento) => {
+    if (documento.url) {
+      window.open(documento.url, '_blank');
     } else {
-      alert('Erro ao baixar documento');
+      toast.error('Documento sem URL disponível.');
     }
   };
 
@@ -161,8 +164,7 @@ const EditarSolicitacao = () => {
     setErroRecibo(null);
 
     try {
-      // Usando any para evitar erro de TS caso o método baixarRecibo ainda não esteja tipado no service de admin
-      const blob = await (solicitacoesService as any).baixarRecibo({
+      const blob = await solicitacoesService.baixarRecibo({
         idSolicitacao: Number(id),
       });
       const url = URL.createObjectURL(blob);
@@ -351,7 +353,7 @@ const EditarSolicitacao = () => {
                   {documentos.map((doc, i) => {
                     const cfg = doc_status_config[doc.status];
                     return (
-                      <TableRow key={i} className="border-slate-50">
+                      <TableRow key={doc.id} className="border-slate-50">
                         <TableCell className="text-sm text-slate-700 font-medium">{doc.arquivo}</TableCell>
                         <TableCell className="text-sm text-slate-500">{doc.tipo}</TableCell>
                         <TableCell>
@@ -361,7 +363,7 @@ const EditarSolicitacao = () => {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">
-                            <button className="text-slate-400 hover:text-slate-600 transition-colors cursor-pointer" onClick={() => handleDownload(doc.arquivo)}>
+                            <button className="text-slate-400 hover:text-slate-600 transition-colors cursor-pointer" onClick={() => handleDownload(doc)}>
                               <Download className="size-4" />
                             </button>
                             <button className="text-slate-400 hover:text-slate-600 transition-colors cursor-pointer" onClick={() => setModalDocumento({ aberto: true, index: i })}>

@@ -6,6 +6,8 @@ import {
   CircleSlash,
   CheckCircle,
   Search,
+  GripVertical,
+  Eye,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -35,6 +37,7 @@ import {
 } from "@/services/solicitacoesService";
 import ModalCancelarSolicitacao from "./ModalCancelarSolicitacao";
 import ModalRecuperarSolicitacao from "./ModalRecuperarSolicitacao";
+import { toast } from "sonner";
 
 const COLUMNS = [
   {
@@ -103,20 +106,49 @@ const KanbanCard = ({ item, borderColor, onClick }: KanbanCardProps) => {
   return (
     <Card
       ref={setNodeRef}
-      {...listeners}
-      {...attributes}
-      onClick={onClick}
+      onClick={(event) => {
+        const target = event.target as HTMLElement;
+        if (!target.closest("[data-drag-handle='true']")) {
+          onClick();
+        }
+      }}
       className={`
-        cursor-grab active:cursor-grabbing border-l-5 ${borderColor}
+        cursor-pointer border-l-5 ${borderColor}
         transition-opacity duration-150
         ${isDragging ? "opacity-40" : "opacity-100"}
       `}
     >
       <CardContent className="p-3 space-y-1">
-        <p className="font-bold text-slate-800 text-sm">
-          #{item.id} {item.cliente}
-        </p>
-        <p className="text-slate-500 text-xs">{item.servico}</p>
+        <div className="flex items-start gap-2">
+          <button
+            type="button"
+            {...listeners}
+            {...attributes}
+            data-drag-handle="true"
+            aria-label={`Mover solicitação #${item.id}`}
+            onClick={(event) => event.stopPropagation()}
+            className="mt-0.5 cursor-grab rounded p-0.5 text-slate-300 transition hover:bg-slate-100 hover:text-slate-500 active:cursor-grabbing"
+          >
+            <GripVertical className="size-4" />
+          </button>
+          <div className="min-w-0">
+            <p className="font-bold text-slate-800 text-sm">
+              #{item.id} {item.cliente}
+            </p>
+            <p className="text-slate-500 text-xs">{item.servico}</p>
+          </div>
+          <button
+            type="button"
+            aria-label={`Abrir detalhes da solicitação #${item.id}`}
+            onClick={(event) => {
+              event.stopPropagation();
+              onClick();
+            }}
+            className="ml-auto rounded p-1 text-slate-300 transition hover:bg-slate-100 hover:text-slate-600"
+          >
+            <Eye className="size-4" />
+          </button>
+        </div>
         <p className="text-slate-400 text-[10px]">
           {new Date(item.data + "T00:00:00").toLocaleDateString("pt-BR")}
         </p>
@@ -189,9 +221,14 @@ const SolicitacoesAdmin = () => {
   useEffect(() => {
     const carregarSolicitacoes = async () => {
       setIsLoading(true);
-      const dados = await solicitacoesService.listarTodas();
-      setSolicitacoes(dados);
-      setIsLoading(false);
+      try {
+        const dados = await solicitacoesService.listarKanban();
+        setSolicitacoes(dados);
+      } catch {
+        toast.error("Não foi possível carregar as solicitações.");
+      } finally {
+        setIsLoading(false);
+      }
     };
     carregarSolicitacoes();
   }, []);
@@ -310,20 +347,34 @@ const SolicitacoesAdmin = () => {
       return;
     }
 
+    const statusAnterior = solicitacao.status;
+
     setSolicitacoes((prev) =>
       prev.map((s) => (s.id === active.id ? { ...s, status: novoStatus } : s)),
     );
 
-    await solicitacoesService.atualizarStatus(active.id, novoStatus);
+    const sucesso = await solicitacoesService.atualizarStatus(
+      active.id,
+      novoStatus,
+    );
+
+    if (!sucesso) {
+      setSolicitacoes((prev) =>
+        prev.map((s) =>
+          s.id === active.id ? { ...s, status: statusAnterior } : s,
+        ),
+      );
+      toast.error("Não foi possível atualizar o status da solicitação.");
+      return;
+    }
+
+    toast.success("Status da solicitação atualizado.");
   };
 
   const confirmarCancelamento = async () => {
     if (!cancelando) return;
 
-    const sucesso = await solicitacoesService.atualizarStatus(
-      cancelando.solicitacao.id,
-      cancelando.novoStatus,
-    );
+    const sucesso = await solicitacoesService.cancelar(cancelando.solicitacao.id);
 
     if (sucesso) {
       setSolicitacoes((prev) =>
@@ -333,6 +384,9 @@ const SolicitacoesAdmin = () => {
             : s,
         ),
       );
+      toast.success("Solicitação cancelada.");
+    } else {
+      toast.error("Não foi possível cancelar a solicitação.");
     }
 
     setCancelando(null);
@@ -341,10 +395,13 @@ const SolicitacoesAdmin = () => {
   const confirmarRecuperacao = async () => {
     if (!recuperando) return;
 
-    const sucesso = await solicitacoesService.atualizarStatus(
-      recuperando.solicitacao.id,
-      recuperando.novoStatus,
-    );
+    const sucesso =
+      recuperando.novoStatus === "em_andamento"
+        ? await solicitacoesService.reabrir(recuperando.solicitacao.id)
+        : await solicitacoesService.atualizarStatus(
+            recuperando.solicitacao.id,
+            recuperando.novoStatus,
+          );
 
     if (sucesso) {
       setSolicitacoes((prev) =>
@@ -354,6 +411,9 @@ const SolicitacoesAdmin = () => {
             : s,
         ),
       );
+      toast.success("Solicitação recuperada.");
+    } else {
+      toast.error("Não foi possível recuperar a solicitação.");
     }
 
     setRecuperando(null);

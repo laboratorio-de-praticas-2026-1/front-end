@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Plus } from "lucide-react";
 
@@ -10,33 +10,33 @@ import {
   solicitacaoService,
   type SolicitacaoResumo,
 } from "@/services/solicitacaoService";
-
-const USUARIO_ID = 1;
+import { getStoredUser } from "@/lib/authStorage";
 
 export default function Solicitacoes() {
   const location = useLocation();
+  const usuarioId = getStoredUser()?.id ?? 1;
   const [modalOpen, setModalOpen] = useState(location.state?.openModal || false);
   const [solicitacoes, setSolicitacoes] = useState<SolicitacaoResumo[]>([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
 
-  async function carregarSolicitacoes() {
+  const carregarSolicitacoes = useCallback(async () => {
     setLoading(true);
     setErro(null);
 
     try {
-      const data = await solicitacaoService.listar({ usuario_id: USUARIO_ID });
+      const data = await solicitacaoService.listar({ usuario_id: usuarioId });
       setSolicitacoes(data.solicitacoes);
     } catch {
       setErro("Nao foi possivel carregar as solicitacoes.");
     } finally {
       setLoading(false);
     }
-  }
+  }, [usuarioId]);
 
   useEffect(() => {
-    carregarSolicitacoes();
-  }, []);
+    void carregarSolicitacoes();
+  }, [carregarSolicitacoes]);
 
   if (loading) {
     return (
@@ -85,7 +85,7 @@ export default function Solicitacoes() {
       <ModalNovaSolicitacao
         open={modalOpen}
         onOpenChange={setModalOpen}
-        usuarioId={USUARIO_ID}
+        usuarioId={usuarioId}
         onSucesso={carregarSolicitacoes}
       />
     </div>

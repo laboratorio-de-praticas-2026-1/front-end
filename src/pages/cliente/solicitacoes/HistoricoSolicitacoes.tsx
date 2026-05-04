@@ -17,8 +17,8 @@ import {
   type SolicitacaoResumo,
   type StatusSolicitacao,
 } from "@/services/solicitacaoService";
+import { getStoredUser } from "@/lib/authStorage";
 
-const USUARIO_ID = 1;
 const ITEMS_POR_PAGINA = 6;
 
 const STATUS_CONFIG: Record<
@@ -85,6 +85,7 @@ function getLinhaSecundaria(solicitacao: SolicitacaoResumo) {
 
 export default function HistoricoSolicitacoes() {
   const navigate = useNavigate();
+  const usuarioId = getStoredUser()?.id ?? 1;
 
   const [solicitacoes, setSolicitacoes] = useState<SolicitacaoResumo[]>([]);
   const [total, setTotal] = useState(0);
@@ -105,7 +106,7 @@ export default function HistoricoSolicitacoes() {
 
     try {
       const data = await solicitacaoService.listar({
-        usuario_id: USUARIO_ID,
+        usuario_id: usuarioId,
         status: statusFilter || undefined,
         search: searchText || undefined,
         dataInicio: dataInicio || undefined,
@@ -121,7 +122,7 @@ export default function HistoricoSolicitacoes() {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, dataFim, dataInicio, searchText, statusFilter]);
+  }, [currentPage, dataFim, dataInicio, searchText, statusFilter, usuarioId]);
 
   useEffect(() => {
     carregarHistorico();
