@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import { ContactForm } from "./components/ContactForm";
 import { LocationForm } from "./components/LocationForm";
 import { MapViewer } from "./components/MapViewer";
 import { ConfirmActionModal } from "./components/ConfirmActionModal";
+import { contatoService } from "@/services/contatoService";
 
 export const EmpresaFormPage = () => {
   const { id } = useParams();
@@ -23,7 +24,8 @@ export const EmpresaFormPage = () => {
   const formattedId = id ? id.toString().padStart(3, '0') : "";
   
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [loading, setLoading] = useState(isEdit);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const methods = useForm<EmpresaFormData>({
     resolver: zodResolver(empresaSchema) as any,
@@ -43,37 +45,100 @@ export const EmpresaFormPage = () => {
     },
   });
 
+  useEffect(() => {
+    if (isEdit && id) {
+      const carregarEmpresa = async () => {
+        try {
+          const dataList = await contatoService.buscarTodasEmpresas();
+          const data = dataList.find((emp) => String(emp.id) === id);
+
+          if (!data) {
+            toast.error("Empresa não encontrada.");
+            navigate("/admin/empresas");
+            return;
+          }
+
+          // Converter strings para números para os campos do formulário (latitude, longitude)
+          methods.reset({
+            nomeFantasia: data.nomeFantasia || "",
+            cnpj: data.cnpj || "",
+            tipo: data.tipo || "",
+            telefone: data.telefone || "",
+            email: data.email || "",
+            site: data.site || "",
+            endereco: data.endereco || "",
+            cidade: data.cidade || "",
+            estado: data.estado || "",
+            latitude: data.latitude ? parseFloat(data.latitude) : -24.495,
+            longitude: data.longitude ? parseFloat(data.longitude) : -47.845,
+          });
+        } catch (error) {
+          console.error("Erro ao carregar empresa:", error);
+          toast.error("Erro ao carregar dados da empresa.");
+        } finally {
+          setLoading(false);
+        }
+      };
+      carregarEmpresa();
+    } else {
+      setLoading(false);
+    }
+  }, [isEdit, id, methods, navigate]);
+
   const lat = methods.watch("latitude");
   const lng = methods.watch("longitude");
   const nomeFantasia = methods.watch("nomeFantasia");
 
   const onSubmit = async (data: any) => {
     try {
+      setIsSubmitting(true);
       const validatedData = data as EmpresaFormData;
-      
-      toast.success(isEdit ? "Alterações salvas com sucesso!" : "Empresa criada com sucesso!", {
-        description: `${validatedData.nomeFantasia} foi registrada no sistema.`,
-      });
-      
-      navigate("/admin/empresas");
+
+      // Converter latitude e longitude de volta para string para envio à API
+      const payload = {
+        ...validatedData,
+        latitude: String(validatedData.latitude),
+        longitude: String(validatedData.longitude),
+      };
+
+      if (isEdit && id) {
+        await contatoService.atualizarDadosEmpresa(Number(id), payload);
+        toast.success("Alterações salvas com sucesso!", {
+          description: `A empresa ${validatedData.nomeFantasia} foi atualizada.`,
+        });
+        navigate("/admin/empresas");
+      } else {
+        // Simulação de cadastro (enquanto o backend não tem a rota POST)
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        toast.success("Empresa criada com sucesso!", {
+          description: `${validatedData.nomeFantasia} foi registrada no sistema.`,
+        });
+        navigate("/admin/empresas");
+      }
     } catch (error) {
-      toast.error("Erro ao salvar os dados. Verifique os campos.");
+      console.error("Erro ao salvar empresa:", error);
+      toast.error("Erro ao salvar os dados. Tente novamente.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleDelete = async () => {
-    setIsDeleting(true);
+    // Simulação de exclusão (enquanto o backend não tem a rota DELETE)
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      toast.success("Empresa excluída com sucesso!");
+      setIsModalOpen(false);
+      toast.success("Empresa excluída com sucesso!", {
+        description: "A empresa foi removida do sistema.",
+      });
       navigate("/admin/empresas");
     } catch (error) {
       toast.error("Erro ao excluir empresa.");
-    } finally {
-      setIsDeleting(false);
-      setIsModalOpen(false);
     }
   };
+
+  if (loading) {
+    return <div className="p-8 text-center text-gray-500">Carregando dados...</div>;
+  }
 
   return (
     <div className="p-8 max-w-7xl mx-auto">
@@ -120,14 +185,15 @@ export const EmpresaFormPage = () => {
               onClick={() => navigate("/admin/empresas")}
               className="text-gray-600 font-medium hover:text-gray-900 transition-colors"
             >
-              {isEdit ? "Cancelar alterações" : "Cancelar criação"}
+              Cancelar alterações
             </button>
             
             <Button 
               type="submit" 
+              disabled={isSubmitting}
               className="bg-[#1E84CF] hover:bg-[#166ba8] px-10 h-11 gap-2 shadow-md transition-colors"
             >
-              <Printer size={18} /> {isEdit ? "Salvar empresa" : "Criar empresa"}
+              <Printer size={18} /> {isSubmitting ? "Salvando..." : "Salvar empresa"}
             </Button>
           </div>
         </form>
@@ -137,7 +203,6 @@ export const EmpresaFormPage = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleDelete}
-        isLoading={isDeleting}
         title="Excluir empresa?"
         description={`Tem certeza que deseja excluir a empresa ${nomeFantasia || `#${formattedId}`}?\nA empresa será removida do mapa imediatamente.`}
         confirmText="Excluir"

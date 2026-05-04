@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Search, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
@@ -16,10 +16,14 @@ import { Button } from "@/components/ui/button";
 import { EmpresaTable } from "@/components/tables/EmpresaTable";
 import { ConfirmActionModal } from "./components/ConfirmActionModal";
 import type { EmpresaFilters } from "@/types/empresa.types"; 
-import { MOCK_EMPRESAS } from "@/mocks/empresas.mock";
+import { contatoService } from "@/services/contatoService";
+import type { ContatoEmpresa } from "@/services/contatoService";
 
 export const EmpresasAdmin = () => {
   const navigate = useNavigate();
+  const [empresas, setEmpresas] = useState<ContatoEmpresa[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [selectedEmpresa, setSelectedEmpresa] = useState<{ id: string; nome: string } | null>(null);
@@ -44,10 +48,49 @@ export const EmpresasAdmin = () => {
     setFilters({ tipo: "", estado: "", cidade: "", search: "", page: 1 });
   };
 
+  useEffect(() => {
+    const carregarEmpresas = async () => {
+      try {
+        setLoading(true);
+        const data = await contatoService.buscarTodasEmpresas();
+        setEmpresas(data);
+      } catch (error) {
+        console.error("Erro ao buscar dados das empresas", error);
+        toast.error("Não foi possível carregar os dados das empresas.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    carregarEmpresas();
+  }, []);
+
+  // Formata os dados para a tabela
+  const tableData = empresas.map(empresa => ({
+    id: String(empresa.id),
+    nomeFantasia: empresa.nomeFantasia,
+    cnpj: empresa.cnpj,
+    cidade: empresa.cidade,
+    estado: empresa.estado,
+    telefone: empresa.telefone,
+    tipo: empresa.tipo,
+    email: empresa.email,
+    endereco: empresa.endereco,
+    latitude: Number(empresa.latitude),
+    longitude: Number(empresa.longitude),
+  }));
+
+  const filteredData = tableData.filter((emp) => {
+    const matchesSearch = emp.nomeFantasia.toLowerCase().includes(filters.search?.toLowerCase() || "");
+    const matchesTipo = filters.tipo ? emp.tipo === filters.tipo : true;
+    const matchesCidade = filters.cidade ? emp.cidade === filters.cidade : true;
+    const matchesEstado = filters.estado ? emp.estado === filters.estado : true;
+    return matchesSearch && matchesTipo && matchesCidade && matchesEstado;
+  });
+
   const handleOpenDeleteModal = (id: string) => {
-    const empresa = MOCK_EMPRESAS.find(emp => emp.id === id);
-    if (empresa) {
-      setSelectedEmpresa({ id, nome: empresa.nomeFantasia });
+    const emp = filteredData.find(e => e.id === id);
+    if (emp) {
+      setSelectedEmpresa({ id, nome: emp.nomeFantasia });
       setIsModalOpen(true);
     }
   };
@@ -57,7 +100,9 @@ export const EmpresasAdmin = () => {
     setIsDeleting(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      toast.success("Empresa excluída com sucesso!");
+      toast.success("Empresa excluída com sucesso!", {
+        description: `${selectedEmpresa.nome} foi removida do sistema.`,
+      });
     } catch (error) {
       toast.error("Erro ao excluir empresa.");
     } finally {
@@ -66,14 +111,6 @@ export const EmpresasAdmin = () => {
       setSelectedEmpresa(null);
     }
   };
-
-  const filteredData = MOCK_EMPRESAS.filter((emp) => {
-    const matchesSearch = emp.nomeFantasia.toLowerCase().includes(filters.search?.toLowerCase() || "");
-    const matchesTipo = filters.tipo ? emp.tipo === filters.tipo : true;
-    const matchesCidade = filters.cidade ? emp.cidade === filters.cidade : true;
-    const matchesEstado = filters.estado ? emp.estado === filters.estado : true;
-    return matchesSearch && matchesTipo && matchesCidade && matchesEstado;
-  });
 
   return (
     <div className="p-8">
@@ -150,6 +187,7 @@ export const EmpresasAdmin = () => {
           onEdit={(id) => navigate(`editar/${id}`)} 
           onDelete={handleOpenDeleteModal} 
         />
+        {loading && <p className="text-center text-sm text-gray-500 mt-4">Carregando dados da empresa...</p>}
       </div>
 
       <div className="mt-8 grid grid-cols-3 items-center">

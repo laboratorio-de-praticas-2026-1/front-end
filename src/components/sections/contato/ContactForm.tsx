@@ -1,17 +1,26 @@
 import { useState } from "react";
-import { Mail, MapPin, ChevronRight } from "lucide-react";
+import { Mail, MapPin, ChevronRight, Loader2 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { contatoService, type ContatoEmpresa } from "@/services/contatoService";
 
-export default function ContactForm(){
+interface ContactFormProps {
+  empresa: ContatoEmpresa | null;
+  loading: boolean;
+}
+
+export default function ContactForm({ empresa, loading }: ContactFormProps){
     const [formData, setFormData] = useState({
         nome:"",
         email:"",
         telefone:"",
         mensagem:"",
     })
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     function handleChange(
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -23,9 +32,44 @@ export default function ContactForm(){
         }))
     }
 
-    function handleSubmit(e: React.FormEvent<HTMLFormElement>){
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>){
         e.preventDefault();
+        if (!formData.nome.trim() || !formData.email.trim() || !formData.mensagem.trim()) {
+            toast.error("Preencha todos os campos obrigatórios.", {
+                description: "Nome, e-mail e mensagem são obrigatórios.",
+            });
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        try {
+            await contatoService.enviarContato({
+                nome: formData.nome,
+                email: formData.email,
+                telefone: formData.telefone || undefined,
+                mensagem: formData.mensagem,
+            });
+
+            toast.success("Mensagem enviada com sucesso!", {
+                description: "Entraremos em contato em breve.",
+            });
+
+            setFormData({ nome: "", email: "", telefone: "", mensagem: "" });
+        } catch (error) {
+            console.error("Erro ao enviar contato:", error);
+            toast.error("Erro ao enviar mensagem.", {
+                description: "Tente novamente mais tarde.",
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     }
+
+    const telefoneExibido = loading ? "Carregando..." : (empresa?.telefone || "—");
+    const emailExibido = loading ? "Carregando..." : (empresa?.email || "—");
+    const enderecoExibido = loading ? "Carregando..." : (empresa?.endereco || "—");
+    const cidadeEstado = loading ? "" : `${empresa?.cidade || ""}${empresa?.estado ? `, ${empresa.estado}` : ""}`;
 
     return(
         <section className="relative z-20 pb-10">
@@ -48,7 +92,7 @@ export default function ContactForm(){
                                 </div>
                                 <div>
                                     <p className="font-semibold text-secondary">WhatsApp</p>
-                                    <p className="text-sm text-secondary">(13) 8888-9999</p>
+                                    <p className="text-sm text-secondary">{telefoneExibido}</p>
                                 </div>
                             </div>
 
@@ -58,7 +102,7 @@ export default function ContactForm(){
                                 </div>
                                 <div>
                                     <p className="font-semibold text-secondary">E-mail</p>
-                                    <p className="text-sm text-secondary">bortone@gmail.com</p>
+                                    <p className="text-sm text-secondary">{emailExibido}</p>
                                 </div>
                             </div>
 
@@ -68,9 +112,10 @@ export default function ContactForm(){
                                 </div>
                                 <div>
                                     <p className="font-semibold text-secondary">Onde estamos?</p>
-                                    <p className="text-sm text-secondary">Rua aaaaaaaa, 000 - Loja 1</p>
-                                    <p className="text-sm text-secondary">yyyyy, Registro / SP</p>
-                                    <p className="text-sm text-secondary">CEP: 11940-000(13) 8888-9999</p>
+                                    <p className="text-sm text-secondary">{enderecoExibido}</p>
+                                    {cidadeEstado && (
+                                        <p className="text-sm text-secondary">{cidadeEstado}</p>
+                                    )}
                                 </div>
                             </div>
 
@@ -93,7 +138,8 @@ export default function ContactForm(){
                                         value={formData.nome}
                                         onChange={handleChange}
                                         placeholder="Digite seu nome Aqui"
-                                        className="h-11 border-[#E4E4E7]  mt-1"                                   
+                                        className="h-11 border-[#E4E4E7]  mt-1"
+                                        disabled={isSubmitting}
                                     />
                                 </div>
 
@@ -109,7 +155,8 @@ export default function ContactForm(){
                                         value={formData.email}
                                         onChange={handleChange}
                                         placeholder="Seu melhor e-mail aqui"
-                                        className="h-11 border-[#E4E4E7]  mt-1"                                   
+                                        className="h-11 border-[#E4E4E7]  mt-1"
+                                        disabled={isSubmitting}
                                     />
                                     </div>
                                     <div className="space-y-2">
@@ -123,7 +170,8 @@ export default function ContactForm(){
                                         value={formData.telefone}
                                         onChange={handleChange}
                                         placeholder="DDD e Telefone"
-                                        className="h-11  border-[#E4E4E7]  mt-1"                                   
+                                        className="h-11  border-[#E4E4E7]  mt-1"
+                                        disabled={isSubmitting}
                                     />
                                     </div>
 
@@ -138,13 +186,28 @@ export default function ContactForm(){
                                         value={formData.mensagem}
                                         onChange={handleChange}
                                         placeholder="Digite sua mensagem aqui"
-                                        className="flex w-full rounded-md border border-[#E4E4E7] text-[#09090B] mt-1 px-3 py-3 shadow-sm min-h-[180px]"                                   
+                                        className="flex w-full rounded-md border border-[#E4E4E7] text-[#09090B] mt-1 px-3 py-3 shadow-sm min-h-[180px]"
+                                        disabled={isSubmitting}
                                     />
                                     </div>
 
-                                    <Button className="inline-flex h-11 min-w-[00px] items-center justify-center rounded-full bg-primary px-8 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-secondary" type="submit" variant="default"> 
-                                        Enviar
-                                        <ChevronRight size={18} />
+                                    <Button
+                                        className="inline-flex h-11 min-w-[00px] items-center justify-center rounded-full bg-primary px-8 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+                                        type="submit"
+                                        variant="default"
+                                        disabled={isSubmitting}
+                                    >
+                                        {isSubmitting ? (
+                                            <>
+                                                <Loader2 size={18} className="animate-spin mr-2" />
+                                                Enviando...
+                                            </>
+                                        ) : (
+                                            <>
+                                                Enviar
+                                                <ChevronRight size={18} />
+                                            </>
+                                        )}
                                     </Button>
                             </form>
                         </div>
@@ -155,5 +218,3 @@ export default function ContactForm(){
     );
 
 }
-
-
