@@ -1,13 +1,21 @@
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, Car, Calendar } from 'lucide-react';
-import type { Veiculo } from '@/types/veiculo';
+import { ChevronRight, Car, Calendar, Trash2 } from 'lucide-react';
+import type { VeiculoApi } from '@/services/veiculoService';
 
 interface VehicleCardProps {
-  veiculo: Veiculo;
+  veiculo: VeiculoApi;
+  onDelete: () => void;
 }
 
-export function VehicleCard({ veiculo }: VehicleCardProps) {
+export function VehicleCard({ veiculo, onDelete }: VehicleCardProps) {
   const navigate = useNavigate();
+
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Evita navegar para os detalhes ao clicar em excluir
+    if (confirm('Tem certeza que deseja remover este veículo?')) {
+      onDelete();
+    }
+  };
 
   return (
     <div 
@@ -35,7 +43,16 @@ export function VehicleCard({ veiculo }: VehicleCardProps) {
         </div>
       </div>
 
-      <ChevronRight className="text-[#6C6C6C] transition-colors" size={24} />
+      <div className="flex items-center gap-4">
+        <button
+          onClick={handleDeleteClick}
+          className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+          title="Excluir veículo"
+        >
+          <Trash2 size={20} />
+        </button>
+        <ChevronRight className="text-[#6C6C6C] transition-colors" size={24} />
+      </div>
     </div>
   );
 }

@@ -65,22 +65,6 @@ export function ClienteLayout() {
       {/* ÁREA PRINCIPAL DA PÁGINA */}
       <main className="flex-1 flex flex-col overflow-y-auto w-full">
         
-        {/* Cabeçalho Superior */}
-        <header className="h-16 bg-white border-b border-zinc-200 flex items-center px-4 md:px-8 shadow-sm shrink-0 justify-between">
-          
-          {/* Botão Hamburguer */}
-          <button 
-            className="md:hidden p-2 -ml-2 text-zinc-600 hover:bg-zinc-100 rounded-md transition-colors"
-            onClick={() => setIsMobileMenuOpen(true)}
-          >
-            <FiMenu className="h-7 w-7" />
-          </button>
-
-          <h1 className="text-zinc-500 font-medium text-sm hidden md:block">Portal do Cliente</h1>
-          
-          {/* Placeholder para alinhar o flex no mobile */}
-          <div className="md:hidden w-8"></div>
-        </header>
 
         {/* O conteúdo dinâmico (Tabelas, Formulários, etc) */}
         <div className="p-4 md:p-8 flex-1">

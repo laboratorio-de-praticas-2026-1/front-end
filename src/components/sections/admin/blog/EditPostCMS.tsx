@@ -14,10 +14,10 @@ import { blogService } from "@/services/blogService";
 export default function EditPostCMS() {
   const navigate = useNavigate();
   const { id } = useParams(); // Pega o ID da URL
-  
+
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
-  
+
   const [titulo, setTitulo] = useState("");
   const [conteudo, setConteudo] = useState("");
   const [salvando, setSalvando] = useState(false);
@@ -36,7 +36,7 @@ export default function EditPostCMS() {
         if (post) {
           setTitulo(post.titulo);
           setConteudo(post.conteudo);
-          
+
           if (post.dataPublicacao) {
             // Parseia a data como horário local para evitar deslocamento de 1 dia causado pela interpretação em UTC
             const parts = post.dataPublicacao.split('T')[0].split('-');
@@ -85,7 +85,7 @@ export default function EditPostCMS() {
       const formData = new FormData();
       formData.append("titulo", titulo);
       formData.append("conteudo", conteudo);
-      
+
       const dataPostagem = date ? date : new Date();
       // Formata a data usando componentes locais (YYYY-MM-DD) para não converter para UTC via toISOString()
       const pad = (n: number) => String(n).padStart(2, '0');
@@ -167,8 +167,8 @@ export default function EditPostCMS() {
                 onChange={handleImageChange}
                 accept="image/*"
               />
-              <div 
-                onClick={() => fileInputRef.current?.click()} 
+              <div
+                onClick={() => fileInputRef.current?.click()}
                 className="aspect-video bg-gray-100 rounded-lg flex flex-col items-center justify-center relative cursor-pointer hover:bg-gray-50 transition-colors group"
               >
                 <img
@@ -223,17 +223,17 @@ export default function EditPostCMS() {
       </main>
 
       <footer className="mt-12 flex justify-end items-center gap-4">
-        <Button 
+        <Button
           type="button"
-          variant="outline" 
-          onClick={() => navigate(-1)} 
+          variant="outline"
+          onClick={() => navigate(-1)}
           disabled={salvando}
           className="cursor-pointer transition-opacity hover:opacity-70 active:opacity-100 disabled:opacity-50 h-11 px-6 rounded-lg font-medium"
         >
           Cancelar
         </Button>
 
-        <Button 
+        <Button
           type="button"
           onClick={handleSalvarEdicao}
           disabled={salvando}

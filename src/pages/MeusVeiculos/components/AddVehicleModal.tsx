@@ -4,13 +4,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { X, Loader2 } from "lucide-react";
 import { vehicleSchema } from "../schemas/vehicleSchema";
 import type { VehicleFormData } from "../schemas/vehicleSchema";
+import { veiculoService } from "@/services/veiculoService";
+import { toast } from "sonner";
 
 interface AddVehicleModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
-export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
+export function AddVehicleModal({ isOpen, onClose, onSuccess }: AddVehicleModalProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -27,12 +30,18 @@ export function AddVehicleModal({ isOpen, onClose }: AddVehicleModalProps) {
   const handleRegistration: SubmitHandler<VehicleFormData> = async (data) => {
     setIsLoading(true);
     try {
-      console.log("Payload limpo:", data);
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await veiculoService.criar({
+        ...data,
+        usuarioId: 1, // Hardcoded conforme solicitado
+      });
+      
+      toast.success("Veículo cadastrado com sucesso!");
       reset();
+      onSuccess?.();
       onClose();
     } catch (error) {
       console.error("Erro ao salvar veículo:", error);
+      toast.error("Erro ao cadastrar veículo. Verifique os dados.");
     } finally {
       setIsLoading(false);
     }

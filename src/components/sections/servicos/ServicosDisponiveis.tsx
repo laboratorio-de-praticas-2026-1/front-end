@@ -1,96 +1,45 @@
 import CardServicos from "../../ui/CardServicos";
 import { FaWhatsapp } from "react-icons/fa";
+import { useEffect, useState, useRef } from "react";
+import { servicosService } from "../../../services/servicoService";
+import { useLocation } from "react-router-dom";
 
 export default function ServicosSection() {
-    const servicos = [
-        {
-            id: 1,
-            titulo: "Transferência de Veículo",
-            descricao: "Realizamos todo o processo de transferência de propriedade de forma rápida e segura, garantindo que seu veículo seja registrado corretamente no nome do novo proprietário.",
-            valor: 0.0,
-            prazo: 0
-        },
-        {
-            id: 2,
-            titulo: "Licenciamento Anual",
-            descricao: "Regularize o licenciamento do seu veículo sem burocracia. Cuidamos de toda a documentação para que você circule com tranquilidade.",
-            valor: 0.0,
-            prazo: 0
-        },
-        {
-            id: 3,
-            titulo: "Primeiro Emplacamento",
-            descricao: "Adquiriu um veículo novo? Nós cuidamos do primeiro emplacamento e de toda a documentação necessária para colocar seu carro na rua.",
-            valor: 0.0,
-            prazo: 0
-        },
-        {
-            id: 4,
-            titulo: "2ª Via de Documentos",
-            descricao: "Perdeu ou teve documentos roubados? Emitimos a segunda via do CRLV e outros documentos essenciais com agilidade.",
-            valor: 0.0,
-            prazo: 0
-        },
-        {
-            id: 5,
-            titulo: "Regularização de Débitos", // Removi o "5." para manter o padrão visual dos títulos
-            descricao: "Consultamos e auxiliamos na regularização de multas, IPVA e outros débitos vinculados ao seu veículo.",
-            valor: 0.0,
-            prazo: 0
-        },
-        {
-            id: 6,
-            titulo: "Comunicação de Venda", // Removi o "6."
-            descricao: "Evite problemas futuros. Realizamos a comunicação de venda do veículo junto aos órgãos responsáveis.",
-            valor: 0.0,
-            prazo: 0
-        },
-        {
-            id: 7,
-            titulo: "Alteração de Dados do Veículo", // Removi o "7."
-            descricao: "Mudanças como cor, características ou outras alterações precisam ser registradas. Fazemos todo o processo para você.",
-            valor: 0.0,
-            prazo: 0
-        },
-        {
-            id: 8,
-            titulo: "Consultas Veiculares", // Removi o "8."
-            descricao: "Oferecemos consultas completas sobre situação do veículo, débitos, restrições e histórico.",
-            valor: 0.0,
-            prazo: 0
-        },
-        {
-            id: 9,
-            titulo: "Parcelamento de Débitos Veiculares",
-            descricao: "Facilitamos o pagamento de débitos do seu veículo, como multas, IPVA e licenciamento, oferecendo opções de parcelamento. Assim, você regulariza sua situação de forma prática e sem comprometer seu orçamento.",
-            valor: 0.0,
-            prazo: 0
-        },
-        {
-            id: 10,
-            titulo: "Emissão de CRLV",
-            descricao: "Auxiliamos na emissão do CRLV digital, garantindo que você tenha acesso ao documento atualizado do seu veículo diretamente no celular ou em versão impressa, conforme sua necessidade.",
-            valor: 0.0,
-            prazo: 0
-        },
-        {
-            id: 11,
-            titulo: "Baixa de Veículo", // Removi o "11."
-            descricao: "Se o veículo foi vendido para desmanche, sofreu perda total ou não será mais utilizado, realizamos todo o processo de baixa junto aos órgãos responsáveis, garantindo a regularização da situação.",
-            valor: 0,
-            prazo: 0
-        },
-        {
-            id: 12,
-            titulo: "Assessoria Completa em documentação veicular", // Removi o "12." e corrigi "documentaçãao"
-            descricao: "Oferecemos suporte completo para resolver qualquer questão relacionada à documentação do seu veículo. Nossa equipe acompanha cada etapa do processo para garantir agilidade, segurança e menos burocracia para você.",
-            valor: 0,
-            prazo: 0
-        },
-    ];
+    const [servicos, setServicos] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    const sectionRef = useRef<HTMLDivElement>(null);
+    const location = useLocation();
+
+    useEffect(() => {
+        async function load() {
+            try {
+                setLoading(true);
+                const data = await servicosService.listarTodos();
+                setServicos(data);
+            } catch {
+                setError("Erro ao carregar serviços");
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        load();
+    }, []);
+
+    // scroll botao todos
+    useEffect(() => {
+        if (location.hash === "#lista-servicos") {
+            sectionRef.current?.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [location]);
+
+    if (loading) return <p className="text-center py-10">Carregando serviços...</p>;
+    if (error) return <p className="text-center py-10">{error}</p>;
 
     return (
-        <section className="w-full px-6 py-16 md:py-24 bg-[#F0F8FF] flex flex-col">
+        <section ref={sectionRef} id="lista-servicos" className="w-full px-6 py-16 md:py-24 bg-[#F0F8FF] flex flex-col">
             <div className="mx-auto w-full max-w-7xl">
                 
                 {/* Título da Seção */}
@@ -104,10 +53,10 @@ export default function ServicosSection() {
                     {servicos.map((servico) => (
                         <CardServicos 
                             key={servico.id}
-                            titulo={servico.titulo}
-                            descricao={servico.descricao}
-                            valor={servico.valor}
-                            prazo={servico.prazo}
+                            titulo={servico.nome}
+                            descricao={servico.descricao ?? ""}
+                            valor={Number(servico.valorBase) ?? 0}
+                            prazo={servico.prazoEstimadoDias ?? 0}
                         />
                     ))}
                 </div>

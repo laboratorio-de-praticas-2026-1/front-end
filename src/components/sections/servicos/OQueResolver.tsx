@@ -1,25 +1,21 @@
 import { FaCar } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { servicosService } from "../../../services/servicoService";
 
+// api
 export function OQueResolver() {
-  const servicos = [
-    { 
-      titulo: "Transferência\nde Veículo", 
-      isGradient: true 
-    },
-    { 
-      titulo: "Licenciamento\nanual", 
-      isGradient: false 
-    },
-    { 
-      titulo: "Primeiro\nemplacamento", 
-      isGradient: false 
-    },
-    { 
-      titulo: "Transferência\nde Veículo", 
-      isGradient: true 
+  const [servicos, setServicos] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function load() {
+      const data = await servicosService.listarTodos();
+      setServicos(data.slice(0, 4)); 
     }
-  ];
+
+    load();
+  }, []);
+  //observacao: foi feito para aparecer apenas 4 servicos seguindo a quantia que estava feita no front e foi feito abaixo um calculo para colocar os cards em um formato de xadrez, com gradiente e outro sem.
 
   return (
     <section className="py-24 bg-[#EAECEE] overflow-hidden">
@@ -44,6 +40,10 @@ export function OQueResolver() {
             {/* Ajustado o gap para mobile (gap-3) para ganhar mais espaço interno nos cards */}
             <div className="grid grid-cols-2 gap-3 md:gap-6">
               {servicos.map((servico, index) => {
+                //efeito das cores alternadas
+                const col = index % 2;
+                const row = Math.floor(index / 2);
+                const isGradient = (row + col) % 2 === 0;
                 const isRightColumn = index === 1 || index === 3;
                 const offsetClass = isRightColumn ? "translate-y-0 md:translate-y-12" : "";
                 
@@ -51,19 +51,19 @@ export function OQueResolver() {
                   <div 
                     key={index}
                     className={`flex flex-col items-center justify-center p-4 md:p-8 rounded-[1.5rem] shadow-lg transition-transform hover:-translate-y-1 cursor-pointer min-h-[150px] md:min-h-[220px] ${offsetClass} ${
-                      servico.isGradient 
+                      isGradient 
                         ? "bg-gradient-to-b from-[#1E84CF] to-[#135A91] text-white border border-white/10" 
                         : "bg-white text-primary"
                     }`}
                   >
                     {/* Ícone menor no mobile (size 32) e maior no desktop (size 44) */}
                     <FaCar 
-                      className={`mb-3 md:mb-4 text-3xl md:text-5xl ${servico.isGradient ? "text-white" : "text-primary"}`} 
+                      className={`mb-3 md:mb-4 text-3xl md:text-5xl ${isGradient ? "text-white" : "text-primary"}`} 
                     />
                     
                     {/* Fonte ajustada: text-sm no mobile, text-xl no desktop */}
                     <h3 className="text-center font-bold text-sm md:text-xl leading-tight whitespace-pre-line break-words">
-                      {servico.titulo}
+                      {servico.nome}
                     </h3>
                   </div>
                 );
@@ -73,7 +73,7 @@ export function OQueResolver() {
             {/* Botão Ver Todos */}
             <div className="flex justify-center md:justify-end mt-12 md:mt-20 md:pr-12">
               <Link 
-                to="/servicos"
+                to="/servicos#lista-servicos"
                 className="bg-primary text-white px-8 py-3 rounded-full font-semibold text-sm hover:bg-secondary/90 transition-colors shadow-md"
               >
                 Ver Todos

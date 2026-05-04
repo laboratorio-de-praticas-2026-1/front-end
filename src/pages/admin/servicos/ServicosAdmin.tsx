@@ -1,13 +1,16 @@
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+
 import ToolbarServicos, { type StatusFiltro } from "@/components/sections/admin/servicos/ToolbarServicos"
 import ServicosTable from "@/components/tables/ServicosTable"
-import { mockServicos, type Servico } from "@/mocks/mockServicos"
-import ModalConfirmacaoServico, { type TipoModalServico } from "@/components/admin/servicos/ModalConfirmacaoServico.tsx"
+import ModalConfirmacaoServico, { type TipoModalServico } from "@/components/admin/servicos/ModalConfirmacaoServico"
+
+import { servicosService } from "@/services/servicoService"
+
+import { type Servico } from "@/mocks/mockServicos"
 
 const ITEMS_PER_PAGE = 9
 
-// Valores iniciais extraídos como constante para reusar no reset
 const PRAZO_INICIAL: number[] = [0, 30]
 const VALOR_INICIAL: number[] = [0, 2000]
 
@@ -17,15 +20,19 @@ type ModalState = {
   serviceId: number | null
 }
 
+
+
 export function ServicosAdmin() {
   const navigate = useNavigate()
+
   const [currentPage, setCurrentPage] = useState(1)
   const [statusFilter, setStatusFilter] = useState<StatusFiltro>("Todos")
   const [searchQuery, setSearchQuery] = useState("")
-  const [servicos, setServicos] = useState<Servico[]>(mockServicos)
+  const [servicos, setServicos] = useState<Servico[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
   const [modalLoading, setModalLoading] = useState(false)
 
-  // Corrigido: iniciados com [min, max] para ativar os dois handles no Slider
   const [prazoRange, setPrazoRange] = useState<number[]>(PRAZO_INICIAL)
   const [valorRange, setValorRange] = useState<number[]>(VALOR_INICIAL)
 
@@ -35,7 +42,40 @@ export function ServicosAdmin() {
     serviceId: null,
   })
 
-  const servicoAtual = servicos.find((s) => s.id === modalState.serviceId) ?? null
+  const servicoAtual =
+    servicos.find((s) => s.id === modalState.serviceId) ?? null
+
+  useEffect(() => {
+    async function load() {
+      try {
+        setLoading(true)
+
+        const data = await servicosService.listarTodos()
+
+        console.log("DADOS DA API:", data) 
+
+        const adaptados = data.map((s) => ({
+          id: s.id,
+          nome: s.nome,
+          descricao: s.descricao ?? "",
+          valorBase: Number(s.valorBase) ?? 0,
+          prazoEstimado: s.prazoEstimadoDias ?? 0,
+          status: (s.ativo ? "Ativo" : "Inativo") as "Ativo" | "Inativo",
+        }))
+
+        console.log("ADAPTADOS:", adaptados) 
+
+        setServicos(adaptados)
+      } catch (e) {
+        console.error(e)
+        setError("Erro ao carregar serviços")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    load()
+  }, [])
 
   const servicosFiltrados = useMemo(() => {
     return servicos.filter((s) => {
@@ -47,15 +87,11 @@ export function ServicosAdmin() {
         s.nome.toLowerCase().includes(searchQuery.toLowerCase()) ||
         s.descricao.toLowerCase().includes(searchQuery.toLowerCase())
 
-      // Corrigido: filtra pelo range de prazo
       const matchPrazo =
-        s.prazo == null ||
-        (s.prazo >= prazoRange[0] && s.prazo <= prazoRange[1])
+        s.prazoEstimado >= prazoRange[0] && s.prazoEstimado <= prazoRange[1]
 
-      // Corrigido: filtra pelo range de valor
       const matchValor =
-        s.valor == null ||
-        (s.valor >= valorRange[0] && s.valor <= valorRange[1])
+        s.valorBase >= valorRange[0] && s.valorBase <= valorRange[1]
 
       return matchStatus && matchSearch && matchPrazo && matchValor
     })
@@ -88,7 +124,6 @@ export function ServicosAdmin() {
     setCurrentPage(1)
   }
 
-  // Corrigido: reseta todos os filtros incluindo os ranges
   const handleClearFilters = () => {
     setStatusFilter("Todos")
     setSearchQuery("")
@@ -98,24 +133,24 @@ export function ServicosAdmin() {
   }
 
   const handleEditar = (servico: Servico) => {
-    navigate(`/admin/servicos/editar/${servico.id}`)
-  }
+  navigate(`/admin/servicos/editar/${servico.id}`)
+}
 
-  const handleAlternarStatus = (servico: Servico) => {
-    setModalState({
-      isOpen: true,
-      type: servico.status === "Ativo" ? "inativar" : "ativar",
-      serviceId: servico.id,
-    })
-  }
+const handleAlternarStatus = (servico: Servico) => {
+  setModalState({
+    isOpen: true,
+    type: servico.status === "Ativo" ? "inativar" : "ativar",
+    serviceId: servico.id,
+  })
+}
 
-  const handleExcluir = (servico: Servico) => {
-    setModalState({
-      isOpen: true,
-      type: "excluir",
-      serviceId: servico.id,
-    })
-  }
+const handleExcluir = (servico: Servico) => {
+  setModalState({
+    isOpen: true,
+    type: "excluir",
+    serviceId: servico.id,
+  })
+}
 
   const handleFecharModal = () => {
     setModalState({ isOpen: false, type: null, serviceId: null })
@@ -125,16 +160,25 @@ export function ServicosAdmin() {
     if (!modalState.type || !modalState.serviceId) return
 
     setModalLoading(true)
-    try {
-      await new Promise((res) => setTimeout(res, 600))
 
+    try {
       if (modalState.type === "excluir") {
-        setServicos((prev) => prev.filter((s) => s.id !== modalState.serviceId))
+        await servicosService.deletar(modalState.serviceId)
+
+        setServicos((prev) =>
+          prev.filter((s) => s.id !== modalState.serviceId)
+        )
       } else {
+        const novoStatus = modalState.type === "ativar"
+
+        await servicosService.atualizar(modalState.serviceId, {
+          ativo: novoStatus,
+        })
+
         setServicos((prev) =>
           prev.map((s) =>
             s.id === modalState.serviceId
-              ? { ...s, status: modalState.type === "ativar" ? "Ativo" : "Inativo" }
+              ? { ...s, status: novoStatus ? "Ativo" : "Inativo" }
               : s
           )
         )
@@ -148,9 +192,11 @@ export function ServicosAdmin() {
     }
   }
 
+  if (loading) return <p className="text-center py-10">Carregando...</p>
+  if (error) return <p className="text-center py-10">{error}</p>
+
   return (
     <div className="flex flex-col gap-6">
-      {/* Corrigido: todas as props agora passadas corretamente */}
       <ToolbarServicos
         statusFilter={statusFilter}
         searchQuery={searchQuery}
@@ -184,4 +230,4 @@ export function ServicosAdmin() {
       )}
     </div>
   )
-} 
+}
