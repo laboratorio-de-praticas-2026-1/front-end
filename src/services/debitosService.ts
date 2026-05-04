@@ -20,6 +20,7 @@ export async function getVeiculos(): Promise<Veiculo[]> {
 
   const data = await response.json();
 
+  //Normalização 
   return data.debitosPendentes.porVeiculo.map((item: any) => ({
     id: String(item.veiculoId),
     placa: item.placa,
@@ -35,10 +36,11 @@ export async function getDebitosByVeiculoId(placa: string) {
   );
   return response.json();
 }
+
 /*
 export async function getDebitosByVeiculoId(veiculoId: string) {
   await delay(1000);
   const data = mockData.debitos[veiculoId as keyof typeof mockData.debitos];
   if (!data) return null;
   return data;
-}*/
+}  getDebito com dados mockup*/
