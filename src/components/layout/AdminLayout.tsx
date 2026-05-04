@@ -1,15 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { FiX } from "react-icons/fi";
 import AdminChatModal from "../chat/AdminChatModal";
 import ChatFloatingButton from "../chat/ChatFloatingButton";
 import { useLocation } from "react-router-dom";
+import { getStoredUser, getToken } from "@/lib/authStorage";
+import { getChatSocket } from "@/services/socket";
+import { useChatNotifications } from "@/hooks/useChatNotifications";
 
 export function AdminLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const location = useLocation();
+
+  const at = getToken();
+  const au = getStoredUser();
+  const showAdminChat = !!(at && au?.nivel === "administrador");
+
+  useEffect(() => {
+    if (!showAdminChat) return;
+    const tok = getToken();
+    if (tok) getChatSocket(tok);
+  }, [showAdminChat]);
+
+  const { floatingCount, sessionUnread, consumeSessionUnread } =
+    useChatNotifications("administrador", isChatOpen);
 
   const noPaddingRoutes = [
     "/admin/dashboard",
@@ -78,15 +94,20 @@ export function AdminLayout() {
 
       </main>
 
-      <AdminChatModal
-        open={isChatOpen}
-        onClose={() => setIsChatOpen(false)}
-      />
-
-      <ChatFloatingButton
-        onClick={() => setIsChatOpen((prev) => !prev)}
-        unreadCount={1}
-      />
+      {showAdminChat && (
+        <>
+          <AdminChatModal
+            open={isChatOpen}
+            onClose={() => setIsChatOpen(false)}
+            sessionUnreadCounts={sessionUnread}
+            onConsumeSessionUnread={consumeSessionUnread}
+          />
+          <ChatFloatingButton
+            onClick={() => setIsChatOpen((prev) => !prev)}
+            unreadCount={floatingCount}
+          />
+        </>
+      )}
     </div>
   );
 }

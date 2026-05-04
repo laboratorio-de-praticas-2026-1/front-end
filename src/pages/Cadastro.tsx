@@ -1,14 +1,19 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import vectorWhiteLogo from "@/assets/vector-white-logo.png";
 import vectorHuman from "@/assets/vector-human.png";
+import { loginRequest, registerRequest } from "@/services/authApi";
+import { setSession } from "@/lib/authStorage";
 
 export function Cadastro() {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     nome: "",
@@ -58,14 +63,33 @@ export function Cadastro() {
     setCurrentStep(2);
   };
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { email, senha } = formData;
+    const { nome, documento, celular, email, senha } = formData;
     if (!email.trim() || !senha.trim()) {
-      alert("Preencha e-mail e senha.");
+      toast.error("Preencha e-mail e senha.");
       return;
     }
-    console.log("Dados completos do cadastro:", formData);
+    const docDigits = documento.replace(/\D/g, "");
+    const celDigits = celular.replace(/\D/g, "");
+    setLoading(true);
+    try {
+      await registerRequest({
+        nome: nome.trim(),
+        email: email.trim(),
+        senha,
+        cpfCnpj: docDigits.length >= 11 ? docDigits : undefined,
+        celular: celDigits.length >= 10 ? celDigits : undefined,
+      });
+      const loginData = await loginRequest(email.trim(), senha);
+      setSession(loginData.tokenJWT, loginData.usuario);
+      toast.success("Conta criada. Bem-vindo!");
+      navigate("/cliente/inicio", { replace: true });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Falha no cadastro");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -126,6 +150,7 @@ export function Cadastro() {
                 <Button
                   type="button"
                   onClick={handleNextStep}
+                  disabled={loading}
                   className="w-full bg-[#3979A5] hover:bg-[#2f678d] text-white"
                 >
                   Continuar
@@ -175,9 +200,10 @@ export function Cadastro() {
 
                 <Button
                   type="submit"
+                  disabled={loading}
                   className="w-full bg-[#3979A5] hover:bg-[#2f678d] text-white"
                 >
-                  Cadastrar
+                  {loading ? "Cadastrando…" : "Cadastrar"}
                 </Button>
               </div>
             )}
