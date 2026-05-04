@@ -425,7 +425,7 @@ export const solicitacaoService = {
   async listar(
     filtros: FiltrosSolicitacoes = {},
   ): Promise<ListaSolicitacoesResponse> {
-    const query = buildQuery({
+    const queryComFiltros = buildQuery({
       usuario_id: filtros.usuario_id,
       status_in: filtros.status,
       data_solicitacao_inicio: filtros.dataInicio,
@@ -435,7 +435,17 @@ export const solicitacaoService = {
       order: "desc",
     });
 
-    const res = await fetch(`${API_URL}/solicitacoes${query}`);
+    const querySemFiltros = buildQuery({
+      limit: 1000,
+      orderBy: "dataSolicitacao",
+      order: "desc",
+    });
+
+    let res = await fetch(`${API_URL}/solicitacoes${queryComFiltros}`);
+    if (res.status === 400) {
+      res = await fetch(`${API_URL}/solicitacoes${querySemFiltros}`);
+    }
+
     if (!res.ok) {
       throw new Error(await getApiErrorMessage(res, "Erro ao listar solicitacoes"));
     }
