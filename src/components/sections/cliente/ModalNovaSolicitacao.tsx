@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
-import { File, Upload, X } from "lucide-react";
+import { File as FileIcon, Upload, X } from "lucide-react";
 
 import {
   Dialog,
@@ -40,7 +40,7 @@ export function ModalNovaSolicitacao({
   const navigate = useNavigate();
   const [veiculoSelecionado, setVeiculoSelecionado] = useState("");
   const [servicoSelecionado, setServicoSelecionado] = useState("");
-  const [arquivos, setArquivos] = useState<File[]>([]);
+  const [arquivos, setArquivos] = useState<globalThis.File[]>([]);
   const [servicos, setServicos] = useState<ServicoDisponivel[]>([]);
   const [loadingServicos, setLoadingServicos] = useState(false);
   const [salvando, setSalvando] = useState(false);
@@ -80,8 +80,9 @@ export function ModalNovaSolicitacao({
     };
   }, [open]);
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
+  const onDrop = useCallback((acceptedFiles: globalThis.File[]) => {
     const validFiles = acceptedFiles.slice(0, 5);
+    setErro(null);
     setArquivos((prev) => [...prev, ...validFiles].slice(0, 5));
   }, []);
 
@@ -112,14 +113,40 @@ export function ModalNovaSolicitacao({
     onOpenChange(false);
   }
 
+  function obterTipoDocumento(arquivo: globalThis.File) {
+    if (arquivo.type === "application/pdf") return "PDF";
+    if (arquivo.type.startsWith("image/")) return "Imagem";
+    return "Documento";
+  }
+
+  async function resolverSolicitacaoCriadaId(
+    resultado: Awaited<ReturnType<typeof solicitacaoService.criar>>,
+    servicoId: number,
+  ) {
+    const idRetornado =
+      resultado.id ??
+      resultado.solicitacao_id ??
+      resultado.protocolo.solicitacao.id;
+
+    if (idRetornado) {
+      return idRetornado;
+    }
+
+    const data = await solicitacaoService.listar({
+      usuario_id: usuarioId,
+      limit: 10,
+    });
+
+    return data.solicitacoes.find(
+      (solicitacao) =>
+        solicitacao.servicoId === servicoId &&
+        solicitacao.status === "recebido",
+    )?.id;
+  }
+
   async function handleSave() {
     if (!servicoSelecionado) {
       setErro("Selecione um servico para continuar.");
-      return;
-    }
-
-    if (arquivos.length > 0) {
-      setErro("Nao foi possivel enviar arquivos com a API atual.");
       return;
     }
 
@@ -127,11 +154,35 @@ export function ModalNovaSolicitacao({
     setErro(null);
 
     try {
+      const servicoId = Number(servicoSelecionado);
       const resultado = await solicitacaoService.criar({
         usuario_id: usuarioId,
-        servico_id: Number(servicoSelecionado),
+        servico_id: servicoId,
         veiculo_id: null,
       });
+
+      if (arquivos.length > 0) {
+        const solicitacaoId = await resolverSolicitacaoCriadaId(
+          resultado,
+          servicoId,
+        );
+
+        if (!solicitacaoId) {
+          throw new Error(
+            "Solicitacao criada, mas nao foi possivel identificar o envio dos documentos.",
+          );
+        }
+
+        await Promise.all(
+          arquivos.map((arquivo) =>
+            solicitacaoService.enviarDocumento(
+              solicitacaoId,
+              obterTipoDocumento(arquivo),
+              arquivo,
+            ),
+          ),
+        );
+      }
 
       onSucesso?.();
       limparFormulario();
@@ -263,7 +314,7 @@ export function ModalNovaSolicitacao({
                     className="flex items-center justify-between rounded-md bg-gray-100 p-2"
                   >
                     <div className="flex items-center gap-2">
-                      <File className="h-4 w-4 text-gray-500" />
+                      <FileIcon className="h-4 w-4 text-gray-500" />
                       <span className="max-w-[200px] truncate text-sm text-gray-700">
                         {file.name}
                       </span>

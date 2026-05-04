@@ -65,6 +65,8 @@ export interface CriarReciboPayload {
 }
 
 export interface CreateSolicitacaoResponse {
+  id?: number;
+  solicitacao_id?: number;
   message: string;
   protocolo: {
     cliente: {
@@ -75,6 +77,7 @@ export interface CreateSolicitacaoResponse {
       valor_base: number | null;
     };
     solicitacao: {
+      id?: number;
       data_solicitacao: string;
       prazo_estimado: string;
     };
