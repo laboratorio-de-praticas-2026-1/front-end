@@ -1,3 +1,5 @@
+import { TOKEN_KEY } from "@/lib/authStorage";
+
 const API_URL = import.meta.env.VITE_API_URL;
 if (!API_URL) {
   throw new Error("VITE_API_URL não está definido no ambiente");
@@ -18,10 +20,9 @@ export const recomendacaoService = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token") ?? ""}`,
+        Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY) ?? ""}`,
       },
       body: JSON.stringify({
-        usuarioId: 1,
         categoriaBlog: categoria,
         dataInteracao: new Date().toISOString(),
       }),
@@ -41,10 +42,11 @@ export const recomendacaoService = {
     const response = await fetch(`${API_URL}/recomendacoes`, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token") ?? ""}`,
+        Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY) ?? ""}`,
       },
     });
     const data = await response.json();
+    console.log("Recomendações recebidas:", data);
     return data;
   },
 };

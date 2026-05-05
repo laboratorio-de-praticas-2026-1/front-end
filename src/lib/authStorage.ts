@@ -1,7 +1,7 @@
 import { disconnectChatSocket } from "@/services/socket";
 
-const TOKEN_KEY = "bortone_auth_token";
-const USER_KEY = "bortone_auth_user";
+export const TOKEN_KEY = "bortone_auth_token";
+export const USER_KEY = "bortone_auth_user";
 
 export type StoredUser = {
   id: number;

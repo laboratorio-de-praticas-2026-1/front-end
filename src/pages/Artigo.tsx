@@ -9,7 +9,17 @@ import {
   recomendacaoService,
 } from "@/services/recomendacaoService";
 
+type CategoriaRecomendacao = (typeof RecomendacaoCategoriaBlogEnum)[keyof typeof RecomendacaoCategoriaBlogEnum];
+
 const interacoesEmAndamento = new Set<string>();
+const categoriasRecomendacao = new Set<CategoriaRecomendacao>(
+  Object.values(RecomendacaoCategoriaBlogEnum),
+);
+
+const isCategoriaRecomendacao = (
+  categoria: string,
+): categoria is CategoriaRecomendacao =>
+  categoriasRecomendacao.has(categoria as CategoriaRecomendacao);
 
 export function Artigo() {
   const { id } = useParams();
@@ -33,13 +43,13 @@ export function Artigo() {
         interacoesEmAndamento.add(chaveInteracao);
 
         try {
+          console.log("Registrando interação para o artigo categoria:", postCarregado.categoria);
           const categoria =
-            (postCarregado.categoria as
-              | (typeof RecomendacaoCategoriaBlogEnum)[keyof typeof RecomendacaoCategoriaBlogEnum]
-              | undefined) ?? RecomendacaoCategoriaBlogEnum.DOCUMENTACAO;
+            postCarregado.categoria ?? "";
 
-          console.log("Registrando interação para categoria:", categoria);
-          await recomendacaoService.registrarInteracao(categoria);
+          if (isCategoriaRecomendacao(categoria)) {
+            await recomendacaoService.registrarInteracao(categoria);
+          }
         } catch (error) {
           console.error("Erro ao registrar interação:", error);
         } finally {
@@ -91,10 +101,15 @@ export function Artigo() {
       <div className="min-h-screen bg-white flex flex-col">
         <Navbar />
         <main className="flex-1 flex flex-col items-center justify-center text-center px-6 pt-20">
-          <h1 className="text-3xl font-bold text-secondary mb-4">Artigo não encontrado</h1>
-          <p className="text-zinc-600 mb-8">Desculpe, não conseguimos encontrar a postagem que você está procurando.</p>
+          <h1 className="text-3xl font-bold text-secondary mb-4">
+            Artigo não encontrado
+          </h1>
+          <p className="text-zinc-600 mb-8">
+            Desculpe, não conseguimos encontrar a postagem que você está
+            procurando.
+          </p>
           <button
-            onClick={() => navigate('/blog')}
+            onClick={() => navigate("/blog")}
             className="bg-[#1E84CF] text-white px-8 py-3 rounded-full font-semibold hover:scale-105 transition-transform"
           >
             Voltar para o Blog
@@ -117,7 +132,7 @@ export function Artigo() {
   let fraseDestaque = post.olhoDoTexto;
 
   if (!fraseDestaque && conteudo) {
-    const frases = conteudo.split('. ');
+    const frases = conteudo.split(". ");
     if (frases.length > 2) {
       fraseDestaque = `"${frases[Math.floor(frases.length / 2)].trim()}."`;
     } else {
@@ -148,7 +163,7 @@ export function Artigo() {
 
         <div className="max-w-7xl mx-auto px-6 pt-12 md:pt-16">
           <button
-            onClick={() => navigate('/blog')}
+            onClick={() => navigate("/blog")}
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-sm font-medium text-white rounded-full hover:bg-secondary shadow-sm transition-all mb-8 group"
           >
             <ArrowLeft className="w-4 h-4 text-white group-hover:-translate-x-1 transition-transform" />
@@ -166,7 +181,6 @@ export function Artigo() {
           </header>
 
           <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 text-zinc-600 leading-relaxed whitespace-pre-wrap font-medium text-justify">
-            
             <div className="hidden lg:flex absolute top-[160px] left-1/2 -translate-x-1/2 w-[320px] h-[220px] items-center justify-center pointer-events-none z-10 bg-white">
               <p className="text-2xl font-bold text-[#0F2A44] text-center px-2 leading-snug">
                 {fraseDestaque}
@@ -194,15 +208,22 @@ export function Artigo() {
                   />
                 ) : (
                   <div className="bg-[#5c2d91] p-6 text-white text-center aspect-[4/5] flex flex-col justify-center items-center">
-                    <h3 className="font-black text-2xl mb-2 italic uppercase">Anuncie<br/>Aqui</h3>
-                    <p className="text-xs opacity-80 leading-tight">Espaço para<br/>publicidade</p>
+                    <h3 className="font-black text-2xl mb-2 italic uppercase">
+                      Anuncie
+                      <br />
+                      Aqui
+                    </h3>
+                    <p className="text-xs opacity-80 leading-tight">
+                      Espaço para
+                      <br />
+                      publicidade
+                    </p>
                   </div>
                 )}
               </aside>
               <div className="hidden lg:block float-left w-[128px] h-[220px] mt-[160px]"></div>
               {coluna2}
             </div>
-
           </div>
         </div>
       </main>

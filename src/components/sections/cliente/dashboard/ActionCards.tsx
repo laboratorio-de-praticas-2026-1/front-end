@@ -1,54 +1,66 @@
-import { Link } from "react-router-dom";
-import { FaCar } from "react-icons/fa";
-import { FiFileText, FiBell } from "react-icons/fi";
-import { MdOutlineQrCode } from "react-icons/md";
 import { Card, CardContent } from "@/components/ui/card";
+import { recomendacaoService } from "@/services/recomendacaoService";
+import { useEffect, useState } from "react";
+import { FaCar } from "react-icons/fa";
+import { FiBell, FiFileText } from "react-icons/fi";
+import { MdOutlineQrCode } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 interface ActionCardItem {
+  id: number;
   icon: React.ReactNode;
   title: string;
   description: string;
   href: string;
 }
 
-const cards: ActionCardItem[] = [
-  {
-    icon: <FaCar className="w-6 h-6 text-secondary" />,
-    title: "Monitore seu veículo",
-    description: "Monitore em tempo real tudo sobre seu veículo.",
-    href: "/cliente/veiculos",
-  },
-  {
-    icon: <FiFileText className="w-6 h-6 text-secondary" />,
-    title: "Monitore sua CNH",
-    description: "Monitore em tempo real tudo sobre sua CNH.",
-    href: "/cliente/cnh",
-  },
-  {
-    icon: <MdOutlineQrCode className="w-6 h-6 text-secondary" />,
-    title: "CRLV Digital",
-    description: "Retire seu CRLV Digital e acompanhe tudo sobre.",
-    href: "/cliente/crlv",
-  },
-  {
-    icon: <FiBell className="w-6 h-6 text-secondary" />,
-    title: "Alerta de multas",
-    description: "Saiba quando seu veículo receber uma multa.",
-    href: "/cliente/notificacoes",
-  },
-];
-
 export function ActionCards() {
+  const [cards, setCard] = useState<ActionCardItem[]>([]);
+  useEffect(() => {
+    recomendacaoService.obterRecomendacoes().then((data) => {
+      const cardsData: ActionCardItem[] = data.map((item: any) => {
+        let icon;
+        switch (item.categoriaBlog) {
+          case "Documentacao":
+            icon = <FiFileText className="w-6 h-6 text-secondary" />;
+            break;
+          case "Debitos":
+            icon = <FaCar className="w-6 h-6 text-secondary" />;
+            break;
+          case "Multas":
+            icon = <FiBell className="w-6 h-6 text-secondary" />;
+            break;
+          case "Legislacao":
+            icon = <MdOutlineQrCode className="w-6 h-6 text-secondary" />;
+            break;
+          case "Condutor":
+            icon = <FiFileText className="w-6 h-6 text-secondary" />;
+            break;
+          default:
+            icon = <FiFileText className="w-6 h-6 text-secondary" />;
+        }
+        return {
+          id: item.id,
+          icon,
+          title: item.nome,
+          description: item.descricao,
+          href: `/servicos`,
+        };
+      });
+      setCard(cardsData);      
+    });
+  }, []);
+
   return (
     <div className="w-full flex flex-col">
       <h2 className="text-xl md:text-2xl font-bold text-secondary mb-5 mt-5">
         Serviços recomendados para você:
       </h2>
-      
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {cards.map((card) => (
           <Card
-            key={card.title}
+            key={card.id}
             className="border border-zinc-200 shadow-sm hover:shadow-md transition-shadow duration-200"
           >
             <CardContent className="p-5 flex flex-col gap-3">
@@ -58,8 +70,12 @@ export function ActionCards() {
               </div>
 
               <div className="space-y-1 flex-1 mt-2">
-                <h3 className="text-sm font-bold text-secondary">{card.title}</h3>
-                <p className="text-xs text-zinc-500 leading-relaxed">{card.description}</p>
+                <h3 className="text-sm font-bold text-secondary">
+                  {card.title}
+                </h3>
+                <p className="text-xs text-zinc-500 leading-relaxed">
+                  {card.description}
+                </p>
               </div>
 
               <Link
