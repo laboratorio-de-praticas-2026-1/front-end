@@ -16,13 +16,18 @@ L.Icon.Default.mergeOptions({
     shadowUrl: markerShadow,
 });
 
-export default function ContactMap() {
+interface ContactMapProps {
+  latitude: number;
+  longitude: number;
+}
+
+export default function ContactMap({ latitude, longitude }: ContactMapProps) {
   return (
     <section className="relative bg-[#eef3f7] pb-16 md:pb-24 z-0">
       <div className="relative">
         {/* AUMENTADO A ALTURA: Mudei de 100px para 450px */}
         <MapContainer 
-          center={[-24.4979, -47.8449]} 
+          center={[latitude, longitude]} 
           zoom={15} 
           scrollWheelZoom={false} 
           style={{ height: "550px", width: "100%", zIndex: 0, border: "none" }}
@@ -31,7 +36,7 @@ export default function ContactMap() {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <Marker position={[-24.4979, -47.8449]}>
+            <Marker position={[latitude, longitude]}>
                 <Popup>
                    Estamos aqui! <br /> Venha nos visitar.
                 </Popup>
@@ -49,10 +54,10 @@ export default function ContactMap() {
                 </p>
             </div>
 
-            <button className="flex items-center justify-center shrink-0 rounded-full bg-white font-bold text-secondary text-lg gap-3 px-8 py-4 h-14 md:h-16 shadow-md hover:bg-zinc-100 hover:scale-105 transition-all w-full md:w-auto">
+            <a href="https://wa.me/5513996939896?text=Olá! Gostaria de mais informações sobre os serviços." target="_blank" rel="noopener noreferrer" className="flex items-center justify-center shrink-0 rounded-full bg-white font-bold text-secondary text-lg gap-3 px-8 py-4 h-14 md:h-16 shadow-md hover:bg-zinc-100 hover:scale-105 transition-all w-full md:w-auto">
                 <FaWhatsapp className="w-6 h-6" />
                 WhatsApp Online
-            </button>
+            </a>
         </div>
       </div>
     </section>
