@@ -1,89 +1,103 @@
-import { MOCK_EMPRESAS } from "@/mocks/empresas.mock";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export interface Empresa {
-  id: string;
-  nomeFantasia: string;
-  cnpj: string;
-  tipo: string;
-  telefone: string;
-  email: string;
-  site?: string;
-  endereco: string;
-  cidade: string;
-  estado: string;
-  latitude: number;
-  longitude: number;
-}
-
-export interface CreateEmpresaDTO {
-  nome_fantasia: string;
-  cnpj: string;
-  tipo: string;
-  telefone: string;
-  email: string;
-  site?: string;
-  endereco: string;
-  cidade: string;
-  estado: string;
-  latitude: number;
-  longitude: number;
+  id: number;
+  nomeFantasia: string | null;
+  cnpj: string | null;
+  tipo: 'clinica' | 'vistoria' | 'detran' | null;
+  telefone: string | null;
+  email: string | null;
+  site?: string | null;
+  endereco: string | null;
+  cidade: string | null;
+  estado: string | null;
+  latitude: string | null;
+  longitude: string | null;
 }
 
 export interface EmpresaFilters {
   tipo?: string;
-  estado?: string;
   cidade?: string;
-  search?: string;
-  page: number;
 }
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+const mapApiToFront = (emp: Empresa) => {
+  const lat = Number(emp.latitude);
+  const lng = Number(emp.longitude);
 
-const mapToDTO = (data: Omit<Empresa, "id">): CreateEmpresaDTO => ({
-  nome_fantasia: data.nomeFantasia,
-  cnpj: data.cnpj,
-  tipo: data.tipo,
-  telefone: data.telefone,
-  email: data.email,
-  site: data.site,
-  endereco: data.endereco,
-  cidade: data.cidade,
-  estado: data.estado,
-  latitude: data.latitude,
-  longitude: data.longitude,
-});
+  // proteção contra dados inválidos
+  if (isNaN(lat) || isNaN(lng)) return null;
+
+  return {
+    id: emp.id,
+    nome: emp.nomeFantasia ?? "Sem nome",
+    tipo: emp.tipo ?? "Não informado",
+    endereco: emp.endereco ?? "Endereço não informado",
+    lat,
+    lng,
+    categoria:
+      emp.tipo === "clinica"
+        ? "Clínicas"
+        : emp.tipo === "vistoria"
+        ? "Vistoria"
+        : "Detran",
+    nota: 4.5, // mock temporário
+    imagem: "https://via.placeholder.com/400x300", // mock temporário
+  };
+};
 
 export const empresaService = {
-  async getEmpresas(filters: EmpresaFilters): Promise<Empresa[]> {
-    await delay(800);
-    return (MOCK_EMPRESAS as any[]).filter((emp) => {
-      const matchesSearch = emp.nomeFantasia?.toLowerCase().includes(filters.search?.toLowerCase() || "");
-      const matchesTipo = filters.tipo ? emp.tipo === filters.tipo : true;
-      const matchesCidade = filters.cidade ? emp.cidade === filters.cidade : true;
-      const matchesEstado = filters.estado ? emp.estado === filters.estado : true;
-      return matchesSearch && matchesTipo && matchesCidade && matchesEstado;
-    }) as Empresa[];
+  async getEmpresas(filters?: EmpresaFilters) {
+    let url = `${API_URL}/mapa`;
+
+    if (filters?.tipo || filters?.cidade) {
+      const params = new URLSearchParams();
+
+      if (filters.tipo) params.append("tipo", filters.tipo);
+      if (filters.cidade) params.append("cidade", filters.cidade);
+
+      url = `${API_URL}/mapa/filtro?${params.toString()}`;
+    }
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error("Erro ao buscar empresas");
+    }
+
+    const data: Empresa[] = await response.json();
+
+    return data
+      .map(mapApiToFront)
+      .filter((item): item is NonNullable<typeof item> => item !== null);
   },
 
-  async getEmpresaById(id: string): Promise<Empresa | undefined> {
-    await delay(500);
-    return (MOCK_EMPRESAS as any[]).find((emp) => emp.id === id) as Empresa | undefined;
+  async getEmpresasByTipo(tipo: string) {
+    const response = await fetch(`${API_URL}/mapa/tipo?tipo=${tipo}`);
+
+    if (!response.ok) {
+      throw new Error("Erro ao buscar por tipo");
+    }
+
+    const data: Empresa[] = await response.json();
+
+    return data
+      .map(mapApiToFront)
+      .filter((item): item is NonNullable<typeof item> => item !== null);
   },
 
-  async createEmpresa(data: Omit<Empresa, "id">): Promise<void> {
-    const dto = mapToDTO(data);
-    await delay(1000);
-    console.log("POST /empresas", dto);
-  },
+  async getEmpresasByCidade(cidade: string) {
+    const response = await fetch(
+      `${API_URL}/mapa/cidade?cidade=${cidade}`
+    );
 
-  async updateEmpresa(id: string, data: Omit<Empresa, "id">): Promise<void> {
-    const dto = mapToDTO(data);
-    await delay(1000);
-    console.log(`PUT /empresas/${id}`, dto);
-  },
+    if (!response.ok) {
+      throw new Error("Erro ao buscar por cidade");
+    }
 
-  async deleteEmpresa(id: string): Promise<void> {
-    await delay(1000);
-    console.log(`DELETE /empresas/${id}`);
+    const data: Empresa[] = await response.json();
+
+    return data
+      .map(mapApiToFront)
+      .filter((item): item is NonNullable<typeof item> => item !== null);
   },
 };
