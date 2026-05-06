@@ -1,0 +1,45 @@
+site_name: Front-end Bortone - Documentação Técnica
+site_url: https://laboratorio-de-praticas-2026-1.github.io/front-end/
+site_description: Documentação técnica do front-end da aplicação Despachante Bortone
+site_author: Laboratorio de Praticas 2026-1
+
+repo_name: laboratorio-de-praticas-2026-1/front-end
+repo_url: https://github.com/laboratorio-de-praticas-2026-1/front-end
+
+theme:
+  name: material
+  language: pt
+  logo: assets/logo-full-branca.png
+  favicon: assets/logo-bortone-escura.png
+  palette:
+    - scheme: default
+      primary: custom
+      accent: custom
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - content.code.copy
+    - toc.integrate
+
+extra_css:
+  - stylesheets/custom.css
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - tables
+  - attr_list
+
+nav:
+  - Inicio: index.md
+  - Configuracao do Ambiente: configuracao.md
+  - Arquitetura: arquitetura.md
+  - Componentes: componentes.md
+  - Paginas e Rotas: paginas-e-rotas.md
+  - Integracao com a API: integracao-api.md
+  - Status de Implementacao: status-implementacao.md
