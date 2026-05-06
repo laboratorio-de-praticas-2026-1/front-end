@@ -1,9 +1,40 @@
 import type { FAQPublico } from "@/types/faqPublico.types";
-import { FAQ_PUBLICO_MOCK } from "@/mocks/faqPublico.mocks";
 
 const API_URL = import.meta.env.VITE_API_URL || "https://despachante-bortone-release-production.up.railway.app";
 
-let faqs = [...FAQ_PUBLICO_MOCK];
+const CATEGORIA_LABEL: Record<string, string> = {
+  documentacao: "Documentação",
+  regularizacao: "Regularização",
+  manutencao: "Manutenção",
+  outros: "Outros",
+  frequentes: "Frequentes",
+};
+
+interface FaqApiResponse {
+  id: number;
+  pergunta: string;
+  resposta: string;
+  categoria: string;
+  status: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+function mapApiToFaqPublico(api: FaqApiResponse): FAQPublico {
+  return {
+    id: `#${api.id}`,
+    pergunta: api.pergunta,
+    resposta: api.resposta,
+    categoria: CATEGORIA_LABEL[api.categoria] ?? api.categoria,
+    status: api.status ? "Ativo" : "Inativo",
+    dataCriacao: api.createdAt
+      ? new Date(api.createdAt).toLocaleDateString("pt-BR")
+      : "—",
+    dataAtualizacao: api.updatedAt
+      ? new Date(api.updatedAt).toLocaleDateString("pt-BR")
+      : "—",
+  };
+}
 
 const handleResponse = async (response: Response) => {
   if (!response.ok) {
@@ -15,19 +46,12 @@ const handleResponse = async (response: Response) => {
 export const faqPublicoService = {
   async listarTodos(): Promise<FAQPublico[]> {
     try {
-      // 🔥 quando tiver API:
-      // const response = await fetch(`${API_URL}/faq`);
-      // const data = await handleResponse(response);
-
-      // mock
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      // 🔥 REGRA DA ISSUE
-      return faqs.filter((faq) => faq.status === "Ativo");
-
+      const response = await fetch(`${API_URL}/faq`);
+      const data: FaqApiResponse[] = await handleResponse(response);
+      return data.map(mapApiToFaqPublico);
     } catch (erro) {
       console.error("Erro ao listar FAQ público:", erro);
       return [];
     }
-  }
+  },
 };

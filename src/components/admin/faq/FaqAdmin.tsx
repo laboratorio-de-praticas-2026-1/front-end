@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { FAQItem, FAQStatus, FAQFilters, FAQCategoryOption, FAQStatusOption } from "@/types/faq.types";
-import { FAQ_MOCK_DATA, FAQ_CATEGORIES_MOCK, FAQ_STATUS_MOCK } from "@/mocks/faq.mocks";
 import { ConfirmDeleteModalFaq } from "./ConfirmDeleteModal";
 // import { id } from "date-fns/locale";
 import { faqService } from "@/services/faqService";
@@ -42,11 +41,17 @@ export default function FAQ() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const dados = await faqService.listarTodos();
-      setFaqs(dados)
-      setCatOptions(FAQ_CATEGORIES_MOCK);
-      setStatusOptions(FAQ_STATUS_MOCK);
-
+      const [dados, categorias] = await Promise.all([
+        faqService.listarTodos(),
+        faqService.listarCategorias(),
+      ]);
+      setFaqs(dados);
+      setCatOptions(categorias);
+      setStatusOptions([
+        { value: "todas", label: "Status" },
+        { value: "Ativo", label: "Ativo" },
+        { value: "Inativo", label: "Inativo" },
+      ]);
     } catch (error) {
       console.error(error);
     } finally {

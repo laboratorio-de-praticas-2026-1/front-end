@@ -8,11 +8,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { faqSchema, type FAQFormData } from './faq.schema';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FAQ_CATEGORIES_MOCK } from "@/mocks/faq.mocks"; 
 import type { FAQCategoryOption } from '@/types/faq.types';
 import { faqService } from '@/services/faqService';
-
-
 
 export default function NovoFAQ() {
   const navigate = useNavigate();
@@ -36,7 +33,7 @@ export default function NovoFAQ() {
   });
 
   useEffect(() => {
-    setCatOptions(FAQ_CATEGORIES_MOCK)
+    faqService.listarCategorias().then(setCatOptions);
   }, []);
 
   const onSubmit = async (data: FAQFormData) => {
